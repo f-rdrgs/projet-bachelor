@@ -12,3 +12,6 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 ---
 ### 05.11.23
 - Continuation des recherches concernant les divers types de bots
+
+### 11.11.23
+- Définition de l'ensemble des recherches à effectuer demain
