@@ -15,3 +15,8 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 
 ### 11.11.23
 - Définition de l'ensemble des recherches à effectuer demain
+
+### 12.11.23
+
+- Rédaction plus détaillée de l'architecture en composants d'un chatbot, manque cependant le détail pour un chatbot génératif/conversationnel
+- À faire par la suite 2 sections détaillant comment fonctionne un bot conversationnel à la ChatGPT et un moteur NLP
