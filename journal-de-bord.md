@@ -20,3 +20,7 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 
 - Rédaction plus détaillée de l'architecture en composants d'un chatbot, manque cependant le détail pour un chatbot génératif/conversationnel
 - À faire par la suite 2 sections détaillant comment fonctionne un bot conversationnel à la ChatGPT et un moteur NLP
+
+## 19.11.23
+
+- Récupération d'une source concernant l'utilisation d'IA avec des chatbots conversationnels
