@@ -15,3 +15,7 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 
 ### 11.11.23
 - Définition de l'ensemble des recherches à effectuer demain
+
+### 23.11.23
+- Recherches sur l'implémentation d'un chatbot à l'aide d'une IA
+- Recherches plus spécifiques sur des modèles Transformer tels que BERT et TAPAS
