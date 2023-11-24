@@ -16,6 +16,15 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 ### 11.11.23
 - Définition de l'ensemble des recherches à effectuer demain
 
+### 12.11.23
+
+- Rédaction plus détaillée de l'architecture en composants d'un chatbot, manque cependant le détail pour un chatbot génératif/conversationnel
+- À faire par la suite 2 sections détaillant comment fonctionne un bot conversationnel à la ChatGPT et un moteur NLP
+
+## 19.11.23
+
+- Récupération d'une source concernant l'utilisation d'IA avec des chatbots conversationnels
+
 ### 23.11.23
 - Recherches sur l'implémentation d'un chatbot à l'aide d'une IA
 - Recherches plus spécifiques sur des modèles Transformer tels que BERT et TAPAS
