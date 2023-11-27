@@ -28,3 +28,8 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 ### 23.11.23
 - Recherches sur l'implémentation d'un chatbot à l'aide d'une IA
 - Recherches plus spécifiques sur des modèles Transformer tels que BERT et TAPAS
+### 26.11.23
+- Continuation de la rédaction de l'implementation de maniere concise (pour le moment) d'un chatbot avec IA
+- Davantage de renseignements sur le modele TAPAS
+- Définition des divers techniques de traitement NLP
+- Continuation des recherches sur NLP afin de prochainement rédiger la section sur le NLP 
