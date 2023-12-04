@@ -33,3 +33,9 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 - Davantage de renseignements sur le modele TAPAS
 - Définition des divers techniques de traitement NLP
 - Continuation des recherches sur NLP afin de prochainement rédiger la section sur le NLP 
+
+### 02.12.23
+- Recherche de sources pour parler du NLP
+
+### 03.12.23
+- Rédaction d'une partie du traitement NLP, toujours de manière concise pour le moment bien qu'il est toujours possible d'entrer davantage dans les détails
