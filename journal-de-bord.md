@@ -39,3 +39,9 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 
 ### 03.12.23
 - Rédaction d'une partie du traitement NLP, toujours de manière concise pour le moment bien qu'il est toujours possible d'entrer davantage dans les détails
+
+### 14.12.23
+- Complétion partie NLP résumé
+- Recherches sur TAPAS
+- Début rédaction partie sur TAPAS
+- Recherches sur framework BERT
