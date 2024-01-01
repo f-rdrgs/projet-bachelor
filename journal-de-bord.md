@@ -48,3 +48,6 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 ### 17.12.23
 - Encore des recherches sur le framework BERT
 - continuation de la rédaction sur TAPAS en expliquant BERT
+
+### 01.01.24
+- Contination recherche et écriture partie TAPAS
