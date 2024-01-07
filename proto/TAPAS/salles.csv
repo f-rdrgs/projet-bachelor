@@ -1,0 +1,19 @@
+Id,Nom Salle,Type,Disponible
+1,Une Salle 1,Large,0
+2,Une Salle 2,Moyenne,0
+3,Une Salle 3,Large,1
+4,Une Salle 4,Petite,1
+5,Une Salle 5,Moyenne,0
+6,Une Salle 6,Moyenne,1
+7,Une Salle 7,Petite,1
+8,Une Salle 8,Large,1
+9,Une Salle 9,Large,1
+10,Une Salle 10,Moyenne,0
+11,Une Salle 11,Petite,0
+12,Une Salle 12,Moyenne,0
+13,Une Salle 13,Petite,0
+14,Une Salle 14,Large,1
+15,Une Salle 15,Moyenne,0
+16,Une Salle 16,Petite,1
+17,Une Salle 17,Petite,1
+18,Une Salle 18,Petite,0
