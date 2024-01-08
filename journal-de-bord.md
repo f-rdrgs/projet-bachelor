@@ -55,3 +55,5 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 ### 04.01.24
 - Ajout sources à Zotero
 - Recherches sur comment s'implémente le modèle TAPAS programmatiquement 
+### 07.01.24
+- Ajout prototype de TAPAS exemple
