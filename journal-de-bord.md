@@ -57,3 +57,8 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 - Recherches sur comment s'implémente le modèle TAPAS programmatiquement 
 ### 07.01.24
 - Ajout prototype de TAPAS exemple
+
+### 14.01.24
+- Recherches sur format ICS/Ical
+- Ajout quelques salles
+- Recherches sur passage de CSV à Ical, possible considérations de changement de type de stockage
