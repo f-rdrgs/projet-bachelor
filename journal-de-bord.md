@@ -62,3 +62,6 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 - Recherches sur format ICS/Ical
 - Ajout quelques salles
 - Recherches sur passage de CSV à Ical, possible considérations de changement de type de stockage
+
+### 03.02.24
+- Ajout ressources dans fichiers csv basé sur la réservation de terrains de sports de la ville de genève

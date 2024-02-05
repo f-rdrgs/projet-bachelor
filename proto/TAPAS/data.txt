@@ -1,0 +1,31 @@
+id	sport	nom terrain	horaire	nom	lundi	mardi	mercredi	jeudi	vendredi	samedi	dimanche	titre	tarif
+1	tennis												
+2	badminton												
+3	petanque												
+4	squash												
+1	1	Tennis 1	1										
+2	1	Tennis 2	1										
+3	1	Tennis 3	1										
+4	1	Tennis 4	2										
+5	2	Badminton 1	1										
+6	2	Badminton 2	1										
+7	2	Badminton 3	1										
+8	3	Petanque 1	1										
+9	4	Squash 1	1										
+10	4	Squash 2	1										
+11	1	Tennis 1	2										
+12	1	Tennis 4	1										
+13	4	Squash1	2										
+1				Queue d'Arve Sports Center									
+2				Bois-des-Freres Sports Center									
+3				Vessy Sports Center									
+4				Centre sportir du Bout-du-Monde									
+1				horaire jour	9h00-16h00	8h30-15h50	8h30-15h50	9h00-17h00	11h30-14h00	11h30-14h00			
+2				horaire nuit	18h00-22h00	18h00-22h00	18h00-22h00	18h00-22h00	18h00-22h00				
+1	1											Tarif Normal	30
+2	1											Tarif Réduit	15
+3	2											Tarif Normal	25
+4	2											Tarif Réduit	12
+5	4											Tarif Normal	32
+6	4											Tarif Réduit	18
+7	3											Tarif Normal	17

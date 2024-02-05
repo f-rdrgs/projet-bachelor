@@ -1,0 +1,8 @@
+﻿id,titre,tarif,sport
+1,Tarif Normal,30,1
+2,Tarif Réduit,15,1
+3,Tarif Normal,25,2
+4,Tarif Réduit,12,2
+5,Tarif Normal,32,4
+6,Tarif Réduit,18,4
+7,Tarif Normal,17,3
