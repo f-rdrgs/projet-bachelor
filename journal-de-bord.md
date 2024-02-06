@@ -65,3 +65,6 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 
 ### 03.02.24
 - Ajout ressources dans fichiers csv basé sur la réservation de terrains de sports de la ville de genève
+
+### 05.02.24
+- Complétion proto TAPAS et tests divers et finalité est qu'il est difficile d'appliquer TAPAS dans un problème multi-table avec clé étrangères
