@@ -68,3 +68,9 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 
 ### 05.02.24
 - Complétion proto TAPAS et tests divers et finalité est qu'il est difficile d'appliquer TAPAS dans un problème multi-table avec clé étrangères
+
+### 06.02.24
+- Visionnage et prise de notes du fonctionnement TAPAS selon le papier de recherche de google au sujet de TAPAS
+
+### 07.02.24
+- Début retranscription des notes au prise la veille sous forme de texte plus détaillé
