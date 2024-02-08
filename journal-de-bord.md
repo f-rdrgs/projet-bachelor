@@ -74,3 +74,7 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 
 ### 07.02.24
 - Début retranscription des notes au prise la veille sous forme de texte plus détaillé
+
+### 08.02.24
+- Retranscription de la prise de notes sur TAPAS faite
+- Début recherches sur l'implémentation d'un proto de moteur NLP
