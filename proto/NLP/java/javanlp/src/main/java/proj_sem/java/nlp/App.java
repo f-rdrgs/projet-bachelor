@@ -1,12 +1,10 @@
 package proj_sem.java.nlp;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
@@ -35,6 +33,8 @@ public class App {
         }
     }
 
+
+
     // private static String[] named_entity_reco(String sentence_to_nlp){
     //     try (InputStream modelIn = new FileInputStream("en-token.bin")) {
     //         TokenNameFinderModel  model = new TokenNameFinderModel(modelIn);
@@ -56,6 +56,8 @@ public class App {
             String[] tokens = tokenizer(sentence_to_nlp);
             Stream<String> stream = Arrays.stream(tokens);
             stream.forEach(str -> System.out.println(str));
+
+            // NER_train train = new NER_train("");
         }
     }
 }
