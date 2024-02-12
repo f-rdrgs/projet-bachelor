@@ -78,3 +78,6 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 ### 08.02.24
 - Retranscription de la prise de notes sur TAPAS faite
 - Début recherches sur l'implémentation d'un proto de moteur NLP
+
+### 10-12.02.24
+- Ajout proto NLP en Java et Python (Java n'a pas été poussé trop loin par manque de modèles pré-entraînés, python en ayant bien plus et permettant ainsi une facilité d'implémentation d'un moteur NLP)
