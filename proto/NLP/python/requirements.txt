@@ -2,3 +2,5 @@ nltk
 dateparser
 argparse
 numpy
+pyspark
+sparknlp

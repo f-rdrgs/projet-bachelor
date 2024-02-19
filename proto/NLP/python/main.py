@@ -4,6 +4,7 @@ from urllib.request import urlopen
 from zipfile import ZipFile
 import nltk as nl
 import numpy as np
+
 # https://github.com/cmchurch/nltk_french/blob/master/french-nltk.py
 # https://nlp.stanford.edu/software/tagger.shtml 
 
@@ -11,6 +12,10 @@ import numpy as np
 # https://nlp.stanford.edu/software/stanford-tagger-4.2.0.zip 
 
 from nltk.tag.stanford import StanfordPOSTagger
+
+import sparknlp as snp
+from pyspark.sql import SparkSession
+from sparknlp.pretrained import PretrainedPipeline, ResourceDownloader
 import os
 
 # Method to download + extract found here https://stackoverflow.com/questions/64990197/download-and-extract-zip-file 
@@ -56,6 +61,11 @@ def process_sentences(file_content_string: str):
                 # Print the phrase and the chunk label
                 print(f"\tSpecial case({phrase}, {chunk.label()})")
         
+def detect_sports(file_content_string:str):
+    pipeline = PretrainedPipeline('entity_recognizer_md', lang = 'fr')
+
+    output = pipeline.fullAnnotate(file_content)
+    print(f"Annotated String : {output}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Traitement de texte par NLP")
@@ -66,6 +76,9 @@ if __name__ == "__main__":
     
     text = args.text
     file = args.file
+
+    spark=    snp.start(memory="2G")
+    print(spark.version)
     update_packages()
     if os.path.exists("./nltk_data/stanford-postagger-full-2020-11-17") and (text is not None or file is not None):
         standFordJarTagger = "./nltk_data/stanford-postagger-full-2020-11-17/stanford-postagger.jar"
@@ -73,20 +86,22 @@ if __name__ == "__main__":
         taggerModel = StanfordPOSTagger(standfordFrenchTaggerFile,standFordJarTagger,encoding='utf8')
         if text is not None:
             print(nl.tokenize.word_tokenize(text,language="french",))
-            process_sentences(text)
+            # process_sentences(text)
+            detect_sports(text)
         elif file is not None:
             if os.path.exists(file) and os.path.isfile(file):
                 file_content : np.ndarray = np.asarray([])
                 file_content_string = ""
                 with open(file) as f:
                    for line in f.readlines():
-                       if line is not "" and line is not "\n":
+                       if line != "" and line != "\n":
                         file_content = np.append(file_content,line.strip())
                         file_content_string+=line.strip()+". "
                   
                 print(f"File Content : {file_content}")
                 print(f"File String : {file_content_string}")
-                process_sentences(file_content_string)
+                # process_sentences(file_content_string)
+                detect_sports(file_content_string)
                 
               
                     
@@ -94,4 +109,5 @@ if __name__ == "__main__":
             print(args)
     else:
         print("Usage : --text <text à traiter>")
+    spark.stop()
         
