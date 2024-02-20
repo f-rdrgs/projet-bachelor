@@ -1,0 +1,26 @@
+version: "3.1"
+
+nlu:
+- lookup: resource
+  examples: |
+    - Tennis
+    - Tenis
+    - TEnnis
+    - tennis
+    - Badminton
+    - badminton
+    - pétanque
+    - petanque
+    - Pétanque
+    - Petanque
+- intent: book_resource
+  examples: |
+    - Je souhaite réserver un terrain de [tennis](resource)
+    - J'aimerais réserver un terrain de [Tennis](resource)
+    - Réserve un terrain de [Tenis](resource)
+    - Je souhaite réserver un terrain de [petanque](resource)
+    - J'aimerais réserver un terrain de [Pétanque](resource)
+    - Réserve un terrain de [Petanque](resource)
+    - Je souhaite réserver un terrain de [badminton](resource)
+    - J'aimerais réserver un terrain de [Badminton](resource)
+    - Réserve un terrain de [Badminton](resource)

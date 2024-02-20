@@ -2,3 +2,5 @@
 **/target
 **/.vscode
 **/nltk_data
+**/.rasa
+**/__pycache__
