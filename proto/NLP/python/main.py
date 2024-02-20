@@ -60,12 +60,7 @@ def process_sentences(file_content_string: str):
                 phrase = ' '.join(words)
                 # Print the phrase and the chunk label
                 print(f"\tSpecial case({phrase}, {chunk.label()})")
-        
-def detect_sports(file_content_string:str):
-    pipeline = PretrainedPipeline('entity_recognizer_md', lang = 'fr')
 
-    output = pipeline.fullAnnotate(file_content)
-    print(f"Annotated String : {output}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Traitement de texte par NLP")
@@ -77,8 +72,6 @@ if __name__ == "__main__":
     text = args.text
     file = args.file
 
-    spark=    snp.start(memory="2G")
-    print(spark.version)
     update_packages()
     if os.path.exists("./nltk_data/stanford-postagger-full-2020-11-17") and (text is not None or file is not None):
         standFordJarTagger = "./nltk_data/stanford-postagger-full-2020-11-17/stanford-postagger.jar"
@@ -86,8 +79,7 @@ if __name__ == "__main__":
         taggerModel = StanfordPOSTagger(standfordFrenchTaggerFile,standFordJarTagger,encoding='utf8')
         if text is not None:
             print(nl.tokenize.word_tokenize(text,language="french",))
-            # process_sentences(text)
-            detect_sports(text)
+            process_sentences(text)
         elif file is not None:
             if os.path.exists(file) and os.path.isfile(file):
                 file_content : np.ndarray = np.asarray([])
@@ -100,14 +92,11 @@ if __name__ == "__main__":
                   
                 print(f"File Content : {file_content}")
                 print(f"File String : {file_content_string}")
-                # process_sentences(file_content_string)
-                detect_sports(file_content_string)
+                process_sentences(file_content_string)
                 
               
                     
         else:
             print(args)
     else:
-        print("Usage : --text <text à traiter>")
-    spark.stop()
-        
+        print("Usage : --text <text à traiter>")        
