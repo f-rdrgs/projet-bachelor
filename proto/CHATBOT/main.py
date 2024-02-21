@@ -36,6 +36,8 @@ def send_message_to_rasa(message):
 # rasa run actions
 # Pour train
 # rasa train --fixed-model-name my_rasa_model
+# Pour run serveur duckling 
+# docker run -p 8000:8000 rasa/duckling
 if __name__ == "__main__":
     user_input = input("Your input -> ")
     response = send_message_to_rasa(user_input)

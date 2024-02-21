@@ -22,8 +22,23 @@ class ActionReserveResource(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
+        current_time = tracker.get_slot("time")
+        print(f"Current Date in reserve date: {current_time}")
         current_resource = next(tracker.get_latest_entity_values("resource"),None)
         print(current_resource)
+        dispatcher.utter_message(text="Hello World!")
+
+
+        return []
+class ActionReserveDate(Action):
+    def name(self) -> Text:
+        return "action_reserve_date"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        current_time = tracker.get_slot("time")
+        print(f"Current Date in reserve date: {current_time}")
         dispatcher.utter_message(text="Hello World!")
 
         return []

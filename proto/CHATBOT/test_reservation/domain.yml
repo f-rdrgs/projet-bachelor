@@ -9,6 +9,8 @@ intents:
   - mood_unhappy
   - bot_challenge
   - book_resource
+  - book_date
+  - book_resource+book_date
 
 responses:
   utter_greet:
@@ -29,13 +31,24 @@ responses:
 
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
+  utter_date_reservation:
+  - text: "Vous souhaitez réserver pour le {time}"
 
 entities:
 - resource
+- time
 
 actions:
 - action_reserve_resource
+- action_reserve_date
 
+slots:
+  time:
+    type: any
+    mappings:
+        - type: from_entity
+          entity: time
+          
 session_config:
   session_expiration_time: 60
   carry_over_slots_to_new_session: true

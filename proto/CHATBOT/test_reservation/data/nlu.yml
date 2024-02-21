@@ -24,3 +24,15 @@ nlu:
     - Je souhaite réserver un terrain de [badminton](resource)
     - J'aimerais réserver un terrain de [Badminton](resource)
     - Réserve un terrain de [Badminton](resource)
+- intent: book_date
+  examples: |
+    - 29 Juillet 2024
+    - 05/02/2024
+    - 04.11.2025
+    - le 21 Avril 2024
+    - le 12 mars 2024
+- intent: book_resource+book_date
+  examples: |
+    - Je souhaite réserver un terrain de [petanque](resource) pour le 6 Septembre 2025
+    - J'aimerais réserver un terrain de [badminton](resource) le 28 Octobre 2024
+    - Je veux réserver un terrain de [tennis](resource) le 4 Janvier 2024

@@ -7,6 +7,21 @@ stories:
   - intent: book_resource
   - action: action_reserve_resource
 
+- story: reservation 2
+  steps:
+  - intent: book_resource
+  - action: action_reserve_resource
+  - intent: book_date
+  - action: action_reserve_date
+  - action: utter_date_reservation
+
+- story: reservation 3
+  steps:
+  - intent: book_resource+book_date
+  - action: action_reserve_resource
+  - action: action_reserve_date
+  - action: utter_date_reservation
+
 
 - story: happy path
   steps:
