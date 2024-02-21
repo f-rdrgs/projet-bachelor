@@ -81,3 +81,8 @@ Lien vers Google Docs Rapport : [Lien](https://docs.google.com/document/d/14lliZ
 
 ### 10-12.02.24
 - Ajout proto NLP en Java et Python (Java n'a pas été poussé trop loin par manque de modèles pré-entraînés, python en ayant bien plus et permettant ainsi une facilité d'implémentation d'un moteur NLP)
+
+### 20.02.24
+(J'ai du oublier de noter les quelques fois où j'ai bossé mais j'ai principalement réalisé des protypes + recherches)
+- Ajout d'un début de protype de bot avec Rasa qui permet déjà de traiter une phrase comme "Je souhaite réserver un terrain de tennis" et tennis sera reconnu comme resource et une action sera déclenchée en conséquence et un message de retour sera retourné avec les données souhaitées. À développer d'avantage mais semble prometteur car bien que je vais essayer encore un peu avec ça, j'ai eu des soucis à pouvoir récupérer facilement des entités importantes comme les resources ou les dates avec des traitement NLP divers mais je vais encore voir pour creuser cela.
+Je pense très prochainement continuer la rédaction pour ajouter une partie sur NLU comme cela semble prometteur pour la réalisation du bot et surtout commencer à faire la mise en page selon le template donné pour ce rapport de bachelor + réécriture du texte 
