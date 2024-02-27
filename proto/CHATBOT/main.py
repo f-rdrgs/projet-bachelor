@@ -34,8 +34,9 @@ def send_message_to_rasa(message):
 # rasa run --enable-api --port 5005  --cors '*' -m models/my_rasa_model.tar.gz
 # Ensuite lancer le serveur d'actions custom
 # rasa run actions
-# Pour train
 # rasa train --fixed-model-name my_rasa_model
+# model FR à avoir 
+# python3.10 -m spacy download fr_core_news_md 
 # Pour run serveur duckling 
 # docker run -p 8000:8000 rasa/duckling
 if __name__ == "__main__":
