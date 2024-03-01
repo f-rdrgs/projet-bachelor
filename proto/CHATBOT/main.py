@@ -41,6 +41,10 @@ def send_message_to_rasa(message):
 # docker run -p 8000:8000 rasa/duckling
 # Renseigner sur Forms pour créer un patterne de conversation qui nécessite de récupérer une quantité d'informations avant de passer à la suite
 # https://rasa.com/docs/rasa/forms/#defining-a-form 
+
+# Intéressant example fourni dans le rapport de recherche officiel de Rasa
+# https://arxiv.org/pdf/2402.12234.pdf
+# Seulement disponible avec Rasa Pro mais peut-être intéressant à mentionner ?
 if __name__ == "__main__":
     user_input = input("Your input -> ")
     response = send_message_to_rasa(user_input)
