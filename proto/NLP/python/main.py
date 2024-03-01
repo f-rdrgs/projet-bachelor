@@ -45,6 +45,7 @@ def process_sentences(file_content_string: str):
             """
     sports_dictionnary = {"tennis","Tennis"}
     chunk_parser = nl.chunk.RegexpParser(chunk_patterns)
+    string_to_print= ""
     for sent in nl.sent_tokenize(file_content_string,language='french'):
         print("NEXT SENTENCE:\n")
         # Voir si possibilité d'utiliser un NER chunker différent pour détecter des dates, sports etc
@@ -52,7 +53,8 @@ def process_sentences(file_content_string: str):
             type = chunk[1]
             if chunk[0] in sports_dictionnary:
                 type = "SPORT"
-            print(f"Chunk : ({chunk[0]}, {type})")
+            string_to_print += f"({chunk[0]}, {type}) "
+            # print(f"({chunk[0]}, {type})")
             if isinstance(chunk, nl.tree.Tree):
             # Extract words from the chunk
                 words = [word for word, pos in chunk.leaves()]
@@ -60,6 +62,7 @@ def process_sentences(file_content_string: str):
                 phrase = ' '.join(words)
                 # Print the phrase and the chunk label
                 print(f"\tSpecial case({phrase}, {chunk.label()})")
+        print(string_to_print)
 
 
 if __name__ == "__main__":
