@@ -1,0 +1,2595 @@
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:z="http://www.zotero.org/namespaces/export#"
+ xmlns:dcterms="http://purl.org/dc/terms/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:bib="http://purl.org/net/biblio#"
+ xmlns:foaf="http://xmlns.com/foaf/0.1/"
+ xmlns:link="http://purl.org/rss/1.0/modules/link/"
+ xmlns:prism="http://prismstandard.org/namespaces/1.2/basic/">
+    <rdf:Description rdf:about="http://arxiv.org/abs/2004.02349">
+        <z:itemType>conferencePaper</z:itemType>
+        <dcterms:isPartOf>
+            <bib:Journal>
+                <dc:title>Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics</dc:title>
+                <dc:identifier>DOI 10.18653/v1/2020.acl-main.398</dc:identifier>
+            </bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Herzig</foaf:surname>
+                        <foaf:givenName>Jonathan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Nowak</foaf:surname>
+                        <foaf:givenName>Paweł Krzysztof</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Müller</foaf:surname>
+                        <foaf:givenName>Thomas</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Piccinno</foaf:surname>
+                        <foaf:givenName>Francesco</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Eisenschlos</foaf:surname>
+                        <foaf:givenName>Julian Martin</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dcterms:isReferencedBy rdf:resource="#item_102"/>
+        <link:link rdf:resource="#item_100"/>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Computer Science - Artificial Intelligence</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Computer Science - Computation and Language</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Computer Science - Information Retrieval</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Computer Science - Machine Learning</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:title>TAPAS: Weakly Supervised Table Parsing via Pre-training</dc:title>
+        <dcterms:abstract>Answering natural language questions over tables is usually seen as a semantic parsing task. To alleviate the collection cost of full logical forms, one popular approach focuses on weak supervision consisting of denotations instead of logical forms. However, training semantic parsers from weak supervision poses difﬁculties, and in addition, the generated logical forms are only used as an intermediate step prior to retrieving the denotation. In this paper, we present TAPAS, an approach to question answering over tables without generating logical forms. TAPAS trains from weak supervision, and predicts the denotation by selecting table cells and optionally applying a corresponding aggregation operator to such selection. TAPAS extends BERT’s architecture to encode tables as input, initializes from an effective joint pre-training of text segments and tables crawled from Wikipedia, and is trained end-to-end. We experiment with three different semantic parsing datasets, and ﬁnd that TAPAS outperforms or rivals semantic parsing models by improving state-of-the-art accuracy on SQA from 55.1 to 67.2 and performing on par with the state-of-the-art on WIKISQL and WIKITQ, but with a simpler model architecture. We additionally ﬁnd that transfer learning, which is trivial in our setting, from WIKISQL to WIKITQ, yields 48.7 accuracy, 4.2 points above the state-of-the-art.</dcterms:abstract>
+        <dc:date>2020</dc:date>
+        <z:language>en</z:language>
+        <z:shortTitle>TAPAS</z:shortTitle>
+        <z:libraryCatalog>arXiv.org</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>http://arxiv.org/abs/2004.02349</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 14:52:21</dcterms:dateSubmitted>
+        <dc:description>arXiv:2004.02349 [cs]</dc:description>
+        <bib:pages>4320-4333</bib:pages>
+    </rdf:Description>
+    <bib:Memo rdf:about="#item_102">
+       <rdf:value>Comment: Accepted to ACL 2020</rdf:value>
+    </bib:Memo>
+    <z:Attachment rdf:about="#item_100">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/100/Herzig et al. - 2020 - TAPAS Weakly Supervised Table Parsing via Pre-tra.pdf"/>
+        <dc:title>Herzig et al. - 2020 - TAPAS Weakly Supervised Table Parsing via Pre-tra.pdf</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://arxiv.org/pdf/2004.02349v2.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 14:52:17</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://analyticsindiamag.com/guide-to-tapas-table-parsing-a-technique-to-retrieve-information-from-tabular-data-using-nlp/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Analytics India Magazine</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Shiledarbaxi</foaf:surname>
+                        <foaf:givenName>Nikita</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_104"/>
+        <dc:title>Guide To TAPAS (TAble PArSing) - A Technique To Retrieve Information From Tabular Data Using NLP</dc:title>
+        <dcterms:abstract>TAPAS is a BERT model-based approach introduced by Google Research for question answering over tables using natural language.</dcterms:abstract>
+        <dc:date>2021-02-13T04:30:00+00:00</dc:date>
+        <z:language>en-US</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://analyticsindiamag.com/guide-to-tapas-table-parsing-a-technique-to-retrieve-information-from-tabular-data-using-nlp/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 14:54:51</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_104">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/104/guide-to-tapas-table-parsing-a-technique-to-retrieve-information-from-tabular-data-using-nlp.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://analyticsindiamag.com/guide-to-tapas-table-parsing-a-technique-to-retrieve-information-from-tabular-data-using-nlp/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 14:54:56</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://huggingface.co/docs/transformers/model_doc/tapas">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_106"/>
+        <dc:title>TAPAS</dc:title>
+        <dcterms:abstract>We’re on a journey to advance and democratize artificial intelligence through open source and open science.</dcterms:abstract>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://huggingface.co/docs/transformers/model_doc/tapas</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 14:55:22</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_106">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/106/tapas.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://huggingface.co/docs/transformers/model_doc/tapas</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 14:55:32</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://medium.com/dataseries/google-tapas-is-a-bert-based-model-to-query-tabular-data-using-natural-language-2435a386b43f">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>DataSeries</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Rodriguez</foaf:surname>
+                        <foaf:givenName>Jesus</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_108"/>
+        <dc:title>Google TAPAS is a BERT-Based Model to Query Tabular Data Using Natural Language</dc:title>
+        <dcterms:abstract>The new neural network extends BERT to interact with tabular datasets.</dcterms:abstract>
+        <dc:date>2020-09-07T15:06:38.699Z</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://medium.com/dataseries/google-tapas-is-a-bert-based-model-to-query-tabular-data-using-natural-language-2435a386b43f</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 14:57:44</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_108">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/108/google-tapas-is-a-bert-based-model-to-query-tabular-data-using-natural-language-2435a386b43f.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://medium.com/dataseries/google-tapas-is-a-bert-based-model-to-query-tabular-data-using-natural-language-2435a386b43f</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 14:57:50</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.analyticsvidhya.com/blog/2019/09/demystifying-bert-groundbreaking-nlp-framework/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_111"/>
+        <dc:title>What is BERT | BERT For Text Classification</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2019/09/demystifying-bert-groundbreaking-nlp-framework/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:00:38</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_111">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/111/demystifying-bert-groundbreaking-nlp-framework.html"/>
+        <dc:title>What is BERT | BERT For Text Classification</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2019/09/demystifying-bert-groundbreaking-nlp-framework/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:00:50</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.techtarget.com/searchenterpriseai/definition/BERT-language-model">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Enterprise AI</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_112"/>
+        <dc:title>What is BERT (Language Model) and How Does It Work?</dc:title>
+        <dcterms:abstract>Learn about the BERT language model, an open source machine learning framework introduced by Google in 2018 that is revolutionizing the field of natural language (NLP) processing.</dcterms:abstract>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.techtarget.com/searchenterpriseai/definition/BERT-language-model</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:00:47</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_112">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/112/BERT-language-model.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.techtarget.com/searchenterpriseai/definition/BERT-language-model</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:00:51</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.analyticssteps.com/blogs/what-topic-modelling-nlp">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Dutta</foaf:surname>
+                        <foaf:givenName>Bhumika</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_114"/>
+        <dc:title>What is Topic Modelling in NLP? | Analytics Steps</dc:title>
+        <dcterms:abstract>A topic model is one that automatically detects subjects in a batch of texts. In this post, you will learn about topic modeling and related methodologies.</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:shortTitle>What is Topic Modelling in NLP?</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticssteps.com/blogs/what-topic-modelling-nlp</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:07:15</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_114">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/114/what-topic-modelling-nlp.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticssteps.com/blogs/what-topic-modelling-nlp</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:07:21</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.engati.com/glossary/lemmatization">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Engati</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_117"/>
+        <dc:title>Lemmatization</dc:title>
+        <dcterms:abstract>Lemmatization in NLP is a text normalization technique used to group the inflected forms of a word so they can be analyzed as a single item.</dcterms:abstract>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.engati.com/glossary/lemmatization</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:12:18</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_117">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/117/lemmatization.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.engati.com/glossary/lemmatization</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:12:26</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.engati.com/glossary/stemming">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Engati</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_118"/>
+        <dc:title>Stemming</dc:title>
+        <dcterms:abstract>Stemming is a text normalization technique used in NLP that reduces a word to its stem that affixes to suffixes and prefixes or the roots.</dcterms:abstract>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.engati.com/glossary/stemming</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:12:22</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_118">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/118/stemming.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.engati.com/glossary/stemming</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:12:27</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.ovationcxm.com/blog/3-kinds-chatbots-youll-meet">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <dc:title>The 3 Kinds of Chatbots You'll Meet | OvationCXM</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.ovationcxm.com/blog/3-kinds-chatbots-youll-meet</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:12:59</dcterms:dateSubmitted>
+    </bib:Document>
+    <bib:Document rdf:about="https://www.ibm.com/blog/chatbot-types/www.ibm.com/blog/chatbot-types">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>IBM Blog</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Church</foaf:surname>
+                        <foaf:givenName>Bella</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_121"/>
+        <dc:title>5 types of chatbot and how to choose the right one</dc:title>
+        <dcterms:abstract>Chatbots are playing an increasingly prevalent role in our lives. Here are five types of chatbot and how to pick the best one for your business.</dcterms:abstract>
+        <dc:date>2023-09-05T12:00:00+00:00</dc:date>
+        <z:language>en-US</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.ibm.com/blog/chatbot-types/www.ibm.com/blog/chatbot-types</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:13:18</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_121">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/121/chatbot-types.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.ibm.com/blog/chatbot-types/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:13:24</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.theguardian.com/technology/ng-interactive/2023/nov/01/how-ai-chatbots-like-chatgpt-or-bard-work-visual-explainer">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <dc:title>How AI chatbots like ChatGPT or Bard work – visual explainer | Technology | The Guardian</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.theguardian.com/technology/ng-interactive/2023/nov/01/how-ai-chatbots-like-chatgpt-or-bard-work-visual-explainer</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:15:11</dcterms:dateSubmitted>
+    </bib:Document>
+    <bib:Document rdf:about="https://github.com/kothiyayogesh/RasaRestaurantBot/blob/master/README.md">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>GitHub</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <dc:title>RasaRestaurantBot/README.md at master · kothiyayogesh/RasaRestaurantBot</dc:title>
+        <dcterms:abstract>Contribute to kothiyayogesh/RasaRestaurantBot development by creating an account on GitHub.</dcterms:abstract>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://github.com/kothiyayogesh/RasaRestaurantBot/blob/master/README.md</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:15:58</dcterms:dateSubmitted>
+    </bib:Document>
+    <bib:Data rdf:about="https://github.com/kothiyayogesh/RasaRestaurantBot">
+        <z:itemType>computerProgram</z:itemType>
+        <z:programmers>
+            <rdf:Seq>
+                <rdf:li>
+                   <foaf:Person><foaf:surname>Yog</foaf:surname></foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </z:programmers>
+        <dc:title>kothiyayogesh/RasaRestaurantBot</dc:title>
+        <dc:date>2021-09-14T12:05:10Z</dc:date>
+        <z:libraryCatalog>GitHub</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://github.com/kothiyayogesh/RasaRestaurantBot</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:16:04</dcterms:dateSubmitted>
+        <dc:description>original-date: 2020-09-14T08:38:18Z</dc:description>
+        <z:programmingLanguage>Python</z:programmingLanguage>
+    </bib:Data>
+    <bib:Document rdf:about="https://www.analyticsvidhya.com/blog/2023/05/chatbot-evolution-chatgpt-vs-rule-based/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <dc:title>Chatbot Evolution: ChatGPT Vs. Rule-based - Analytics Vidhya</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2023/05/chatbot-evolution-chatgpt-vs-rule-based/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:16:16</dcterms:dateSubmitted>
+    </bib:Document>
+    <bib:Document rdf:about="https://www.analyticsvidhya.com/blog/2022/01/nlp-tutorials-part-i-from-basics-to-advance/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>Analytics Vidhya</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Jaiswal</foaf:surname>
+                        <foaf:givenName>Abhishek</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_127"/>
+        <dc:title>NLP Tutorials Part -I from Basics to Advance</dc:title>
+        <dcterms:abstract>In this article, we will learn about the NLP tutorials techniques for textual data preprocessing and learn how to process word cloud.</dcterms:abstract>
+        <dc:date>2022-01-13T12:44:21+00:00</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2022/01/nlp-tutorials-part-i-from-basics-to-advance/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:16:26</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_127">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/127/nlp-tutorials-part-i-from-basics-to-advance.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2022/01/nlp-tutorials-part-i-from-basics-to-advance/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:16:33</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://monkeylearn.com/natural-language-processing/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>MonkeyLearn</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_129"/>
+        <dc:title>Natural Language Processing (NLP): What Is It &amp; How Does it Work?</dc:title>
+        <dcterms:abstract>Natural Language Processing (NLP) is a subfield of artificial intelligence. Learn how NLP enables  machines to read, interpret, and understand the human language.</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:shortTitle>Natural Language Processing (NLP)</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://monkeylearn.com/natural-language-processing/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:19:56</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_129">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/129/natural-language-processing.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://monkeylearn.com/natural-language-processing/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:20:03</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.hubtype.com/blog/rule-based-chatbots-vs-ai-chatbots">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Hubtype</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Alburger</foaf:surname>
+                        <foaf:givenName>Jenna</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_131"/>
+        <dc:title>Rule-Based Chatbots vs. AI Chatbots: Key Differences</dc:title>
+        <dcterms:abstract>While AI chatbots are more advanced, they're not always necessary. For companies with specific goals, rule-based chatbots are a great solution.</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:shortTitle>Rule-Based Chatbots vs. AI Chatbots</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.hubtype.com/blog/rule-based-chatbots-vs-ai-chatbots</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:20:05</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_131">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/131/rule-based-chatbots-vs-ai-chatbots.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.hubtype.com/blog/rule-based-chatbots-vs-ai-chatbots</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:20:11</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Recording rdf:about="https://www.youtube.com/watch?v=lZjUS_8btEo">
+        <z:itemType>videoRecording</z:itemType>
+        <z:directors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                       <foaf:surname>IBM Technology</foaf:surname>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </z:directors>
+        <dc:title>Generative vs Rules-Based Chatbots</dc:title>
+        <dcterms:abstract>Learn about watsonx → https://www.ibm.com/watsonx
+
+Generative AI chatbots like chatGPT are getting a lot of attention these days. Does this mean that rules-based chatbots are obsolete? Martin Keen explains that it's another case of &quot;it depends&quot;, then he outlines scenarios where each solution makes more sense and/or is more cost effective.
+
+Get started for free on IBM Cloud → https://ibm.biz/sign-up-now
+Subscribe to see more videos like this in the future → http://ibm.biz/subscribe-now
+
+#ai #chatbot</dcterms:abstract>
+        <dc:date>2023-06-05</dc:date>
+        <z:libraryCatalog>YouTube</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.youtube.com/watch?v=lZjUS_8btEo</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:20:18</dcterms:dateSubmitted>
+        <z:runningTime>7:24</z:runningTime>
+    </bib:Recording>
+    <bib:Document rdf:about="https://www.claysys.com/blog/types-of-chatbots/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>ClaySys Technologies</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kakodkar</foaf:surname>
+                        <foaf:givenName>Saish</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_134"/>
+        <dc:title>Different Types of Chatbots</dc:title>
+        <dcterms:abstract>Let’s take a look at the different types of chatbots and learn how to select the right one for your business.</dcterms:abstract>
+        <dc:date>2022-10-31T09:05:40+00:00</dc:date>
+        <z:language>en-US</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.claysys.com/blog/types-of-chatbots/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:20:49</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_134">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/134/types-of-chatbots.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.claysys.com/blog/types-of-chatbots/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:20:58</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="#item_135">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>Analytics Vidhya</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Sanad</foaf:surname>
+                        <foaf:givenName>Mohdsanadzakirizvi@gmail com</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>Demystifying BERT: A Comprehensive Guide to the Groundbreaking NLP Framework</dc:title>
+        <dcterms:abstract>BERT is the powerful and game-changing NLP framework from Google. In this article learn what is BERT and use of BERT for text classification in python.</dcterms:abstract>
+        <dc:date>2019-09-25T03:40:34+00:00</dc:date>
+        <z:language>en</z:language>
+        <z:shortTitle>Demystifying BERT</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2019/09/demystifying-bert-groundbreaking-nlp-framework/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:22:36</dcterms:dateSubmitted>
+    </bib:Document>
+    <bib:Document rdf:about="https://towardsdatascience.com/text-pre-processing-stop-words-removal-using-different-libraries-f20bac19929a">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Medium</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Khanna</foaf:surname>
+                        <foaf:givenName>Chetna</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_137"/>
+        <dc:title>Text pre-processing: Stop words removal using different libraries</dc:title>
+        <dcterms:abstract>A handy guide about English stop words removal in Python!</dcterms:abstract>
+        <dc:date>2021-02-10T13:27:39.079Z</dc:date>
+        <z:language>en</z:language>
+        <z:shortTitle>Text pre-processing</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://towardsdatascience.com/text-pre-processing-stop-words-removal-using-different-libraries-f20bac19929a</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:22:54</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_137">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/137/text-pre-processing-stop-words-removal-using-different-libraries-f20bac19929a.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://towardsdatascience.com/text-pre-processing-stop-words-removal-using-different-libraries-f20bac19929a</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:01</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.geeksforgeeks.org/natural-language-processing-nlp-tutorial/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>GeeksforGeeks</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_139"/>
+        <dc:title>Natural Language Processing (NLP) Tutorial</dc:title>
+        <dcterms:abstract>A Computer Science portal for geeks. It contains well written, well thought and well explained computer science and programming articles, quizzes and practice/competitive programming/company interview Questions.</dcterms:abstract>
+        <dc:date>2023-03-02T16:28:55+00:00</dc:date>
+        <z:language>en-US</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.geeksforgeeks.org/natural-language-processing-nlp-tutorial/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:01</dcterms:dateSubmitted>
+        <dc:description>Section: Data Science</dc:description>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_139">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/139/natural-language-processing-nlp-tutorial.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.geeksforgeeks.org/natural-language-processing-nlp-tutorial/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:08</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.inbenta.com/articles/what-makes-a-chatbot-conversational/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Inbenta</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Ayer</foaf:surname>
+                        <foaf:givenName>Benjamin</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_141"/>
+        <dc:title>What Makes a Chatbot Conversational?</dc:title>
+        <dcterms:abstract>Chatbots have become extraordinarily popular in recent years largely due to technological advances, but not all of them are created equals. From basic button-based bots to NLP-driven conversational chatbots, what differentiate them and most importantly, how can you design a qualitative conversational bot, that’s what we’ll see in this article.</dcterms:abstract>
+        <dc:date>2020-03-20T19:53:00+00:00</dc:date>
+        <z:language>en-US</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.inbenta.com/articles/what-makes-a-chatbot-conversational/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:12</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_141">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/141/what-makes-a-chatbot-conversational.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.inbenta.com/articles/what-makes-a-chatbot-conversational/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:22</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.docomatic.ai/blog/chatbots/menu-based-chatbot/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog></z:Blog>
+        </dcterms:isPartOf>
+        <dc:title>How Menu-Based Chatbots Can Streamline Your Business Processes</dc:title>
+        <dcterms:abstract>Discover how menu-based chatbots can streamline your business processes, simplify workflows, and boost productivity. Read our comprehensive guide now.</dcterms:abstract>
+        <dc:date>2023-02-21T12:38:42+00:00</dc:date>
+        <z:language>en-US</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.docomatic.ai/blog/chatbots/menu-based-chatbot/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:22</dcterms:dateSubmitted>
+        <dc:description>Section: Chatbots</dc:description>
+    </bib:Document>
+    <bib:Document rdf:about="https://botpress.com/blog/nlp-chatbot">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_144"/>
+        <dc:title>Difference between a bot, a chatbot, a NLP chatbot and all the rest? | Botpress Blog</dc:title>
+        <dcterms:abstract>In this article, we dive into details about what an NLP chatbot is, how it works as well as why businesses should leverage AI to gain a competitive advantage.</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:shortTitle>Difference between a bot, a chatbot, a NLP chatbot and all the rest?</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://botpress.com/blog/nlp-chatbot</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:29</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_144">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/144/nlp-chatbot.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://botpress.com/blog/nlp-chatbot</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:35</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.analyticsvidhya.com/blog/2021/11/a-beginners-introduction-to-ner-named-entity-recognition/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_147"/>
+        <dc:title>A Beginner's Introduction to NER (Named Entity Recognition)</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2021/11/a-beginners-introduction-to-ner-named-entity-recognition/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:35</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_147">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/147/a-beginners-introduction-to-ner-named-entity-recognition.html"/>
+        <dc:title>A Beginner's Introduction to NER (Named Entity Recognition)</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2021/11/a-beginners-introduction-to-ner-named-entity-recognition/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:43</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.datacamp.com/blog/what-is-named-entity-recognition-ner">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_148"/>
+        <dc:title>What is Named Entity Recognition (NER)? Methods, Use Cases, and Challenges</dc:title>
+        <dcterms:abstract>Explore the intricacies of Named Entity Recognition (NER), a key component in Natural Language Processing (NLP)</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:shortTitle>What is Named Entity Recognition (NER)?</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.datacamp.com/blog/what-is-named-entity-recognition-ner</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:42</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_148">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/148/what-is-named-entity-recognition-ner.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.datacamp.com/blog/what-is-named-entity-recognition-ner</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:47</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.geeksforgeeks.org/named-entity-recognition/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>GeeksforGeeks</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_150"/>
+        <dc:title>Named Entity Recognition</dc:title>
+        <dcterms:abstract>A Computer Science portal for geeks. It contains well written, well thought and well explained computer science and programming articles, quizzes and practice/competitive programming/company interview Questions.</dcterms:abstract>
+        <dc:date>2021-05-27T13:01:25+00:00</dc:date>
+        <z:language>en-US</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.geeksforgeeks.org/named-entity-recognition/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:48</dcterms:dateSubmitted>
+        <dc:description>Section: Machine Learning</dc:description>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_150">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/150/named-entity-recognition.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.geeksforgeeks.org/named-entity-recognition/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:55</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://capacity.com/learn/ai-chatbots/how-does-an-ai-chatbot-work/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>Capacity</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Capacity</foaf:surname>
+                        <foaf:givenName>Team</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_152"/>
+        <dc:title>How does an AI chatbot work, and what does it mean for the future?</dc:title>
+        <dcterms:abstract>Learn how an AI chatbot works with this beginners guide. See how AI and automation are shaping the future of businesses.</dcterms:abstract>
+        <z:language>en-US</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://capacity.com/learn/ai-chatbots/how-does-an-ai-chatbot-work/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:23:55</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_152">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/152/how-does-an-ai-chatbot-work.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://capacity.com/learn/ai-chatbots/how-does-an-ai-chatbot-work/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:24:03</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://realpython.com/nltk-nlp-python/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Python</foaf:surname>
+                        <foaf:givenName>Real</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_154"/>
+        <dc:title>Natural Language Processing With Python's NLTK Package – Real Python</dc:title>
+        <dcterms:abstract>In this beginner-friendly tutorial, you'll take your first steps with Natural Language Processing (NLP) and Python's Natural Language Toolkit (NLTK). You'll learn how to process unstructured data in order to be able to analyze it and draw conclusions from it.</dcterms:abstract>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://realpython.com/nltk-nlp-python/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:24:29</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_154">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/154/nltk-nlp-python.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://realpython.com/nltk-nlp-python/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:24:37</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://blog.research.google/2020/04/using-neural-networks-to-find-answers.html">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_156"/>
+        <dc:title>Using Neural Networks to Find Answers in Tables</dc:title>
+        <dc:date>2020-04-30</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://blog.research.google/2020/04/using-neural-networks-to-find-answers.html</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:24:39</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_156">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/156/using-neural-networks-to-find-answers.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://blog.research.google/2020/04/using-neural-networks-to-find-answers.html</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:24:46</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.analyticsvidhya.com/blog/2021/07/nltk-a-beginners-hands-on-guide-to-natural-language-processing/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_159"/>
+        <dc:title>NLTK: A Beginners Hands-on Guide to Natural Language Processing</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2021/07/nltk-a-beginners-hands-on-guide-to-natural-language-processing/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:24:50</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_159">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/159/nltk-a-beginners-hands-on-guide-to-natural-language-processing.html"/>
+        <dc:title>NLTK: A Beginners Hands-on Guide to Natural Language Processing</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2021/07/nltk-a-beginners-hands-on-guide-to-natural-language-processing/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:25:02</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.shiksha.com/online-courses/articles/pos-tagging-in-nlp/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_162"/>
+        <dc:title>Understanding Part-of-Speech Tagging in NLP: Techniques and Applications - Shiksha Online</dc:title>
+        <dcterms:abstract>Part-of-speech (POS) tagging is the process of labeling words in a text with their corresponding parts of speech. It is an important step in natural language processing (NLP) that helps algorithms understand the grammatical structure and meaning of a text. There are several methods of POS tagging, including rule-based, statistical, transformation-based, and hidden Markov model (HMM) tagging.</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:shortTitle>Understanding Part-of-Speech Tagging in NLP</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.shiksha.com/online-courses/articles/pos-tagging-in-nlp/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:25:15</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_162">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/162/pos-tagging-in-nlp.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.shiksha.com/online-courses/articles/pos-tagging-in-nlp/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:25:21</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Data rdf:about="https://github.com/huggingface/transformers">
+        <z:itemType>computerProgram</z:itemType>
+        <z:programmers>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>contributors (https://github.com/huggingface/transformers/graphs/contributors)</foaf:surname>
+                        <foaf:givenName>The Hugging Face team (past and future) with the help of all our</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </z:programmers>
+        <link:link rdf:resource="#item_164"/>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>BERT,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>deep,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>GPT-2,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>jax,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>learning,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>NLP,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>pytorch,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+                <rdf:value>Scientific/Engineering - Artificial Intelligence</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>speech,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>tensorflow,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>transformer,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>vision,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>ViT</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>Wav2Vec2,</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <prism:edition>4.36.2</prism:edition>
+        <dc:title>transformers: State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow</dc:title>
+        <z:shortTitle>transformers</z:shortTitle>
+        <z:libraryCatalog>PyPI</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://github.com/huggingface/transformers</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:25:57</dcterms:dateSubmitted>
+        <dc:rights>Apache Software License</dc:rights>
+        <z:system>OS Independent</z:system>
+        <z:programmingLanguage>Python</z:programmingLanguage>
+    </bib:Data>
+    <z:Attachment rdf:about="#item_164">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/164/transformers.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://pypi.org/project/transformers/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:26:04</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://medium.com/john-snow-labs/tapas-question-answering-from-tables-1796a7b90f49">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>John Snow Labs</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Pirge</foaf:surname>
+                        <foaf:givenName>Gursev</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_166"/>
+        <dc:title>TAPAS — Question Answering from Tables</dc:title>
+        <dcterms:abstract>State-of-the-art performance for table-based question answering tasks</dcterms:abstract>
+        <dc:date>2023-05-02T10:47:47.801Z</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://medium.com/john-snow-labs/tapas-question-answering-from-tables-1796a7b90f49</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:26:36</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_166">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/166/tapas-question-answering-from-tables-1796a7b90f49.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://medium.com/john-snow-labs/tapas-question-answering-from-tables-1796a7b90f49</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:26:43</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.analyticsvidhya.com/blog/2023/06/step-by-step-bert-implementation-guide/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>Analytics Vidhya</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kumari</foaf:surname>
+                        <foaf:givenName>Kajal</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_168"/>
+        <dc:title>Building Language Models: A Step-by-Step BERT Implementation Guide</dc:title>
+        <dcterms:abstract>Learn about BERT, the powerful language model architecture, and how to implement it for NLP tasks like text classification, etc. Try it today!</dcterms:abstract>
+        <dc:date>2023-06-29T14:30:00+00:00</dc:date>
+        <z:language>en</z:language>
+        <z:shortTitle>Building Language Models</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2023/06/step-by-step-bert-implementation-guide/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:26:44</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_168">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/168/step-by-step-bert-implementation-guide.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2023/06/step-by-step-bert-implementation-guide/#h-why-do-we-need-bert</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:26:53</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://monkeylearn.com/blog/what-is-natural-language-processing/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>MonkeyLearn Blog</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_170"/>
+        <dc:title>What Is Natural Language Processing</dc:title>
+        <dcterms:abstract>Natural Language Processing (NLP) helps machines understand, process, and analyze the human language. Learn how NLP works and what it's used for.</dcterms:abstract>
+        <dc:date>2020-02-26T18:12:49.000Z</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://monkeylearn.com/blog/what-is-natural-language-processing/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:26:55</dcterms:dateSubmitted>
+        <dc:description>Section: Natural Language Processing</dc:description>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_170">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/170/what-is-natural-language-processing.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://monkeylearn.com/blog/what-is-natural-language-processing/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:26:59</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.johnsnowlabs.com/tapas-question-answering-from-tables-in-spark-nlp/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>John Snow Labs</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Pirge</foaf:surname>
+                        <foaf:givenName>Gursev</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_172"/>
+        <dc:title>TAPAS — Question Answering from Tables in Spark NLP</dc:title>
+        <dcterms:abstract>If you are interested in the state-of-the-art AI solutions, get more in the article TAPAS — Question Answering from Tables in Spark NLP</dcterms:abstract>
+        <dc:date>2023-04-26T14:00:39+00:00</dc:date>
+        <z:language>en-US</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.johnsnowlabs.com/tapas-question-answering-from-tables-in-spark-nlp/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:27:06</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_172">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/172/tapas-question-answering-from-tables-in-spark-nlp.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.johnsnowlabs.com/tapas-question-answering-from-tables-in-spark-nlp/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:27:13</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.analyticsvidhya.com/blog/2021/06/nlp-sentiment-analysis/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>Analytics Vidhya</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Raj</foaf:surname>
+                        <foaf:givenName>Nikhil</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_174"/>
+        <dc:title>Starters Guide to Sentiment Analysis using Natural Language Processing</dc:title>
+        <dcterms:abstract>Gain valuable insights into sentiment analysis in NLP and enhance your understanding of this powerful tool. Explore now and level up your NLP skills!&quot;</dcterms:abstract>
+        <dc:date>2021-06-15T13:04:40+00:00</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2021/06/nlp-sentiment-analysis/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:27:18</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_174">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/174/nlp-sentiment-analysis.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2021/06/nlp-sentiment-analysis/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-04 15:27:25</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Recording rdf:about="https://www.youtube.com/watch?v=cIUtRNhY6Rw">
+        <z:itemType>videoRecording</z:itemType>
+        <z:directors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                       <foaf:surname>Yannic Kilcher</foaf:surname>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </z:directors>
+        <dc:title>TAPAS: Weakly Supervised Table Parsing via Pre-training (Paper Explained)</dc:title>
+        <dcterms:abstract>Answering complex questions about tabular information is hard. No two tables are alike and sometimes the answer you're looking for is not even in the table and needs to be computed from a subset of the cells. Surprisingly, this model can figure it all out by itself through some clever input encoding and loss engineering.
+
+Paper: https://arxiv.org/abs/2004.02349
+Code: https://github.com/google-research/tapas
+
+Abstract:
+Answering natural language questions over tables is usually seen as a semantic parsing task. To alleviate the collection cost of full logical forms, one popular approach focuses on weak supervision consisting of denotations instead of logical forms. However, training semantic parsers from weak supervision poses difficulties, and in addition, the generated logical forms are only used as an intermediate step prior to retrieving the denotation. In this paper, we present TAPAS, an approach to question answering over tables without generating logical forms. TAPAS trains from weak supervision, and predicts the denotation by selecting table cells and optionally applying a corresponding aggregation operator to such selection. TAPAS extends BERT's architecture to encode tables as input, initializes from an effective joint pre-training of text segments and tables crawled from Wikipedia, and is trained end-to-end. We experiment with three different semantic parsing datasets, and find that TAPAS outperforms or rivals semantic parsing models by improving state-of-the-art accuracy on SQA from 55.1 to 67.2 and performing on par with the state-of-the-art on WIKISQL and WIKITQ, but with a simpler model architecture. We additionally find that transfer learning, which is trivial in our setting, from WIKISQL to WIKITQ, yields 48.7 accuracy, 4.2 points above the state-of-the-art.
+
+Authors: Jonathan Herzig, Paweł Krzysztof Nowak, Thomas Müller, Francesco Piccinno, Julian Martin Eisenschlos
+
+Links:
+YouTube:    / yannickilcher  
+Twitter:   / ykilcher  
+BitChute: https://www.bitchute.com/channel/yann...
+Minds: https://www.minds.com/ykilcher</dcterms:abstract>
+        <dc:date>2020-05-05</dc:date>
+        <z:shortTitle>TAPAS</z:shortTitle>
+        <z:libraryCatalog>YouTube</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.youtube.com/watch?v=cIUtRNhY6Rw</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-01-06 14:51:49</dcterms:dateSubmitted>
+        <z:runningTime>31:47</z:runningTime>
+    </bib:Recording>
+    <bib:Document rdf:about="https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>MachineLearningMastery.com</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Saeed</foaf:surname>
+                        <foaf:givenName>Mehreen</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_177"/>
+        <dc:title>A Gentle Introduction to Positional Encoding in Transformer Models, Part 1</dc:title>
+        <dcterms:abstract>Introduction to how position information is encoded in transformers and how to write your own positional encoder in Python.</dcterms:abstract>
+        <dc:date>2022-09-19T15:37:17+00:00</dc:date>
+        <z:language>en-US</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-06 16:58:38</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_177">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/177/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-06 16:58:45</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://nlp.stanford.edu/software/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_179"/>
+        <dc:title>Software - The Stanford Natural Language Processing Group</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://nlp.stanford.edu/software/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-08 17:18:41</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_179">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/179/software.html"/>
+        <dc:title>Software - The Stanford Natural Language Processing Group</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://nlp.stanford.edu/software/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-08 17:18:48</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://opennlp.apache.org/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_181"/>
+        <dc:title>Apache OpenNLP</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://opennlp.apache.org/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-08 17:19:28</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_181">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/181/opennlp.apache.org.html"/>
+        <dc:title>Apache OpenNLP</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://opennlp.apache.org/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-08 17:19:29</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <rdf:Description rdf:about="http://arxiv.org/abs/2301.05220">
+        <z:itemType>preprint</z:itemType>
+        <dc:publisher>
+           <foaf:Organization><foaf:name>arXiv</foaf:name></foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Choudhry</foaf:surname>
+                        <foaf:givenName>Arjun</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Khatri</foaf:surname>
+                        <foaf:givenName>Inder</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Gupta</foaf:surname>
+                        <foaf:givenName>Pankaj</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Gupta</foaf:surname>
+                        <foaf:givenName>Aaryan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Nicol</foaf:surname>
+                        <foaf:givenName>Maxime</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Meurs</foaf:surname>
+                        <foaf:givenName>Marie-Jean</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Vishwakarma</foaf:surname>
+                        <foaf:givenName>Dinesh Kumar</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dcterms:isReferencedBy rdf:resource="#item_186"/>
+        <link:link rdf:resource="#item_184"/>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Computer Science - Artificial Intelligence</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Computer Science - Computation and Language</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Computer Science - Machine Learning</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:title>Adversarial Adaptation for French Named Entity Recognition</dc:title>
+        <dcterms:abstract>Named Entity Recognition (NER) is the task of identifying and classifying named entities in largescale texts into predeﬁned classes. NER in French and other relatively limited-resource languages cannot always beneﬁt from approaches proposed for languages like English due to a dearth of large, robust datasets. In this paper, we present our work that aims to mitigate the effects of this dearth of large, labeled datasets. We propose a Transformer-based NER approach for French, using adversarial adaptation to similar domain or general corpora to improve feature extraction and enable better generalization. Our approach allows learning better features using large-scale unlabeled corpora from the same domain or mixed domains to introduce more variations during training and reduce overﬁtting. Experimental results on three labeled datasets show that our adaptation framework outperforms the corresponding non-adaptive models for various combinations of Transformer models, source datasets, and target corpora. We also show that adversarial adaptation to large-scale unlabeled corpora can help mitigate the performance dip incurred on using Transformer models pre-trained on smaller corpora.</dcterms:abstract>
+        <dc:date>2023-01-12</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>arXiv.org</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>http://arxiv.org/abs/2301.05220</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-11 20:38:26</dcterms:dateSubmitted>
+        <dc:description>arXiv:2301.05220 [cs]</dc:description>
+        <prism:number>arXiv:2301.05220</prism:number>
+    </rdf:Description>
+    <bib:Memo rdf:about="#item_186">
+        <rdf:value>Comment: Preprint version of short paper accepted for the ECIR 2023 conference</rdf:value>
+    </bib:Memo>
+    <z:Attachment rdf:about="#item_184">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/184/Choudhry et al. - 2023 - Adversarial Adaptation for French Named Entity Rec.pdf"/>
+        <dc:title>Choudhry et al. - 2023 - Adversarial Adaptation for French Named Entity Rec.pdf</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://arxiv.org/pdf/2301.05220.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-11 20:38:21</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://nlp.stanford.edu/software/tagger.shtml">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <dc:title>The Stanford Natural Language Processing Group</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://nlp.stanford.edu/software/tagger.shtml</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-11 20:39:06</dcterms:dateSubmitted>
+    </bib:Document>
+    <bib:Document rdf:about="https://www.analyticsvidhya.com/blog/2021/07/getting-started-with-nlp-using-nltk-library/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>Analytics Vidhya</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Reddy</foaf:surname>
+                        <foaf:givenName>Ajay Vardhan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>Getting started with NLP using NLTK Library</dc:title>
+        <dcterms:abstract>NLTK is a standard python library that provides a set of diverse algorithms for NLP. Let's perform NLP tasks using NLTK library</dcterms:abstract>
+        <dc:date>2021-07-30T11:45:03+00:00</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.analyticsvidhya.com/blog/2021/07/getting-started-with-nlp-using-nltk-library/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-11 20:45:11</dcterms:dateSubmitted>
+    </bib:Document>
+    <bib:Document rdf:about="https://www.nltk.org/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <dc:title>NLTK :: Natural Language Toolkit</dc:title>
+        <dc:identifier>
+           <dcterms:URI><rdf:value>https://www.nltk.org/</rdf:value></dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-11 20:45:29</dcterms:dateSubmitted>
+    </bib:Document>
+    <bib:Document rdf:about="https://nanonets.com/blog/named-entity-recognition-with-nltk-and-spacy/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+            <z:Website>
+                <dc:title>Nanonets Intelligent Automation, and Business Process AI Blog</dc:title>
+            </z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_192"/>
+        <dc:title>A complete Guide to Named Entity Recognition (NER) in 2024</dc:title>
+        <dcterms:abstract>Explore Named Entity Recognition (NER), learn how to build/train NER models, &amp; perform NER using NLTK and Spacy. Dive into a business example showcasing NER applications.</dcterms:abstract>
+        <dc:date>2022-01-08T06:41:00.000Z</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://nanonets.com/blog/named-entity-recognition-with-nltk-and-spacy/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-12 19:24:40</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_192">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/192/named-entity-recognition-with-nltk-and-spacy.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://nanonets.com/blog/named-entity-recognition-with-nltk-and-spacy/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-12 19:24:45</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://rasa.com/docs/rasa/command-line-interface/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <dc:title>Command Line Interface</dc:title>
+        <dcterms:abstract>Command line interface for open source chatbot framework Rasa. Learn how to train, test and run your machine learning-based conversational AI assistants</dcterms:abstract>
+        <dc:date>2024-02-20</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://rasa.com/docs/rasa/command-line-interface/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-21 00:02:05</dcterms:dateSubmitted>
+    </bib:Document>
+    <bib:Document rdf:about="https://rasa.com/docs/rasa/pages/http-api/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_195"/>
+        <dc:title>Rasa Documentation</dc:title>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://rasa.com/docs/rasa/pages/http-api/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-21 00:02:21</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_195">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/195/http-api.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://rasa.com/docs/rasa/pages/http-api/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-21 00:02:30</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://rasa.com/docs/rasa/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_197"/>
+        <dc:title>Introduction to Rasa Open Source &amp; Rasa Pro</dc:title>
+        <dcterms:abstract>Learn more about open-source natural language processing library Rasa for conversation handling, intent classification and entity extraction in on premise chatbots.</dcterms:abstract>
+        <dc:date>2024-02-20</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://rasa.com/docs/rasa/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-21 00:02:46</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_197">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/197/rasa.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://rasa.com/docs/rasa/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-21 00:02:51</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://spacy.io/usage/models">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Models &amp; Languages</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_199"/>
+        <dc:title>Models &amp; Languages · spaCy Usage Documentation</dc:title>
+        <dcterms:abstract>spaCy is a free open-source library for Natural Language Processing in Python. It features NER, POS tagging, dependency parsing, word vectors and more.</dcterms:abstract>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://spacy.io/usage/models</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-21 00:03:06</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_199">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/199/models.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://spacy.io/usage/models</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-21 00:03:12</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Recording rdf:about="https://www.youtube.com/watch?v=VcbfcsjBBIg">
+        <z:itemType>videoRecording</z:itemType>
+        <z:directors>
+            <rdf:Seq>
+                <rdf:li>
+                   <foaf:Person><foaf:surname>Rasa</foaf:surname></foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </z:directors>
+        <dc:title>Conversational AI with Rasa: Custom Actions</dc:title>
+        <dcterms:abstract>In this episode of Conversational AI with Rasa, Vincent Warmerdam will go over custom actions: how to use your chatbot to execute your own Python code.
+
+The code used in this video can be found here:
+https://github.com/RasaHQ/conversatio...
+
+Learn more about Rasa: https://rasa.com
+Rasa documentation: http://rasa.com/docs
+Join the Rasa Community: https://forum.rasa.com
+Twitter:   / rasa_hq  
+Facebook:   / rasahq  
+Linkedin:   / rasa  
+
+#chatbot  #nlp #opensourceConversational AI with Rasa: Slots</dcterms:abstract>
+        <dc:date>2021-12-07</dc:date>
+        <z:shortTitle>Conversational AI with Rasa</z:shortTitle>
+        <z:libraryCatalog>YouTube</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.youtube.com/watch?v=VcbfcsjBBIg</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-21 00:03:55</dcterms:dateSubmitted>
+        <z:runningTime>21:08</z:runningTime>
+    </bib:Recording>
+    <bib:Data rdf:about="https://github.com/facebook/duckling">
+        <z:itemType>computerProgram</z:itemType>
+        <dc:publisher>
+           <foaf:Organization><foaf:name>Meta</foaf:name></foaf:Organization>
+        </dc:publisher>
+        <dc:title>facebook/duckling</dc:title>
+        <dcterms:abstract>Language, engine, and tooling for expressing, testing, and evaluating composable language rules on input strings.</dcterms:abstract>
+        <dc:date>2024-02-21T09:31:04Z</dc:date>
+        <z:libraryCatalog>GitHub</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://github.com/facebook/duckling</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-21 17:03:50</dcterms:dateSubmitted>
+        <dc:description>original-date: 2017-03-02T01:45:50Z</dc:description>
+        <z:programmingLanguage>Haskell</z:programmingLanguage>
+    </bib:Data>
+    <bib:Document rdf:about="https://thelevel.ai/blog/natural-language-understanding/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog></z:Blog>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_203"/>
+        <dc:title>What Is Natural Language Understanding (NLU)?</dc:title>
+        <dcterms:abstract>Natural language understanding (NLU) is a branch of natural language processing that deals with extracting meaning from text and speech.</dcterms:abstract>
+        <dc:date>2022-07-31T09:45:00+00:00</dc:date>
+        <z:language>en-US</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://thelevel.ai/blog/natural-language-understanding/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-26 22:03:19</dcterms:dateSubmitted>
+        <dc:description>Section: AI</dc:description>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_203">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/203/natural-language-understanding.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://thelevel.ai/blog/natural-language-understanding/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-26 22:03:28</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.ibm.com/topics/chatbots">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_206"/>
+        <dc:title>What Is a Chatbot? | IBM</dc:title>
+        <dcterms:abstract>A chatbot is a computer program that simulates conversation with human end users, often using NLP to parse inputs and generative AI to automate responses.</dcterms:abstract>
+        <z:language>en-us</z:language>
+        <z:shortTitle>What Is a Chatbot?</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.ibm.com/topics/chatbots</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-26 23:55:24</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_206">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/206/chatbots.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.ibm.com/topics/chatbots</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-26 23:55:40</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://marutitech.com/chatbots-work-guide-chatbot-architecture/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Maruti Techlabs</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_208"/>
+        <dc:title>How do Chatbots work? A Guide to the Chatbot Architecture</dc:title>
+        <dcterms:abstract>Have a brief Guide to Chatbot Architecture, How these Chatbots work? How it processes Human Language? How does the Chatbot learn after it's live?</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:shortTitle>How do Chatbots work?</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://marutitech.com/chatbots-work-guide-chatbot-architecture/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-27 16:20:09</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_208">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/208/chatbots-work-guide-chatbot-architecture.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://marutitech.com/chatbots-work-guide-chatbot-architecture/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-27 16:20:16</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.ibm.com/blog/nlp-vs-nlu-vs-nlg-the-differences-between-three-natural-language-processing-concepts/www.ibm.com/blog/nlp-vs-nlu-vs-nlg-the-differences-between-three-natural-language-processing-concepts">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>IBM Blog</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kavlakoglu</foaf:surname>
+                        <foaf:givenName>Eda</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_210"/>
+        <dc:title>NLP vs. NLU vs. NLG: the differences between three natural language processing concepts</dc:title>
+        <dcterms:abstract>At a high level, NLU and NLG are just components of NLP. In this post, we’ll define each term individually and summarize their differences.</dcterms:abstract>
+        <dc:date>2020-11-12T20:47:33+00:00</dc:date>
+        <z:language>en-US</z:language>
+        <z:shortTitle>NLP vs. NLU vs. NLG</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.ibm.com/blog/nlp-vs-nlu-vs-nlg-the-differences-between-three-natural-language-processing-concepts/www.ibm.com/blog/nlp-vs-nlu-vs-nlg-the-differences-between-three-natural-language-processing-concepts</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-28 00:06:29</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_210">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/210/nlp-vs-nlu-vs-nlg-the-differences-between-three-natural-language-processing-concepts.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.ibm.com/blog/nlp-vs-nlu-vs-nlg-the-differences-between-three-natural-language-processing-concepts/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-28 00:06:40</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://rasa.com/docs/rasa-pro/calm/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_212"/>
+        <dc:title>Conversational AI with Language Models</dc:title>
+        <dcterms:abstract>Conversational AI with Language Models (CALM) is an LLM-native approach to building reliable conversational AI.</dcterms:abstract>
+        <dc:date>2024-02-26</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://rasa.com/docs/rasa-pro/calm/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-28 00:21:44</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_212">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/212/calm.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://rasa.com/docs/rasa-pro/calm/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-28 00:21:50</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://agenda.ch">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_214"/>
+        <dc:title>Prise de rendez-vous en ligne avec une application professionnel</dc:title>
+        <dcterms:abstract>Calendrier professionnel avec réservation de rdv par internet et rappels SMS &amp; emails. Facturation intégrée (y compris Tarif 590 &amp; Tarmed )</dcterms:abstract>
+        <z:language>fr</z:language>
+        <dc:identifier>
+           <dcterms:URI><rdf:value>https://agenda.ch</rdf:value></dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-28 17:45:19</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_214">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/214/fr.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+           <dcterms:URI><rdf:value>https://agenda.ch/fr/</rdf:value></dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-28 17:45:44</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.meetme.io/en">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <dc:title>Meetme - Simplify Your Appointment Scheduling</dc:title>
+        <dcterms:abstract>Meetme is an online appointment scheduling tool that helps busy professionals streamline their booking process. Save time, increase customer engagement, and boost your business with Meetme.</dcterms:abstract>
+        <dc:date>2023-09-03</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.meetme.io/en</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-28 22:51:21</dcterms:dateSubmitted>
+    </bib:Document>
+    <bib:Document rdf:about="https://www.klara.ch/fr-ch/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <dc:title>KLARA | Logiciels de gestion pour les PME</dc:title>
+        <dcterms:abstract>En un clic, KLARA se charge de toutes tes tâches administratives gratuitement. Au bureau ou chez toi. Dis adieu à la paperasse.</dcterms:abstract>
+        <z:language>fr-ch</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.klara.ch/fr-ch/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-28 22:52:00</dcterms:dateSubmitted>
+    </bib:Document>
+    <rdf:Description rdf:about="http://arxiv.org/abs/2402.12234">
+        <z:itemType>preprint</z:itemType>
+        <dc:publisher>
+           <foaf:Organization><foaf:name>arXiv</foaf:name></foaf:Organization>
+        </dc:publisher>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Bocklisch</foaf:surname>
+                        <foaf:givenName>Tom</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Werkmeister</foaf:surname>
+                        <foaf:givenName>Thomas</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Varshneya</foaf:surname>
+                        <foaf:givenName>Daksh</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Nichol</foaf:surname>
+                        <foaf:givenName>Alan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_217"/>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>Computer Science - Computation and Language</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:title>Task-Oriented Dialogue with In-Context Learning</dc:title>
+        <dcterms:abstract>We describe a system for building taskoriented dialogue systems combining the incontext learning abilities of large language models (LLMs) with the deterministic execution of business logic. LLMs are used to translate between the surface form of the conversation and a domain-speciﬁc language (DSL) which is used to progress the business logic. We compare our approach to the intent-based NLU approach predominantly used in industry today. Our experiments show that developing chatbots with our system requires signiﬁcantly less effort than established approaches, that these chatbots can successfully navigate complex dialogues which are extremely challenging for NLU-based systems, and that our system has desirable properties for scaling taskoriented dialogue systems to a large number of tasks. We make our implementation available for use and further study1.</dcterms:abstract>
+        <dc:date>2024-02-19</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>arXiv.org</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>http://arxiv.org/abs/2402.12234</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-29 20:31:36</dcterms:dateSubmitted>
+        <dc:description>arXiv:2402.12234 [cs]</dc:description>
+        <prism:number>arXiv:2402.12234</prism:number>
+    </rdf:Description>
+    <z:Attachment rdf:about="#item_217">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/217/Bocklisch et al. - 2024 - Task-Oriented Dialogue with In-Context Learning.pdf"/>
+        <dc:title>Bocklisch et al. - 2024 - Task-Oriented Dialogue with In-Context Learning.pdf</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://arxiv.org/pdf/2402.12234.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-02-29 20:31:31</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://towardsdatascience.com/nlp-with-spacy-part-1-beginner-guide-to-nlp-4b9460652994">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Medium</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Munnangi</foaf:surname>
+                        <foaf:givenName>Manikanta</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_220"/>
+        <dc:title>A Comprehensive Guide To NLP.</dc:title>
+        <dcterms:abstract>Natural Language Processing is the one widely used in almost every domains, somewhat depth knowledge is required before hands-on.</dcterms:abstract>
+        <dc:date>2019-11-22T03:57:46.707Z</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://towardsdatascience.com/nlp-with-spacy-part-1-beginner-guide-to-nlp-4b9460652994</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-01 13:32:08</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_220">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/220/nlp-with-spacy-part-1-beginner-guide-to-nlp-4b9460652994.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://towardsdatascience.com/nlp-with-spacy-part-1-beginner-guide-to-nlp-4b9460652994</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-01 13:32:15</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://datasolut.com/natural-language-processing-vs-nlu-vs-nlg-unterschiede-funktionen-und-beispiele/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>datasolut GmbH</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Wuttke</foaf:surname>
+                        <foaf:givenName>Laurenz</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_222"/>
+        <dc:title>NLP vs. NLU vs. NLG: Unterschiede, Funktionen und Beispiele</dc:title>
+        <dcterms:abstract>In diesem Beitrag werden die wesentlichen Unterschiede, Funktionen und Beispiele zu Natural Language Processing, NLU und NLG näher erklärt.</dcterms:abstract>
+        <dc:date>2023-05-24T18:48:18+00:00</dc:date>
+        <z:language>de-DE</z:language>
+        <z:shortTitle>NLP vs. NLU vs. NLG</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://datasolut.com/natural-language-processing-vs-nlu-vs-nlg-unterschiede-funktionen-und-beispiele/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-01 17:23:40</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_222">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/222/natural-language-processing-vs-nlu-vs-nlg-unterschiede-funktionen-und-beispiele.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://datasolut.com/natural-language-processing-vs-nlu-vs-nlg-unterschiede-funktionen-und-beispiele/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-01 17:23:46</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.techtarget.com/searchenterpriseai/definition/natural-language-understanding-NLU">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Enterprise AI</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_224"/>
+        <dc:title>What is Natural Language Understanding (NLU)? | Definition from TechTarget</dc:title>
+        <dcterms:abstract>Learn about natural language understanding, its importance and how it works. Examine its applications, as well as how it compares to NLP and NLG.</dcterms:abstract>
+        <z:language>en</z:language>
+        <z:shortTitle>What is Natural Language Understanding (NLU)?</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.techtarget.com/searchenterpriseai/definition/natural-language-understanding-NLU</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-01 17:34:38</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_224">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/224/natural-language-understanding-NLU.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.techtarget.com/searchenterpriseai/definition/natural-language-understanding-NLU</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-01 17:34:42</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://byteiota.com/stages-of-nlp/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog></z:Blog>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_226"/>
+        <dc:title>Stages of Natural Language Processing (NLP) | byteiota</dc:title>
+        <dcterms:abstract>Natural Language Processing (NLP) consists of 5 major phases/ stages: Lexical, Syntax, Semantic, Discourse and Pragmatics.</dcterms:abstract>
+        <dc:date>2020-12-24T14:43:49+00:00</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://byteiota.com/stages-of-nlp/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-01 17:40:33</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_226">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/226/stages-of-nlp.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://byteiota.com/stages-of-nlp/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-01 17:40:44</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://www.oncrawl.com/technical-seo/five-phases-nlp-how-incorporate-them-into-seo-journey/">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>Oncrawl - Technical SEO Data</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Stoy</foaf:surname>
+                        <foaf:givenName>Lazarina</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_228"/>
+        <dc:title>Five phases of NLP and how to incorporate them into your SEO journey</dc:title>
+        <dcterms:abstract>With the rise of machine learning in SEO, it’s time to go back to the basics and look at the five phases of NLP and how you can use them.</dcterms:abstract>
+        <dc:date>2023-02-28T13:30:40+00:00</dc:date>
+        <z:language>en-GB</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.oncrawl.com/technical-seo/five-phases-nlp-how-incorporate-them-into-seo-journey/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-01 20:49:05</dcterms:dateSubmitted>
+        <dc:description>Section: Technical SEO</dc:description>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_228">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/228/five-phases-nlp-how-incorporate-them-into-seo-journey.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.oncrawl.com/technical-seo/five-phases-nlp-how-incorporate-them-into-seo-journey/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-01 20:49:11</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="https://www.cambridge.org/core/journals/natural-language-engineering/article/abs/building-applied-natural-language-generation-systems/FEB374A3FF652F06D8567A6FAB2EF36E">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf rdf:resource="urn:issn:1469-8110,%201351-3249"/>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Reiter</foaf:surname>
+                        <foaf:givenName>Ehud</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Dale</foaf:surname>
+                        <foaf:givenName>Robert</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <dc:title>Building applied natural language generation systems</dc:title>
+        <dcterms:abstract>In this article, we give an overview of Natural Language Generation 
+(NLG) from an applied 
+system-building perspective. The article includes a discussion of when 
+NLG techniques should 
+be used; suggestions for carrying out requirements analyses; and a description 
+of the basic 
+NLG tasks of content determination, discourse planning, sentence aggregation, 
+lexicalization, 
+referring expression generation, and linguistic realisation. Throughout, 
+the emphasis is on 
+established techniques that can be used to build simple but practical working 
+systems now. 
+We also provide pointers to techniques in the literature that are appropriate 
+for more complicated scenarios.</dcterms:abstract>
+        <dc:date>1997/03</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Cambridge University Press</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.cambridge.org/core/journals/natural-language-engineering/article/abs/building-applied-natural-language-generation-systems/FEB374A3FF652F06D8567A6FAB2EF36E</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-02 14:35:01</dcterms:dateSubmitted>
+        <bib:pages>57-87</bib:pages>
+    </bib:Article>
+    <bib:Journal rdf:about="urn:issn:1469-8110,%201351-3249">
+        <prism:volume>3</prism:volume>
+        <dc:title>Natural Language Engineering</dc:title>
+        <dc:identifier>DOI 10.1017/S1351324997001502</dc:identifier>
+        <prism:number>1</prism:number>
+        <dc:identifier>ISSN 1469-8110, 1351-3249</dc:identifier>
+    </bib:Journal>
+    <bib:Recording rdf:about="https://www.youtube.com/watch?v=ZXiruGOCn9s">
+        <z:itemType>videoRecording</z:itemType>
+        <z:directors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                       <foaf:surname>IBM Technology</foaf:surname>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </z:directors>
+        <dc:title>What are Transformers (Machine Learning Model)?</dc:title>
+        <dcterms:abstract>Learn more about Transformers → http://ibm.biz/ML-Transformers
+Learn more about AI → http://ibm.biz/more-about-ai
+Check out IBM Watson → http://ibm.biz/more-about-watson
+
+Transformers? In this case, we're talking about a machine learning model, and in this video Martin Keen explains what transformers are, what they're good for, and maybe ... what they're not so good at for.
+
+Download a free AI ebook → http://ibm.biz/ai-ebook-free
+Read about the Journey to AI → http://ibm.biz/ai-journey-blog
+
+Get started for free on IBM Cloud → http://ibm.biz/Bdf7QA
+Subscribe to see more videos like this in the future → http://ibm.biz/subscribe-now
+
+#AI #Software #ITModernization</dcterms:abstract>
+        <dc:date>2022-03-11</dc:date>
+        <z:libraryCatalog>YouTube</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.youtube.com/watch?v=ZXiruGOCn9s</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-02 17:32:46</dcterms:dateSubmitted>
+        <z:runningTime>5:50</z:runningTime>
+    </bib:Recording>
+    <bib:Recording rdf:about="https://www.youtube.com/watch?v=ioGry-89gqE">
+        <z:itemType>videoRecording</z:itemType>
+        <z:directors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                       <foaf:surname>Jay Alammar</foaf:surname>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </z:directors>
+        <dc:title>Language Processing with BERT: The 3 Minute Intro (Deep learning for NLP)</dc:title>
+        <dcterms:abstract>Since its introduction in 2018, the BERT machine learning model has continued to perform well in a lot of language tasks. This video is a gentle introduction into some of the tasks that BERT can handle (in search engines, for example). The first 3 minutes goes over the some of its applications. Then the video discusses how the model works at a high level (and how you may use it to build a semantic search engine which is sensitive to the meanings of queries and results).
+
+Introduction (0:00)
+You have used BERT (applications) (0:25)
+How BERT works (2:52)
+Building a search engine (4:30)
+
+------
+
+The Illustrated BERT
+http://jalammar.github.io/illustrated...
+
+BERT Paper:
+https://www.aclweb.org/anthology/N19-...
+
+Understanding searches better than ever before
+https://blog.google/products/search/s...
+
+Google: BERT now used on almost every English query
+https://searchengineland.com/google-b...
+
+------
+
+Twitter:   / jayalammar  
+Blog: https://jalammar.github.io/
+Mailing List: https://jayalammar.substack.com/
+
+
+More videos by Jay:
+
+Explainable AI Cheat Sheet - Five Key Categories
+   • Explainable AI Cheat Sheet - Five Key...  
+
+The Narrated Transformer Language Model
+   • The Narrated Transformer Language Model  
+
+Jay's Visual Intro to AI
+   • Jay's Visual Intro to AI  
+
+How GPT-3 Works - Easily Explained with Animations
+   • How GPT3 Works - Easily Explained wit...</dcterms:abstract>
+        <dc:date>2021-06-15</dc:date>
+        <z:shortTitle>Language Processing with BERT</z:shortTitle>
+        <z:libraryCatalog>YouTube</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://www.youtube.com/watch?v=ioGry-89gqE</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-02 17:39:24</dcterms:dateSubmitted>
+        <z:runningTime>6:09</z:runningTime>
+    </bib:Recording>
+    <bib:Document rdf:about="https://www.turing.com/kb/brief-introduction-to-transformers-and-their-power">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_233"/>
+        <dc:title>The Ultimate Guide to Transformer Deep Learning</dc:title>
+        <dcterms:abstract>Transformers are neural networks that learn context &amp; understanding through sequential data analysis. Know more about its powers in deep learning, NLP, &amp; more.</dcterms:abstract>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.turing.com/kb/brief-introduction-to-transformers-and-their-power</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-02 17:46:01</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_233">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/233/brief-introduction-to-transformers-and-their-power.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.turing.com/kb/brief-introduction-to-transformers-and-their-power</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-02 17:46:07</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Data rdf:about="https://github.com/google-research/tapas">
+        <z:itemType>computerProgram</z:itemType>
+        <dc:publisher>
+            <foaf:Organization>
+               <foaf:name>Google Research</foaf:name>
+            </foaf:Organization>
+        </dc:publisher>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>nlp-machine-learning</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+            <z:AutomaticTag>
+               <rdf:value>question-answering</rdf:value>
+            </z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>table-parsing</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:subject>
+           <z:AutomaticTag><rdf:value>tensorflow</rdf:value></z:AutomaticTag>
+        </dc:subject>
+        <dc:title>google-research/tapas</dc:title>
+        <dcterms:abstract>End-to-end neural table-text understanding models.</dcterms:abstract>
+        <dc:date>2024-02-29T03:30:22Z</dc:date>
+        <z:libraryCatalog>GitHub</z:libraryCatalog>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://github.com/google-research/tapas</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-03 14:34:48</dcterms:dateSubmitted>
+        <dc:rights>Apache-2.0</dc:rights>
+        <dc:description>original-date: 2020-03-31T15:14:39Z</dc:description>
+        <z:programmingLanguage>Python</z:programmingLanguage>
+    </bib:Data>
+    <bib:Document rdf:about="https://rasa.com/blog/rasa-x-getting-started-as-a-current-rasa-user/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Rasa</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_236"/>
+        <dc:title>Getting Started with Rasa X as an Existing Rasa User | Rasa Blog</dc:title>
+        <dcterms:abstract>Rasa X is a tool designed to make it easier to deploy and improve Rasa-powered assistants by learning from real conversations.</dcterms:abstract>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://rasa.com/blog/rasa-x-getting-started-as-a-current-rasa-user/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-03 19:24:56</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_236">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/236/rasa-x-getting-started-as-a-current-rasa-user.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://rasa.com/blog/rasa-x-getting-started-as-a-current-rasa-user/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-03 19:25:04</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://medium.com/neuralspace/natural-language-understanding-for-chatbots-2eb7a81b9390">
+        <z:itemType>blogPost</z:itemType>
+        <dcterms:isPartOf>
+           <z:Blog><dc:title>NeuralSpace</dc:title></z:Blog>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Shridhar</foaf:surname>
+                        <foaf:givenName>Kumar</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_238"/>
+        <dc:title>Natural Language Understanding for Chatbots</dc:title>
+        <dcterms:abstract>Natural language understanding (NLU) is a branch of artificial intelligence (AI) that deals with understanding human language.</dcterms:abstract>
+        <dc:date>2020-12-26T07:39:06.493Z</dc:date>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://medium.com/neuralspace/natural-language-understanding-for-chatbots-2eb7a81b9390</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-03 20:47:45</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_238">
+        <z:itemType>attachment</z:itemType>
+        <rdf:resource rdf:resource="files/238/natural-language-understanding-for-chatbots-2eb7a81b9390.html"/>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://medium.com/neuralspace/natural-language-understanding-for-chatbots-2eb7a81b9390</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-03 20:47:54</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+</rdf:RDF>
