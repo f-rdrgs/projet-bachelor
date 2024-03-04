@@ -2,25 +2,33 @@ version: "3.1"
 
 stories:
 
-- story: reservation 1
-  steps:
-  - intent: book_resource
-  - action: action_reserve_resource
-
 - story: reservation 2
   steps:
   - intent: book_resource
   - action: action_reserve_resource
   - intent: book_date
   - action: action_reserve_date
-  - action: utter_date_reservation
+  - checkpoint: confirm_reservation
 
 - story: reservation 3
   steps:
   - intent: book_resource+book_date
   - action: action_reserve_resource
   - action: action_reserve_date
-  - action: utter_date_reservation
+  - checkpoint: confirm_reservation
+
+- story: confirmation_confirmed
+  steps:
+  - checkpoint: confirm_reservation
+  - intent: confirm
+  - action: utter_final_reservation
+  - action: action_goodbye
+
+- story: confirmation_cancelled
+  steps:
+  - checkpoint: confirm_reservation
+  - intent: cancel
+  - action: action_goodbye
 
 
 - story: happy path

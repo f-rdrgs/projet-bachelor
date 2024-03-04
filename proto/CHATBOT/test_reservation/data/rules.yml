@@ -12,19 +12,19 @@ rules:
   - intent: bot_challenge
   - action: utter_iamabot
 
-- rule: Want to book a resource
-  steps:
-  - intent: book_resource
-  - action: action_reserve_resource
-- rule: Want to book a date for a resource
-  steps:
-  - intent: book_date
-  - action: action_reserve_date
-  - action: utter_date_reservation
+# - rule: Want to book a resource
+#   steps:
+#   - intent: book_resource
+#   - action: action_reserve_resource
+# - rule: Want to book a date for a resource
+#   steps:
+#   - intent: book_date
+#   - action: action_reserve_date
+#   - action: utter_date_reservation
   
-- rule : Want to book a date and a resource
-  steps:
-  - intent: book_resource+book_date
-  - action: action_reserve_resource
-  - action: action_reserve_date
-  - action: utter_date_reservation
+# - rule : Want to book a date and a resource
+#   steps:
+#   - intent: book_resource+book_date
+#   - action: action_reserve_resource
+#   - action: action_reserve_date
+#   - action: utter_date_reservation

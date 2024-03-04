@@ -11,6 +11,8 @@ intents:
   - book_resource
   - book_date
   - book_resource+book_date
+  - confirm
+  - cancel
 
 responses:
   utter_greet:
@@ -27,12 +29,14 @@ responses:
   - text: "Great, carry on!"
 
   utter_goodbye:
-  - text: "Bye"
+  - text: "Au revoir"
 
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
   utter_date_reservation:
-  - text: "Vous souhaitez réserver pour le {time}"
+  - text: "Souhaitez-vous réserver pour le {time} ?"
+  utter_final_reservation:
+  - text: "Vous avez bien réservé pour le {time} un terrain de {resource}"
 
 entities:
 - resource
@@ -41,6 +45,7 @@ entities:
 actions:
 - action_reserve_resource
 - action_reserve_date
+- action_goodbye
 
 slots:
   time:
@@ -48,6 +53,11 @@ slots:
     mappings:
         - type: from_entity
           entity: time
+  resource:
+    type: any
+    mappings:
+        - type: from_entity
+          entity: resource
           
 session_config:
   session_expiration_time: 60

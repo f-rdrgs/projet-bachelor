@@ -1,6 +1,6 @@
 import requests
 import os
-
+import numpy as np
 # Training example from https://towardsdatascience.com/building-a-conversational-chatbot-for-slack-using-rasa-and-python-part-1-bca5cc75d32f#bypass 
 # from rasa_nlu.training_data import load_data
 # from rasa_nlu.config import RasaNLUModelConfig
@@ -46,6 +46,15 @@ def send_message_to_rasa(message):
 # https://arxiv.org/pdf/2402.12234.pdf
 # Seulement disponible avec Rasa Pro mais peut-être intéressant à mentionner ?
 if __name__ == "__main__":
-    user_input = input("Your input -> ")
-    response = send_message_to_rasa(user_input)
-    print("Rasa's response ->", response)
+    stop_convo = False
+    while(not stop_convo):
+        user_input = input("Entrez \"stop\" pour arrêter\nVotre message ->")
+        print(f"input: {user_input}")
+        if(user_input== "stop"):
+            stop_convo= True
+        if( not stop_convo):
+            responses = send_message_to_rasa(user_input)
+            print("Rasa's response ->", responses) 
+            for response in responses:
+                if response["text"] == "Au revoir":
+                    stop_convo = True
