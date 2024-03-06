@@ -91,7 +91,6 @@
     </bib:Memo>
     <z:Attachment rdf:about="#item_100">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/100/Herzig et al. - 2020 - TAPAS Weakly Supervised Table Parsing via Pre-tra.pdf"/>
         <dc:title>Herzig et al. - 2020 - TAPAS Weakly Supervised Table Parsing via Pre-tra.pdf</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -131,7 +130,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_104">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/104/guide-to-tapas-table-parsing-a-technique-to-retrieve-information-from-tabular-data-using-nlp.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -159,7 +157,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_106">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/106/tapas.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -199,7 +196,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_108">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/108/google-tapas-is-a-bert-based-model-to-query-tabular-data-using-natural-language-2435a386b43f.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -226,7 +222,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_111">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/111/demystifying-bert-groundbreaking-nlp-framework.html"/>
         <dc:title>What is BERT | BERT For Text Classification</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -255,7 +250,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_112">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/112/BERT-language-model.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -295,7 +289,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_114">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/114/what-topic-modelling-nlp.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -324,7 +317,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_117">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/117/lemmatization.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -353,7 +345,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_118">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/118/stemming.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -406,7 +397,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_121">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/121/chatbot-types.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -508,7 +498,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_127">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/127/nlp-tutorials-part-i-from-basics-to-advance.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -538,7 +527,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_129">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/129/natural-language-processing.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -578,7 +566,6 @@
     </bib:Document>
     <z:Attachment rdf:about="#item_131">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/131/rule-based-chatbots-vs-ai-chatbots.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -648,7 +635,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_134">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/134/types-of-chatbots.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -716,7 +702,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_137">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/137/text-pre-processing-stop-words-removal-using-different-libraries-f20bac19929a.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -747,7 +732,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_139">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/139/natural-language-processing-nlp-tutorial.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -787,7 +771,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_141">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/141/what-makes-a-chatbot-conversational.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -834,7 +817,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_144">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/144/nlp-chatbot.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -861,7 +843,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_147">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/147/a-beginners-introduction-to-ner-named-entity-recognition.html"/>
         <dc:title>A Beginner's Introduction to NER (Named Entity Recognition)</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -891,7 +872,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_148">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/148/what-is-named-entity-recognition-ner.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -922,7 +902,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_150">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/150/named-entity-recognition.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -961,7 +940,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_152">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/152/how-does-an-ai-chatbot-work.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1000,7 +978,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_154">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/154/nltk-nlp-python.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1029,7 +1006,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_156">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/156/using-neural-networks-to-find-answers.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1056,7 +1032,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_159">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/159/nltk-a-beginners-hands-on-guide-to-natural-language-processing.html"/>
         <dc:title>NLTK: A Beginners Hands-on Guide to Natural Language Processing</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1086,7 +1061,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_162">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/162/pos-tagging-in-nlp.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1170,7 +1144,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Data>
     <z:Attachment rdf:about="#item_164">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/164/transformers.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1210,7 +1183,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_166">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/166/tapas-question-answering-from-tables-1796a7b90f49.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1251,7 +1223,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_168">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/168/step-by-step-bert-implementation-guide.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1282,7 +1253,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_170">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/170/what-is-natural-language-processing.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1322,7 +1292,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_172">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/172/tapas-question-answering-from-tables-in-spark-nlp.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1362,7 +1331,6 @@ Subscribe to see more videos like this in the future → http://ibm.biz/subscrib
     </bib:Document>
     <z:Attachment rdf:about="#item_174">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/174/nlp-sentiment-analysis.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1440,7 +1408,6 @@ Minds: https://www.minds.com/ykilcher</dcterms:abstract>
     </bib:Document>
     <z:Attachment rdf:about="#item_177">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/177/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1467,7 +1434,6 @@ Minds: https://www.minds.com/ykilcher</dcterms:abstract>
     </bib:Document>
     <z:Attachment rdf:about="#item_179">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/179/software.html"/>
         <dc:title>Software - The Stanford Natural Language Processing Group</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1494,7 +1460,6 @@ Minds: https://www.minds.com/ykilcher</dcterms:abstract>
     </bib:Document>
     <z:Attachment rdf:about="#item_181">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/181/opennlp.apache.org.html"/>
         <dc:title>Apache OpenNLP</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1592,7 +1557,6 @@ Minds: https://www.minds.com/ykilcher</dcterms:abstract>
     </bib:Memo>
     <z:Attachment rdf:about="#item_184">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/184/Choudhry et al. - 2023 - Adversarial Adaptation for French Named Entity Rec.pdf"/>
         <dc:title>Choudhry et al. - 2023 - Adversarial Adaptation for French Named Entity Rec.pdf</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1674,7 +1638,6 @@ Minds: https://www.minds.com/ykilcher</dcterms:abstract>
     </bib:Document>
     <z:Attachment rdf:about="#item_192">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/192/named-entity-recognition-with-nltk-and-spacy.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1718,7 +1681,6 @@ Minds: https://www.minds.com/ykilcher</dcterms:abstract>
     </bib:Document>
     <z:Attachment rdf:about="#item_195">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/195/http-api.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1748,7 +1710,6 @@ Minds: https://www.minds.com/ykilcher</dcterms:abstract>
     </bib:Document>
     <z:Attachment rdf:about="#item_197">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/197/rasa.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1777,7 +1738,6 @@ Minds: https://www.minds.com/ykilcher</dcterms:abstract>
     </bib:Document>
     <z:Attachment rdf:about="#item_199">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/199/models.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1860,7 +1820,6 @@ Linkedin:   / rasa  
     </bib:Document>
     <z:Attachment rdf:about="#item_203">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/203/natural-language-understanding.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1890,7 +1849,6 @@ Linkedin:   / rasa  
     </bib:Document>
     <z:Attachment rdf:about="#item_206">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/206/chatbots.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1920,7 +1878,6 @@ Linkedin:   / rasa  
     </bib:Document>
     <z:Attachment rdf:about="#item_208">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/208/chatbots-work-guide-chatbot-architecture.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1961,7 +1918,6 @@ Linkedin:   / rasa  
     </bib:Document>
     <z:Attachment rdf:about="#item_210">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/210/nlp-vs-nlu-vs-nlg-the-differences-between-three-natural-language-processing-concepts.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -1991,7 +1947,6 @@ Linkedin:   / rasa  
     </bib:Document>
     <z:Attachment rdf:about="#item_212">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/212/calm.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -2018,7 +1973,6 @@ Linkedin:   / rasa  
     </bib:Document>
     <z:Attachment rdf:about="#item_214">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/214/fr.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
            <dcterms:URI><rdf:value>https://agenda.ch/fr/</rdf:value></dcterms:URI>
@@ -2113,7 +2067,6 @@ Linkedin:   / rasa  
     </rdf:Description>
     <z:Attachment rdf:about="#item_217">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/217/Bocklisch et al. - 2024 - Task-Oriented Dialogue with In-Context Learning.pdf"/>
         <dc:title>Bocklisch et al. - 2024 - Task-Oriented Dialogue with In-Context Learning.pdf</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -2153,7 +2106,6 @@ Linkedin:   / rasa  
     </bib:Document>
     <z:Attachment rdf:about="#item_220">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/220/nlp-with-spacy-part-1-beginner-guide-to-nlp-4b9460652994.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -2194,7 +2146,6 @@ Linkedin:   / rasa  
     </bib:Document>
     <z:Attachment rdf:about="#item_222">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/222/natural-language-processing-vs-nlu-vs-nlg-unterschiede-funktionen-und-beispiele.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -2224,7 +2175,6 @@ Linkedin:   / rasa  
     </bib:Document>
     <z:Attachment rdf:about="#item_224">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/224/natural-language-understanding-NLU.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -2254,7 +2204,6 @@ Linkedin:   / rasa  
     </bib:Document>
     <z:Attachment rdf:about="#item_226">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/226/stages-of-nlp.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -2295,7 +2244,6 @@ Linkedin:   / rasa  
     </bib:Document>
     <z:Attachment rdf:about="#item_228">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/228/five-phases-nlp-how-incorporate-them-into-seo-journey.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -2475,7 +2423,6 @@ How GPT-3 Works - Easily Explained with Animations
     </bib:Document>
     <z:Attachment rdf:about="#item_233">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/233/brief-introduction-to-transformers-and-their-power.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -2541,7 +2488,6 @@ How GPT-3 Works - Easily Explained with Animations
     </bib:Document>
     <z:Attachment rdf:about="#item_236">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/236/rasa-x-getting-started-as-a-current-rasa-user.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -2581,7 +2527,6 @@ How GPT-3 Works - Easily Explained with Animations
     </bib:Document>
     <z:Attachment rdf:about="#item_238">
         <z:itemType>attachment</z:itemType>
-        <rdf:resource rdf:resource="files/238/natural-language-understanding-for-chatbots-2eb7a81b9390.html"/>
         <dc:title>Snapshot</dc:title>
         <dc:identifier>
             <dcterms:URI>
@@ -2589,6 +2534,154 @@ How GPT-3 Works - Easily Explained with Animations
             </dcterms:URI>
         </dc:identifier>
         <dcterms:dateSubmitted>2024-03-03 20:47:54</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://rasa.com/product/rasa-pro/">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>Rasa</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_241"/>
+        <dc:title>Rasa Platform: Rasa Pro</dc:title>
+        <dcterms:abstract>The best way to run Rasa is Rasa Pro. An enterprise-grade infrastructure suite to help you scale, secure, and monitor your AI Assistant. Learn more.</dcterms:abstract>
+        <dc:date>2022-10-18T07:29:22Z</dc:date>
+        <z:language>en</z:language>
+        <z:shortTitle>Rasa Platform</z:shortTitle>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://rasa.com/product/rasa-pro/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-04 21:09:04</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_241">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+               <rdf:value>https://rasa.com/product/rasa-pro/</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-04 21:09:26</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="#item_242">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website></z:Website>
+        </dcterms:isPartOf>
+        <link:link rdf:resource="#item_243"/>
+        <dc:title>The Stanford Natural Language Processing Group</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://nlp.stanford.edu/software/tagger.shtml</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-05 20:49:56</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_243">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>The Stanford Natural Language Processing Group</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://nlp.stanford.edu/software/tagger.shtml</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-05 20:50:02</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+    <bib:Article rdf:about="#item_245">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+            <bib:Journal>
+               <prism:volume>08</prism:volume><prism:number>09</prism:number>
+            </bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Mehta</foaf:surname>
+                        <foaf:givenName>Ansh</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Salgond</foaf:surname>
+                        <foaf:givenName>Vishal</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Satra</foaf:surname>
+                        <foaf:givenName>Darshan</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Sharma</foaf:surname>
+                        <foaf:givenName>Nikhil</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_244"/>
+        <dc:title>SPELL CORRECTION AND SUGGESTION USING LEVENSHTEIN DISTANCE</dc:title>
+        <dcterms:abstract>In today’s Data Science and AI community, NLP user has entered. The algorithm is implemented from scratch has become one of the most important topics for research as using python. As we will see in the results section the results we move to a world where communication is becoming produced by the Levenshtein distance are optimal and increasingly important between humans and machines as well.</dcterms:abstract>
+        <dc:date>2021</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>Zotero</z:libraryCatalog>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_244">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Mehta et al. - 2021 - SPELL CORRECTION AND SUGGESTION USING LEVENSHTEIN .pdf</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://www.irjet.net/archives/V8/i9/IRJET-V8I9316.pdf</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-05 21:29:54</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>application/pdf</link:type>
+    </z:Attachment>
+    <bib:Document rdf:about="https://github.com/christianversloot/machine-learning-articles/blob/main/easy-table-parsing-with-tapas-machine-learning-and-huggingface-transformers.md">
+        <z:itemType>webpage</z:itemType>
+        <dcterms:isPartOf>
+           <z:Website><dc:title>GitHub</dc:title></z:Website>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Versloot</foaf:surname>
+                        <foaf:givenName>Christian</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_247"/>
+        <dc:title>Machine Learning for Table Parsing: TAPAS</dc:title>
+        <dcterms:abstract>🧠💬 Articles I wrote about machine learning, archived from MachineCurve.com. - christianversloot/machine-learning-articles</dcterms:abstract>
+        <z:language>en</z:language>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://github.com/christianversloot/machine-learning-articles/blob/main/easy-table-parsing-with-tapas-machine-learning-and-huggingface-transformers.md</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-05 22:45:47</dcterms:dateSubmitted>
+    </bib:Document>
+    <z:Attachment rdf:about="#item_247">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+            <dcterms:URI>
+                <rdf:value>https://github.com/christianversloot/machine-learning-articles/blob/main/easy-table-parsing-with-tapas-machine-learning-and-huggingface-transformers.md</rdf:value>
+            </dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2024-03-05 22:45:54</dcterms:dateSubmitted>
         <z:linkMode>1</z:linkMode>
         <link:type>text/html</link:type>
     </z:Attachment>
