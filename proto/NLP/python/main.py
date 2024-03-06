@@ -13,9 +13,6 @@ import numpy as np
 
 from nltk.tag.stanford import StanfordPOSTagger
 
-import sparknlp as snp
-from pyspark.sql import SparkSession
-from sparknlp.pretrained import PretrainedPipeline, ResourceDownloader
 import os
 
 # Method to download + extract found here https://stackoverflow.com/questions/64990197/download-and-extract-zip-file 
@@ -45,9 +42,9 @@ def process_sentences(file_content_string: str):
             """
     sports_dictionnary = {"tennis","Tennis"}
     chunk_parser = nl.chunk.RegexpParser(chunk_patterns)
-    string_to_print= ""
     for sent in nl.sent_tokenize(file_content_string,language='french'):
-        print("NEXT SENTENCE:\n")
+        string_to_print= ""
+        print("NEXT SENTENCE:")
         # Voir si possibilité d'utiliser un NER chunker différent pour détecter des dates, sports etc
         for chunk in chunk_parser.parse(taggerModel.tag(nl.word_tokenize(sent,language="french"))):
             type = chunk[1]

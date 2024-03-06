@@ -45,6 +45,8 @@ def send_message_to_rasa(message):
 # Intéressant example fourni dans le rapport de recherche officiel de Rasa
 # https://arxiv.org/pdf/2402.12234.pdf
 # Seulement disponible avec Rasa Pro mais peut-être intéressant à mentionner ?
+
+# À noter que les dates en format dd.mm.yyyy ne marchent pas et doivent être traitées en dd/mm/yyyy
 if __name__ == "__main__":
     stop_convo = False
     while(not stop_convo):
