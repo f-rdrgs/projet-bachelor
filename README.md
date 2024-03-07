@@ -1,92 +1,95 @@
-# 2324 RodriguesDosSantos
+# Journal de bord 
+## Projet de Semestre
+</br>
+Lien vers Google Docs Rapport : [Lien](https://drive.google.com/file/d/13cI5RCux5yhVDaEJpb0Zz3skR8-UYu4J/view?usp=drivesdk)
 
+</br>
 
+### 04.11.23
+- Lecture de divers rapports
+- Renseignement sur les divers types de chatbots ainsi que leur fonctionnement interne
+- Spécification du fonctionnement de chatbot par règles
+---
+### 05.11.23
+- Continuation des recherches concernant les divers types de bots
 
-## Getting started
+### 11.11.23
+- Définition de l'ensemble des recherches à effectuer demain
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### 12.11.23
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- Rédaction plus détaillée de l'architecture en composants d'un chatbot, manque cependant le détail pour un chatbot génératif/conversationnel
+- À faire par la suite 2 sections détaillant comment fonctionne un bot conversationnel à la ChatGPT et un moteur NLP
 
-## Add your files
+## 19.11.23
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+- Récupération d'une source concernant l'utilisation d'IA avec des chatbots conversationnels
 
-```
-cd existing_repo
-git remote add origin https://gitedu.hesge.ch/niklaus.eggenber/2324_RodriguesDosSantos.git
-git branch -M main
-git push -uf origin main
-```
+### 23.11.23
+- Recherches sur l'implémentation d'un chatbot à l'aide d'une IA
+- Recherches plus spécifiques sur des modèles Transformer tels que BERT et TAPAS
+### 26.11.23
+- Continuation de la rédaction de l'implementation de maniere concise (pour le moment) d'un chatbot avec IA
+- Davantage de renseignements sur le modele TAPAS
+- Définition des divers techniques de traitement NLP
+- Continuation des recherches sur NLP afin de prochainement rédiger la section sur le NLP 
 
-## Integrate with your tools
+### 02.12.23
+- Recherche de sources pour parler du NLP
 
-- [ ] [Set up project integrations](https://gitedu.hesge.ch/niklaus.eggenber/2324_RodriguesDosSantos/-/settings/integrations)
+### 03.12.23
+- Rédaction d'une partie du traitement NLP, toujours de manière concise pour le moment bien qu'il est toujours possible d'entrer davantage dans les détails
 
-## Collaborate with your team
+### 14.12.23
+- Complétion partie NLP résumé
+- Recherches sur TAPAS
+- Début rédaction partie sur TAPAS
+- Recherches sur framework BERT
+### 17.12.23
+- Encore des recherches sur le framework BERT
+- continuation de la rédaction sur TAPAS en expliquant BERT
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### 01.01.24
+- Contination recherche et écriture partie TAPAS
 
-## Test and Deploy
+### 04.01.24
+- Ajout sources à Zotero
+- Recherches sur comment s'implémente le modèle TAPAS programmatiquement 
+### 07.01.24
+- Ajout prototype de TAPAS exemple
 
-Use the built-in continuous integration in GitLab.
+### 14.01.24
+- Recherches sur format ICS/Ical
+- Ajout quelques salles
+- Recherches sur passage de CSV à Ical, possible considérations de changement de type de stockage
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+### 03.02.24
+- Ajout ressources dans fichiers csv basé sur la réservation de terrains de sports de la ville de genève
 
-***
+### 05.02.24
+- Complétion proto TAPAS et tests divers et finalité est qu'il est difficile d'appliquer TAPAS dans un problème multi-table avec clé étrangères
 
-# Editing this README
+### 06.02.24
+- Visionnage et prise de notes du fonctionnement TAPAS selon le papier de recherche de google au sujet de TAPAS
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### 07.02.24
+- Début retranscription des notes au prise la veille sous forme de texte plus détaillé
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### 08.02.24
+- Retranscription de la prise de notes sur TAPAS faite
+- Début recherches sur l'implémentation d'un proto de moteur NLP
 
-## Name
-Choose a self-explaining name for your project.
+### 10-12.02.24
+- Ajout proto NLP en Java et Python (Java n'a pas été poussé trop loin par manque de modèles pré-entraînés, python en ayant bien plus et permettant ainsi une facilité d'implémentation d'un moteur NLP)
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### 20.02.24
+(J'ai du oublier de noter les quelques fois où j'ai bossé mais j'ai principalement réalisé des protypes + recherches)
+- Ajout d'un début de protype de bot avec Rasa qui permet déjà de traiter une phrase comme "Je souhaite réserver un terrain de tennis" et tennis sera reconnu comme resource et une action sera déclenchée en conséquence et un message de retour sera retourné avec les données souhaitées. À développer d'avantage mais semble prometteur car bien que je vais essayer encore un peu avec ça, j'ai eu des soucis à pouvoir récupérer facilement des entités importantes comme les resources ou les dates avec des traitement NLP divers mais je vais encore voir pour creuser cela.
+Je pense très prochainement continuer la rédaction pour ajouter une partie sur NLU comme cela semble prometteur pour la réalisation du bot et surtout commencer à faire la mise en page selon le template donné pour ce rapport de bachelor + réécriture du texte 
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### 27.02.24
+- Debut Rédaction sur template rapport semestre + intro écrite
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+### 28.02.24 - 07.03.2024
+- Rédaction du rapport
+- Modification du prototype de Chatbot afin d'avoir un cas d'usage plus concret
