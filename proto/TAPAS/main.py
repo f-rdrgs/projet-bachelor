@@ -214,7 +214,8 @@ if __name__ == '__main__':
 		for info in element:
 			newDf = pd.concat([newDf,data[data.apply(lambda row: any(info in value for value in row.values), axis=1)]])
 		newDf = newDf.drop_duplicates()
-
+          
+	print("Output") 
 	print(newDf)
 				
 	queries = ["Which horaire by id allows for a reservation on tuesday at 18h30 ?"]
