@@ -38,7 +38,9 @@ def send_message_to_rasa(message):
 # model FR à avoir 
 # python3.10 -m spacy download fr_core_news_md 
 # Pour run serveur duckling 
-# docker run -p 8000:8000 rasa/duckling
+# docker run --name duckling_reserv -p 8000:8000 rasa/duckling 
+# ou 
+# docker start duckling_reserv -a 
 # Renseigner sur Forms pour créer un patterne de conversation qui nécessite de récupérer une quantité d'informations avant de passer à la suite
 # https://rasa.com/docs/rasa/forms/#defining-a-form 
 
