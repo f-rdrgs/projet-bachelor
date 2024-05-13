@@ -91,7 +91,7 @@ if __name__ == "__main__":
                         file_content_string+=line.strip()+". "
                   
                 print(f"File Content : {file_content}")
-                print(f"File String : {file_content_string}")
+                # print(f"File String : {file_content_string}")
                 process_sentences(file_content_string)
                 
               
@@ -99,4 +99,4 @@ if __name__ == "__main__":
         else:
             print(args)
     else:
-        print("Usage : --text <text à traiter>")        
+        print("Usage : \n--text <text à traiter>--file <fichier à traiter")        

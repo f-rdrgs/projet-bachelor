@@ -29,5 +29,5 @@ Il faut exécuter les commandes suivantes dans un terminal chacun :
 ```bash
 rasa run --enable-api --port 5005  --cors '*' -m models/my_rasa_model.tar.gz
 rasa run actions
-docker run -p 8000:8000 rasa/duckling
+docker run --name duckling -p 8000:8000 rasa/duckling 
 ```

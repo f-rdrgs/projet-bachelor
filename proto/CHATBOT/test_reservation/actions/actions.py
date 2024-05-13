@@ -26,6 +26,7 @@ class ActionReserveResource(Action):
         print(f"Current Date in reserve date: {current_time}")
         current_resource = next(tracker.get_latest_entity_values("resource"),None)
         print(current_resource)
+        print(f"Current time : {current_time}")
         if(current_time is None):
             dispatcher.utter_message(text="Et à quelle date ?")
 
