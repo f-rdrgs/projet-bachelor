@@ -37,6 +37,7 @@ CREATE TABLE "reservation" (
 CREATE TABLE "reservations_client_resource" (
   "id" integer PRIMARY KEY,
   "reservation" integer NOT NULL,
+  "resource" varchar NOT NULL,
   "jour_horaire" jour_semaine NOT NULL,
   "heure" time NOT NULL
 );
@@ -46,3 +47,5 @@ ALTER TABLE "ressource_horaire" ADD FOREIGN KEY ("jour") REFERENCES "jour_horair
 ALTER TABLE "ressource_horaire" ADD FOREIGN KEY ("resource") REFERENCES "ressource" ("label");
 
 ALTER TABLE "reservations_client_resource" ADD FOREIGN KEY ("reservation") REFERENCES "reservation" ("id");
+
+ALTER TABLE "reservations_client_resource" ADD FOREIGN KEY ("resource") REFERENCES "ressource" ("label");
