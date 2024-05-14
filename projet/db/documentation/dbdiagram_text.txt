@@ -1,0 +1,49 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Enum jour_semaine{
+  lundi
+  mardi
+  mercredi
+  jeudi
+  vendredi
+  samedi
+  dimanche
+}
+
+Table ressource {
+  label varchar [pk]
+  description text
+}
+
+Table jour_horaire {
+  id integer [pk, increment]
+  jour jour_semaine [not null]
+  debut time [not null] 
+  fin time [not null]
+}
+
+Table ressource_horaire {
+  id integer [pk, increment]
+  jour integer [not null]
+  resource varchar [not null]
+}
+
+Table reservation {
+  id integer [pk, increment]
+  nom varchar [not null]
+  prenom varchar [not null]
+  numero_tel varchar [not null]
+  date_reservation timestamp [not null]
+}
+
+Table reservations_client_resource {
+  id integer [pk]
+  reservation integer [not null]
+  jour_horaire jour_semaine [not null]
+  heure time [not null]
+}
+
+Ref: ressource_horaire.jour > jour_horaire.id
+Ref: ressource_horaire.resource > ressource.label
+Ref: reservations_client_resource.reservation > reservation.id
