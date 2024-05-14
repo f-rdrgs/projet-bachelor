@@ -40,6 +40,7 @@ Table reservation {
 Table reservations_client_resource {
   id integer [pk]
   reservation integer [not null]
+  resource varchar [not null]
   jour_horaire jour_semaine [not null]
   heure time [not null]
 }
@@ -47,3 +48,4 @@ Table reservations_client_resource {
 Ref: ressource_horaire.jour > jour_horaire.id
 Ref: ressource_horaire.resource > ressource.label
 Ref: reservations_client_resource.reservation > reservation.id
+Ref: reservations_client_resource.resource> ressource.label
