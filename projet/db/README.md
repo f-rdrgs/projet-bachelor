@@ -1,5 +1,6 @@
 # Base de données
 
+[toc]
 
 ## Prérequis
 
@@ -30,3 +31,7 @@ Recréer l'image si la base de données à changé
 
 Supprimer le volume associé
 >docker volume rm projet_chatbot_volume
+
+## Sources
+
+[Tutoriel de mise en place de la DB](https://1kevinson.com/how-to-create-a-postgres-database-in-docker/)
