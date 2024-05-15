@@ -21,7 +21,7 @@ pipeline:
     pooling: "mean"
   - name: "EntitySynonymMapper"
   - name: "DucklingEntityExtractor"
-    url: "http://0.0.0.0:8000"
+    url: "http://duckling:8000"
     dimensions: ["time"]
     locale: "fr_FR"
   - name: "RegexFeaturizer"

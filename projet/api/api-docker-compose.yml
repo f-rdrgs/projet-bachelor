@@ -9,6 +9,7 @@ services:
       - "5500"
     ports:
       - "5500:5500"
+    env_file: .env
     volumes:
       - ../chatbot/:/app/chatbot
     restart: unless-stopped
