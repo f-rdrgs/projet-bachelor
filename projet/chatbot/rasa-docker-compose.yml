@@ -13,7 +13,7 @@ services:
       - "./:/app"
     restart: unless-stopped
     env_file: .env
-    command: sh -c "rasa train --fixed-model-name my_rasa_model && rasa run --enable-api --port 5005  --cors '*' -m models/my_rasa_model.tar.gz"
+    command: sh -c 'rasa train --fixed-model-name my_rasa_model && rasa run --enable-api --port 5005  --cors "*" -m models/my_rasa_model.tar.gz'
   duckling:
     image: "rasa/duckling"
     container_name: ${DUCKLING_CONT}
