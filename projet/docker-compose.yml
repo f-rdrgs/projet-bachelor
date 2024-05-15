@@ -18,8 +18,22 @@ services:
       - "3401:3401"
     restart: unless-stopped
     command: -p 3401
-  # api:
-  # chatbot:
+  api:
+    extends:
+      file: ./api/api-docker-compose.yml
+      service: api
+  rasa-core:
+    extends:
+      file: ./chatbot/rasa-docker-compose.yml
+      service: rasa-core
+  duckling:
+    extends:
+      file: ./chatbot/rasa-docker-compose.yml
+      service: duckling
+  actions-server:
+    extends:
+      file: ./chatbot/rasa-docker-compose.yml
+      service: actions-server
 
 volumes:
   chatbot_volume:

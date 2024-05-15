@@ -1,0 +1,14 @@
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: "rasa-api"
+    container_name: ${SERVER_API_CONT}
+    expose:
+      - "5500"
+    ports:
+      - "5500:5500"
+    volumes:
+      - ../chatbot/:/app/chatbot
+    restart: unless-stopped

@@ -1,0 +1,45 @@
+services:
+  rasa-core:
+    image: "rasa-core"
+    container_name: ${RASA_CORE_CONT}
+    expose:
+      - "5005"
+    ports:
+      - "5005:5005"
+    depends_on:
+      - actions-server
+      - duckling
+    volumes:
+      - "./:/app"
+    restart: unless-stopped
+    networks:
+      chatbot_net:
+    command: sh -c "rasa train --fixed-model-name my_rasa_model && rasa run --enable-api --port 5005  --cors '*' -m models/my_rasa_model.tar.gz"
+  duckling:
+    image: "rasa/duckling"
+    container_name: ${DUCKLING_CONT}
+    ports:
+      - "8000:8000"
+    expose: 
+      - "8000"
+    restart: unless-stopped
+    networks:
+      chatbot_net:
+  actions-server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: "rasa-core"
+    volumes:
+      - "./:/app"
+    ports:
+      - "5055:5055"
+    expose:
+      - "5055"
+    restart: unless-stopped
+    command: rasa run actions
+    networks:
+      chatbot_net:
+
+networks:
+  chatbot_net:
