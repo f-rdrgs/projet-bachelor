@@ -18,40 +18,40 @@ services:
       - "3401:3401"
     restart: unless-stopped
     command: -p 3401
-    # networks:
-    #     chatbot_net:
+
   api:
     extends:
       file: ./api/api-docker-compose.yml
       service: api
       env_file: ./api/.env
-      # networks:
-      #   chatbot_net:
+    volumes:
+      - rasa_volume:/app/chatbot
+
   rasa-core:
     extends:
       file: ./chatbot/rasa-docker-compose.yml
       env_file: ./chatbot/.env
       service: rasa-core
-      # networks:
-      #   chatbot_net:
+
   duckling:
     extends:
       file: ./chatbot/rasa-docker-compose.yml
       service: duckling
       env_file: ./chatbot/.env
-      # networks:
-      #   chatbot_net:
+
   actions-server:
     extends:
       file: ./chatbot/rasa-docker-compose.yml
       service: actions-server
       env_file: ./chatbot/.env
-      # networks:
-      #   chatbot_net:
+
 
 volumes:
   chatbot_volume:
     external: false
-  
-# networks:
-#   chatbot_net:
+  rasa_volume:
+    driver: local
+    driver_opts:
+      device: "./chatbot"
+      o: bind
+      type: none

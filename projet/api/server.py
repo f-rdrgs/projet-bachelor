@@ -5,6 +5,7 @@ from pydantic import BaseModel
 import uvicorn
 import asyncio
 import httpx
+import os
 
 app = FastAPI()
 
@@ -33,7 +34,7 @@ async def talk_to_rasa(data:Communicate_Rasa):
     headers = {"Content-Type": "application/json"}
     print(data.model_dump_json())
     async with httpx.AsyncClient() as client:
-        response = await client.post('http://localhost:5005/webhooks/rest/webhook',data=data.model_dump_json(),headers=headers)    
+        response = await client.post('http://rasa-core:5005/webhooks/rest/webhook',data=data.model_dump_json(),headers=headers)    
         return JSONResponse(content=response.json(),status_code=status.HTTP_200_OK)
 
 if __name__ == "__main__":
