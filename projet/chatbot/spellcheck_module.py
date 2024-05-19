@@ -36,8 +36,8 @@ class Spellchecking_Comp(GraphComponent):
         resource: Resource,
         execution_context: ExecutionContext,
     ) -> GraphComponent:
-        # TODO: Implement this
-        return cls()
+        # TODO: Implement this 
+        ...
 
     def train(self, training_data: TrainingData) -> Resource:
         # TODO: Implement this if your component requires training
@@ -54,8 +54,7 @@ class Spellchecking_Comp(GraphComponent):
         spell = SpellChecker(language="fr")
         
         # This method is used to modify the user message and remove () if included in the user text.
-        data = ["Tennis",
-"Handball","Basketball","Ping-Pong","Pétanque"]
+        data = ["Tennis","Handball","Basketball","Ping-Pong","Pétanque"]
         for message in messages:
             # print(message.data)
             for k, v in message.data.items():
