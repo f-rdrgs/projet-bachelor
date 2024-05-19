@@ -1,2 +1,4 @@
 rasa
 rasa[spacy]
+pyspellchecker
+nltk
