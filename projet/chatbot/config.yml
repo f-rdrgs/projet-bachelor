@@ -17,7 +17,6 @@ pipeline:
   - name: "SpacyNLP"
     model: "fr_core_news_md"
   - name: "SpacyTokenizer"
-
   - name: "SpacyFeaturizer"
     pooling: "mean"
   - name: "EntitySynonymMapper"
@@ -41,7 +40,7 @@ pipeline:
   - name: "FallbackClassifier"
     threshold: 0.3
     ambiguity_threshold: 0.1
-  - name: "spellcheck_module.Spellchecking_Comp"
+# - name: "spellcheck_module.Spellchecking_Comp"
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/

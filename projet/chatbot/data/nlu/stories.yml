@@ -1,0 +1,20 @@
+version: "3.1"
+
+stories:
+  - story: salutation_bot
+    steps:
+        - intent: salutation
+        - action: utter_salutation
+  # Implémenter un form qui va boucler tant qu'une réservation n'est pas fournie ou un "annuler"
+  - story: debut_reservation
+    steps:
+      - or:
+        - intent: ressource_gather
+        - intent: salutation+ressource_gather
+      - action: 
+
+
+  - story: ressource_enounce
+    steps:
+      - intent: ressource_gather
+      - action: utter_ressource

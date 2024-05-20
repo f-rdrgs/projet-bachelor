@@ -1,0 +1,12 @@
+version: "3.1"
+
+intents:
+  - salutation
+  - ressource_gather
+  # - greet
+  # - goodbye
+  # - affirm
+  # - deny
+  # - mood_great
+  # - mood_unhappy
+  # - bot_challenge

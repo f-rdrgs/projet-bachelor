@@ -1,0 +1,8 @@
+nlu:
+- lookup: ressource
+  examples: |
+    - tennis
+    - handball
+    - basketball
+    - ping-Pong
+    - pétanque

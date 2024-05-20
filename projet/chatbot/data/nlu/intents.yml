@@ -1,0 +1,18 @@
+version: "3.1"
+
+nlu:
+  - intent: salutation
+    examples: |
+      - [Bonjour](salutation)
+      - [Salut](salutation)
+      - [Yo](salutation)
+      - [Bonsoir](salutation)
+      - [Bjr](salutation)
+  - intent: ressource_gather
+    examples: |
+      - Je veux réserver un terrain de [Tennis](ressource)
+      - J'aimerais réserver un terrain de [Handball](ressource)
+      - Je souhaite réserver un terrain de [Basketball](ressource)
+      - Je voudrais réserver une table de [Ping-Pong](ressource)
+      - Je souhaiterais réserver un terrain de [Pétanque](ressource)
+  - intent: salutation+ressource_gather
