@@ -5,16 +5,47 @@ stories:
     steps:
         - intent: salutation
         - action: utter_salutation
+
   # Implémenter un form qui va boucler tant qu'une réservation n'est pas fournie ou un "annuler"
-  - story: debut_reservation
+  # - story: debut_reservation_w_ressource
+  #   steps:
+  #     - or:
+  #       - intent: ressource_gather
+  #       - intent: salutation+ressource_gather
+  #     - checkpoint: check_value_ressource
+
+  - story: debut_reservation_wo_ressource
     steps:
-      - or:
-        - intent: ressource_gather
-        - intent: salutation+ressource_gather
-      - action: 
+      - intent: gather_no_ressource
+      - action: utter_gather_no_ressource
+      - checkpoint: start_form_ressource
 
 
-  - story: ressource_enounce
+  # - story: pre_check_value_ressource_failed
+  #   steps:
+  #     - checkpoint: check_value_ressource
+  #     - slot_was_set: 
+  #       - ressource: None
+  #     - checkpoint: start_form_ressource
+
+  # - story: pre_check_value_ressource_succeeded
+  #   steps:
+  #     - checkpoint: check_value_ressource
+  #     - slot_was_set: 
+  #       - ressource: UneRessource
+  #     - action: utter_ressource
+
+  - story: start_form_ressource
     steps:
-      - intent: ressource_gather
-      - action: utter_ressource
+      - checkpoint: start_form_ressource
+      - action: get_ressource_form
+      - active_loop: get_ressource_form
+      - checkpoint: select_horaire
+
+  - story: start_form_horaire
+    steps:
+      - checkpoint: select_horaire
+      - action: utter_fin
+
+
+  

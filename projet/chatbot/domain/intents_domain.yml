@@ -2,11 +2,9 @@ version: "3.1"
 
 intents:
   - salutation
-  - ressource_gather
-  # - greet
-  # - goodbye
-  # - affirm
-  # - deny
-  # - mood_great
-  # - mood_unhappy
-  # - bot_challenge
+  - ressource_gather:
+      use_entities: ["ressource"]
+  - gather_no_ressource:
+      use_entities: ["ressource"]
+  - salutation+ressource_gather:
+      use_entities: ["ressource"]

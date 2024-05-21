@@ -8,11 +8,33 @@ nlu:
       - [Yo](salutation)
       - [Bonsoir](salutation)
       - [Bjr](salutation)
-  - intent: ressource_gather
+  # - intent: ressource_gather
+  #   examples: |
+  #     - Je veux réserver un terrain de [Tennis](ressource)
+  #     - J'aimerais réserver un terrain de [Handball](ressource)
+  #     - Je souhaite réserver un terrain de [Basketball](ressource)
+  #     - Je voudrais réserver une table de [Ping-Pong](ressource)
+  #     - Je souhaiterais réserver un terrain de [Pétanque](ressource)
+
+  # - intent: salutation+ressource_gather
+  #   examples: |
+  #     - [Bonjour](salutation), je veux réserver un terrain de [Tennis](ressource)
+  #     - [Salut](salutation), j'aimerais réserver un terrain de [Handball](ressource)
+  #     - [Yo](salutation), je souhaite réserver un terrain de [Basketball](ressource)
+  #     - [Bonsoir](salutation), je voudrais réserver une table de [Ping-Pong](ressource)
+  #     - [Bjr](salutation), je souhaiterais réserver un terrain de [Pétanque](ressource)
+
+  - intent: gather_no_ressource
     examples: |
-      - Je veux réserver un terrain de [Tennis](ressource)
-      - J'aimerais réserver un terrain de [Handball](ressource)
-      - Je souhaite réserver un terrain de [Basketball](ressource)
-      - Je voudrais réserver une table de [Ping-Pong](ressource)
-      - Je souhaiterais réserver un terrain de [Pétanque](ressource)
-  - intent: salutation+ressource_gather
+      - J'aimerais réserver
+      - Je souhaite réserver
+      - Je veux réserver
+      - Je souhaiterais réserver
+      - Puis-je réserver
+      - Est-ce que je peux réserver
+
+  - intent: inform_ressource
+    examples: |
+      - Un terrain de [tennis](ressource)
+      - Un terrain de [badminton](ressource)
+      - Une table de [ping-pong](ressource)
