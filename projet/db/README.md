@@ -8,7 +8,7 @@
 - Postgres (Pour se connecter manuellement)
 
 ## Schéma 
-![Schéma base de données](/documentation/db.png)
+![Schéma base de données](./documentation/db.png)
 
 ## Usage 
 
