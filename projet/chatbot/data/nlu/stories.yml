@@ -6,13 +6,12 @@ stories:
         - intent: salutation
         - action: utter_salutation
 
+  # Mettre un slot_was_set pour tester si on était pas déjà dans un form de réservation et revenir à la suite
   # Implémenter un form qui va boucler tant qu'une réservation n'est pas fournie ou un "annuler"
-  # - story: debut_reservation_w_ressource
-  #   steps:
-  #     - or:
-  #       - intent: ressource_gather
-  #       - intent: salutation+ressource_gather
-  #     - checkpoint: check_value_ressource
+  - story: debut_reservation_w_ressource
+    steps:
+      - intent: ressource_gather
+      - checkpoint: check_value_ressource
 
   - story: debut_reservation_wo_ressource
     steps:
@@ -21,19 +20,20 @@ stories:
       - checkpoint: start_form_ressource
 
 
-  # - story: pre_check_value_ressource_failed
-  #   steps:
-  #     - checkpoint: check_value_ressource
-  #     - slot_was_set: 
-  #       - ressource: None
-  #     - checkpoint: start_form_ressource
+  - story: pre_check_value_ressource_failed
+    steps:
+      - checkpoint: check_value_ressource
+      - slot_was_set: 
+        - ressource: None
+      - checkpoint: start_form_ressource
 
-  # - story: pre_check_value_ressource_succeeded
-  #   steps:
-  #     - checkpoint: check_value_ressource
-  #     - slot_was_set: 
-  #       - ressource: UneRessource
-  #     - action: utter_ressource
+  - story: pre_check_value_ressource_succeeded
+    steps:
+      - checkpoint: check_value_ressource
+      - slot_was_set: 
+        - ressource: UneRessource
+      - action: utter_ressource
+      - checkpoint: select_horaire
 
   - story: start_form_ressource
     steps:

@@ -8,33 +8,52 @@ nlu:
       - [Yo](salutation)
       - [Bonsoir](salutation)
       - [Bjr](salutation)
-  # - intent: ressource_gather
-  #   examples: |
-  #     - Je veux réserver un terrain de [Tennis](ressource)
-  #     - J'aimerais réserver un terrain de [Handball](ressource)
-  #     - Je souhaite réserver un terrain de [Basketball](ressource)
-  #     - Je voudrais réserver une table de [Ping-Pong](ressource)
-  #     - Je souhaiterais réserver un terrain de [Pétanque](ressource)
 
-  # - intent: salutation+ressource_gather
-  #   examples: |
-  #     - [Bonjour](salutation), je veux réserver un terrain de [Tennis](ressource)
-  #     - [Salut](salutation), j'aimerais réserver un terrain de [Handball](ressource)
-  #     - [Yo](salutation), je souhaite réserver un terrain de [Basketball](ressource)
-  #     - [Bonsoir](salutation), je voudrais réserver une table de [Ping-Pong](ressource)
-  #     - [Bjr](salutation), je souhaiterais réserver un terrain de [Pétanque](ressource)
+  - intent: ressource_gather
+    examples: |
+      - [Je veux réserver un terrain de](reservation_w_ress_action) [Tennis](ressource)
+      - [J'aimerais réserver un terrain de](reservation_w_ress_action) [Handball](ressource)
+      - [Je souhaite réserver un terrain de](reservation_w_ress_action) [Basket](ressource)
+      - [Je voudrais réserver une table de](reservation_w_ress_action) [Ping-Pong](ressource)
+      - [Je souhaiterais réserver un terrain de](reservation_w_ress_action) [Pétanque](ressource)
+      - [Je veux faire une réservation pour un terrain de](reservation_w_ress_action) [tennis](ressource)
+      - [J'aimerais faire une réservation d'un terrain de](reservation_w_ress_action) [Badminton](ressource)
+      - [J'aimerais faire une réservation pour un terrain de](reservation_w_ress_action) [pétanque](ressource)
+
+  - intent: salutation+ressource_gather
+    examples: |
+      - [Bonjour](salutation), [je veux réserver un terrain de](reservation_w_ress_action) [Tennis](ressource)
+      - [Salut](salutation) [j'aimerais réserver un terrain de](reservation_w_ress_action) [Handball](ressource)
+      - [Yo](salutation), [je souhaite réserver un terrain de](reservation_w_ress_action) [Basket](ressource)
+      - [Bonsoir](salutation) [je voudrais réserver une table de](reservation_w_ress_action) [Ping-Pong](ressource)
+      - [Bjr](salutation) [je souhaiterais réserver un terrain de](reservation_w_ress_action) [Pétanque](ressource)
+      - [Bonjour](salutation), [J'aimerais faire une réservation d'un terrain de](reservation_w_ress_action) [Badminton](ressource)
+      - [Bonjour](salutation) [J'aimerais faire une réservation pour un terrain de](reservation_w_ress_action) [pétanque](ressource)
+      - [Yo](salutation) [Je veux faire une réservation pour un terrain de](reservation_w_ress_action) [tennis](ressource)
 
   - intent: gather_no_ressource
     examples: |
-      - J'aimerais réserver
-      - Je souhaite réserver
-      - Je veux réserver
-      - Je souhaiterais réserver
-      - Puis-je réserver
-      - Est-ce que je peux réserver
+      - [J'aimerais réserver](reservation_wo_ress_action)
+      - [Je souhaite réserver](reservation_wo_ress_action)
+      - [Je veux réserver](reservation_wo_ress_action)
+      - [Je souhaiterais réserver](reservation_wo_ress_action)
+      - [Puis-je réserver](reservation_wo_ress_action)
+      - [Est-ce que je peux réserver](reservation_wo_ress_action)
+      - [Je veux faire une réservation](reservation_wo_ress_action)
+      - [J'aimerais faire une réservation](reservation_wo_ress_action)
 
   - intent: inform_ressource
     examples: |
       - Un terrain de [tennis](ressource)
       - Un terrain de [badminton](ressource)
       - Une table de [ping-pong](ressource)
+      - Je veux réserver un terrain de [handball](ressource)
+      - Réserver un terrain de [basket](ressource)
+  - intent: inform_temps
+    examples: |
+      - Pour [14h](temps)
+      - À [12h23](temps)
+      - [8:30](temps)
+      - À [15 heures 30](temps)
+      - [20 heures](temps)
+      - [11 heures 15](temps)

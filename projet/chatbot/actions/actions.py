@@ -13,21 +13,27 @@ from rasa_sdk import Action, Tracker, FormValidationAction, ValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
 from rasa_sdk.events import EventType
-
+from rasa_sdk.events import SlotSet
 @staticmethod
 def get_ressource_list()->list[str]:
-    return ["tennis","badminton","ping-pong","pétanque","handball","basketball"]
+    return ["tennis","badminton","ping-pong","pétanque","handball","basket"]
 
 class ActionCheckRessource(Action):
 
     def name(self) -> Text:
-        return "action_check_ressource"
+        return "validate_existance_ressource"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        ressource = str(tracker.get_slot("ressource")).lower()
 
-        dispatcher.utter_message(text="Hello World!")
+        if ressource not in get_ressource_list():
+            dispatcher.utter_message(text=f"{ressource.capitalize()} n'existe pas. Veuillez réessayer avec une ressource valide.")
+            SlotSet("ressource",None)
+            return []
+
+
 
         return []
 
@@ -40,7 +46,7 @@ class ActionEnumerateRessource(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        dispatcher.utter_message(text="Les ressources à disposition sont : \n\t- Tennis\n\t- Pétanque\n\t- Handball\n\t- basketball\n\t- ping-pong")
+        dispatcher.utter_message(text="Les ressources à disposition sont : \n\t- Tennis\n\t- Pétanque\n\t- Handball\n\t- basket\n\t- ping-pong")
 
         return []
     

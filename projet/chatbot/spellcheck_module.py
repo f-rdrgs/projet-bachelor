@@ -54,7 +54,7 @@ class Spellchecking_Comp(GraphComponent):
         spell = SpellChecker(language="fr")
         
         # This method is used to modify the user message and remove () if included in the user text.
-        data = ["Tennis","Handball","Basketball","Ping-Pong","Pétanque"]
+        data = ["Tennis","Handball","Basket","Ping-Pong","Pétanque"]
         for message in messages:
             # print(message.data)
             for k, v in message.data.items():

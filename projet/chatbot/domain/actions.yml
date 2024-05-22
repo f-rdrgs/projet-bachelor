@@ -2,6 +2,7 @@ version: "3.1"
 
 
 actions:
-  - action_check_ressource
+  - validate_existance_ressource
   - action_ask_ressource
   - validate_get_ressource_form
+  - action_validate_slot_mappings

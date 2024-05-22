@@ -3,6 +3,7 @@ version: "3.1"
 responses:
   utter_ressource:
   - text: "Fin Form, La ressource : {ressource}"
+
   utter_salutation:
   - text: "Bonjour, que souhaitez-vous réserver ?"
   utter_gather_no_ressource:

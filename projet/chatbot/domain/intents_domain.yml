@@ -3,8 +3,22 @@ version: "3.1"
 intents:
   - salutation
   - ressource_gather:
-      use_entities: ["ressource"]
+      use_entities: 
+      - ressource
+      - reservation_w_ress_action
   - gather_no_ressource:
-      use_entities: ["ressource"]
+      use_entities: 
+      - ressource
+      - reservation_wo_ress_action
   - salutation+ressource_gather:
-      use_entities: ["ressource"]
+      use_entities:
+      - ressource
+      - salutation
+      - reservation_w_ress_action
+  - inform_ressource:
+      use_entities:
+        - ressource
+  - inform_temps:
+      use_entities:
+        - temps
+  

@@ -1,11 +1,11 @@
 version: "3.1"
-
+# Utiliser synonymes peut-être au besoin
 nlu:
 - lookup: ressource
   examples: |
     - tennis
     - handball
-    - basketball
+    - basket
     - ping-Pong
     - pétanque
     - badminton
