@@ -23,6 +23,7 @@ stories:
   - story: pre_check_value_ressource_failed
     steps:
       - checkpoint: check_value_ressource
+      - action: validate_existance_ressource
       - slot_was_set: 
         - ressource: None
       - checkpoint: start_form_ressource
@@ -30,8 +31,9 @@ stories:
   - story: pre_check_value_ressource_succeeded
     steps:
       - checkpoint: check_value_ressource
+      - action: validate_existance_ressource
       - slot_was_set: 
-        - ressource: UneRessource
+        - ressource: Tennis
       - action: utter_ressource
       - checkpoint: select_horaire
 

@@ -5,4 +5,3 @@ actions:
   - validate_existance_ressource
   - action_ask_ressource
   - validate_get_ressource_form
-  - action_validate_slot_mappings

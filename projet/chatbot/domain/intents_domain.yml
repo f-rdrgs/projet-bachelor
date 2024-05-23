@@ -8,7 +8,6 @@ intents:
       - reservation_w_ress_action
   - gather_no_ressource:
       use_entities: 
-      - ressource
       - reservation_wo_ress_action
   - salutation+ressource_gather:
       use_entities:

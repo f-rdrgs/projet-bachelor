@@ -26,15 +26,15 @@ class ActionCheckRessource(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        ressource = str(tracker.get_slot("ressource")).lower()
-
+        
+        ressource = next(tracker.get_latest_entity_values("ressource"),None).lower()
         if ressource not in get_ressource_list():
             dispatcher.utter_message(text=f"{ressource.capitalize()} n'existe pas. Veuillez réessayer avec une ressource valide.")
             SlotSet("ressource",None)
             return []
-
-
-
+        
+        SlotSet("ressource",ressource)
+        dispatcher.utter_message(tracker.get_slot("ressource"))
         return []
 
 class ActionEnumerateRessource(Action):
