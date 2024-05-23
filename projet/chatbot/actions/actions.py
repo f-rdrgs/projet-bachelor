@@ -70,27 +70,27 @@ class ValidateRessourceForm(FormValidationAction):
         return {"ressource":None}
 
 # https://rasa.com/docs/rasa/action-server/validation-action/
-class ValidateRessourceSlot(ValidationAction):
-    def validate_ressource(
-        self,
-        slot_value: Any,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: DomainDict,
-    ) -> Dict[Text, Any]:
-        """Validate location value."""
-        if isinstance(slot_value, str):
-            ressource :str = str(slot_value).lower()
-            dispatcher.utter_message(f"Ressource: {ressource}")
+# class ValidateRessourceSlot(ValidationAction):
+#     def validate_ressource(
+#         self,
+#         slot_value: Any,
+#         dispatcher: CollectingDispatcher,
+#         tracker: Tracker,
+#         domain: DomainDict,
+#     ) -> Dict[Text, Any]:
+#         """Validate location value."""
+#         if isinstance(slot_value, str):
+#             ressource :str = str(slot_value).lower()
+#             dispatcher.utter_message(f"Ressource: {ressource}")
 
-            if ressource in get_ressource_list():
-                return {"ressource": ressource.capitalize()}
-            else:
-                dispatcher.utter_message(f"{ressource.capitalize()} n'existe pas. Veuillez suggérer une ressource valide.")
-                return {"ressource": None}
-        else:
-            # validation failed, set this slot to None
-            return {"ressource": None}
+#             if ressource in get_ressource_list():
+#                 return {"ressource": ressource.capitalize()}
+#             else:
+#                 dispatcher.utter_message(f"{ressource.capitalize()} n'existe pas. Veuillez suggérer une ressource valide.")
+#                 return {"ressource": None}
+#         else:
+#             # validation failed, set this slot to None
+#             return {"ressource": None}
         
 # https://rasa.com/docs/rasa/forms/#using-a-custom-action-to-ask-for-the-next-slot
 class AskForRessourceAction(Action):

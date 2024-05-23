@@ -34,7 +34,6 @@ stories:
       - action: validate_existance_ressource
       - slot_was_set: 
         - ressource: Tennis
-      - action: utter_ressource
       - checkpoint: select_horaire
 
   - story: start_form_ressource
