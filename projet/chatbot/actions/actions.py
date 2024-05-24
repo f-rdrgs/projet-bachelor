@@ -9,6 +9,7 @@
 
 from enum import Enum
 from typing import Any, Text, Dict, List
+from urllib import response
 
 from rasa_sdk import Action, Tracker, FormValidationAction, ValidationAction
 from rasa_sdk.executor import CollectingDispatcher
@@ -16,7 +17,7 @@ from rasa_sdk.types import DomainDict
 from rasa_sdk.events import EventType, UserUtteranceReverted, FollowupAction
 from rasa_sdk.events import SlotSet
 import datetime
-
+import requests
 
 class Day_week(Enum):
     lundi = 0
@@ -144,7 +145,14 @@ class ValidateHeuresForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         ressource = str(slot_value)
         jours_dispo = get_jours_semaine()
-
+        data = {
+            "locale":"fr_FR",
+            "text":ressource
+        }
+        res = requests.post("http://duckling:8000/parse",data=data)
+        if res.status_code == 200:
+            dispatcher.utter_message(text=f"{res.json()}")
+        
         dispatcher.utter_message(text=f"Date : {ressource}")
 
       
@@ -159,6 +167,13 @@ class ValidateHeuresForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         ressource = str(slot_value)
         jours_dispo = get_jours_semaine()
+        data = {
+            "locale":"fr_FR",
+            "text":ressource
+        }
+        res = requests.post("http://duckling:8000/parse",data=data)
+        if res.status_code == 200:
+            dispatcher.utter_message(text=f"{res.json()}")
 
         dispatcher.utter_message(text=f"Heure : {ressource}")
 
