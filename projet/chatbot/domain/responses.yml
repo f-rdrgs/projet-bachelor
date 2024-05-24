@@ -3,11 +3,8 @@ version: "3.1"
 responses:
   utter_ressource:
   - text: "Fin Form, La ressource : {ressource}"
-
-  utter_salutation:
-  - text: "Bonjour, que souhaitez-vous réserver ?"
-  utter_gather_no_ressource:
-  - text: "Certainement !"
+  utter_confirm_ressource:
+  - text: "Vous avez bien choisi {ressource}, correct ? Entrez 'Annuler' si ce n'est pas le cas"
   # https://rasa.com/docs/rasa/forms/
   # utter_ask_<form>_<slot> ou utter_ask_<slot> est appelé automatiquement dans un form
   # action_ask_<slot> est possible aussi pour une action custom, voir https://rasa.com/docs/rasa/forms/#using-a-custom-action-to-ask-for-the-next-slot
@@ -18,6 +15,10 @@ responses:
   # Appelé lors de fallback
   utter_please_rephrase:
   - text: "Je n'ai pas bien compris ce que vous vouliez dire. Pouvez-vous répéter votre phrase ?"
+  utter_what_ressource:
+  - text: "Que souhaitez-vous donc réserver ?"
 
-  utter_default:
-    - text: "Je ne suis pas sûr d'avoir compris. Pouvez-vous reformuler votre message ?"
+  # utter_default:
+  #   - text: "Je ne suis pas sûr d'avoir compris. Pouvez-vous reformuler votre message ?"
+  utter_date_heure:
+    - text: "Vous avez bien réservé pour {heure} le {date}"

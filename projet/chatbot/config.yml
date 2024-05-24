@@ -19,29 +19,27 @@ pipeline:
   - name: "SpacyTokenizer"
   - name: "SpacyFeaturizer"
     pooling: "mean"
-  - name: "EntitySynonymMapper"
-  - name: "DucklingEntityExtractor"
-    url: "http://duckling:8000"
-    dimensions: ["time"]
-    locale: "fr_FR"
   - name: "RegexFeaturizer"
   - name: "LexicalSyntacticFeaturizer"
-  - name: "RegexEntityExtractor"
-    use_lookup_tables: True
   - name: "CountVectorsFeaturizer"
     analyzer: "char_wb"
     min_ngram: 1
     max_ngram: 4
+  - name: "EntitySynonymMapper"
   - name: "DIETClassifier"
     epochs: 100
+  - name: "DucklingEntityExtractor"
+    dimensions: ["time"]
+    locale: "fr_FR"
+    url: "http://duckling:8000"
+  - name: RegexEntityExtractor
     constrain_similarities: true
   - name: "ResponseSelector"
     epochs: 100
     constrain_similarities: true
   - name: "FallbackClassifier"
-    threshold: 0.7
+    threshold: 0.3
     ambiguity_threshold: 0.1
-# - name: "spellcheck_module.Spellchecking_Comp"
 
 # Configuration for Rasa Core.
 # https://rasa.com/docs/rasa/core/policies/
@@ -52,13 +50,9 @@ policies:
   - name: MemoizationPolicy
   - name: RulePolicy
 #   - name: UnexpecTEDIntentPolicy
-    # max_history: 5
+#     max_history: 5
 #     epochs: 100
-    core_fallback_threshold: 0.4
-    core_fallback_action_name: "action_default_fallback"
-    enable_fallback_prediction: True
-
   - name: TEDPolicy
-    max_history: 5
+    max_history: 2
     epochs: 100
     constrain_similarities: true

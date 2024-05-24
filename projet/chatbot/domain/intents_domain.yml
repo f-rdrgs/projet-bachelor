@@ -5,19 +5,16 @@ intents:
   - ressource_gather:
       use_entities: 
       - ressource
-      - reservation_w_ress_action
-  - gather_no_ressource:
-      use_entities: 
-      - reservation_wo_ress_action
-  - salutation+ressource_gather:
-      use_entities:
-      - ressource
-      - salutation
-      - reservation_w_ress_action
   - inform_ressource:
       use_entities:
         - ressource
-  - inform_temps:
+  - inform_heure:
       use_entities:
-        - temps
-  
+        - heure
+  - inform_date:
+      use_entities:
+        - date
+  - affirm
+  - refuse
+  - annuler
+  - goodbye

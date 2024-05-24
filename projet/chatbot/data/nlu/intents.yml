@@ -11,49 +11,98 @@ nlu:
 
   - intent: ressource_gather
     examples: |
-      - [Je veux réserver un terrain de](reservation_w_ress_action) [Tennis](ressource)
-      - [J'aimerais réserver un terrain de](reservation_w_ress_action) [Handball](ressource)
-      - [Je souhaite réserver un terrain de](reservation_w_ress_action) [Basket](ressource)
-      - [Je voudrais réserver une table de](reservation_w_ress_action) [Ping-Pong](ressource)
-      - [Je souhaiterais réserver un terrain de](reservation_w_ress_action) [Pétanque](ressource)
-      - [Je veux faire une réservation pour un terrain de](reservation_w_ress_action) [tennis](ressource)
-      - [J'aimerais faire une réservation d'un terrain de](reservation_w_ress_action) [Badminton](ressource)
-      - [J'aimerais faire une réservation pour un terrain de](reservation_w_ress_action) [pétanque](ressource)
-
-  - intent: salutation+ressource_gather
-    examples: |
-      - [Bonjour](salutation), [je veux réserver un terrain de](reservation_w_ress_action) [Tennis](ressource)
-      - [Salut](salutation) [j'aimerais réserver un terrain de](reservation_w_ress_action) [Handball](ressource)
-      - [Yo](salutation), [je souhaite réserver un terrain de](reservation_w_ress_action) [Basket](ressource)
-      - [Bonsoir](salutation) [je voudrais réserver une table de](reservation_w_ress_action) [Ping-Pong](ressource)
-      - [Bjr](salutation) [je souhaiterais réserver un terrain de](reservation_w_ress_action) [Pétanque](ressource)
-      - [Bonjour](salutation), [J'aimerais faire une réservation d'un terrain de](reservation_w_ress_action) [Badminton](ressource)
-      - [Bonjour](salutation) [J'aimerais faire une réservation pour un terrain de](reservation_w_ress_action) [pétanque](ressource)
-      - [Yo](salutation) [Je veux faire une réservation pour un terrain de](reservation_w_ress_action) [tennis](ressource)
-
-  - intent: gather_no_ressource
-    examples: |
-      - [J'aimerais réserver](reservation_wo_ress_action)
-      - [Je souhaite réserver](reservation_wo_ress_action)
-      - [Je veux réserver](reservation_wo_ress_action)
-      - [Je souhaiterais réserver](reservation_wo_ress_action)
-      - [Puis-je réserver](reservation_wo_ress_action)
-      - [Est-ce que je peux réserver](reservation_wo_ress_action)
-      - [Je veux faire une réservation](reservation_wo_ress_action)
-      - [J'aimerais faire une réservation](reservation_wo_ress_action)
+      - Je veux réserver un terrain de [tennis](ressource)
+      - J'aimerai réserver un terrain de [Handball](ressource)
+      - J'aimerai réserver un terrain de [tennis](ressource)
+      - J'aimerai réserver un terrain de [Pétanque](ressource)
+      - Je souhaite réserver un terrain de [Basket](ressource)
+      - Je voudrai réserver une table de [Ping-Pong](ressource)
+      - Je voudrai réserver un terrain de [basket](ressource)
+      - Je voudrai réserver un terrain de [Handball]
+      - Je voudrai réserver un terrain de [tennis](ressource)
+      - Je veux réserver une table de [Ping-Pong](ressource)
+      - Je veux réserver un terrain de [basket](ressource)
+      - Je souhaiterai réserver un terrain de [Pétanque](ressource)
+      - Je veux faire une réservation pour un terrain de [tennis](ressource)
+      - J'aimerai faire une réservation d'un terrain de [Badminton](ressource)
+      - J'aimerai faire une réservation pour un terrain de [pétanque](ressource)
 
   - intent: inform_ressource
     examples: |
       - Un terrain de [tennis](ressource)
       - Un terrain de [badminton](ressource)
       - Une table de [ping-pong](ressource)
-      - Je veux réserver un terrain de [handball](ressource)
-      - Réserver un terrain de [basket](ressource)
-  - intent: inform_temps
+      - un terrain de [handball](ressource)
+      - un terrain de [basket](ressource)
+  - intent: inform_heure
     examples: |
-      - Pour [14h](temps)
-      - À [12h23](temps)
-      - [8:30](temps)
-      - À [15 heures 30](temps)
-      - [20 heures](temps)
-      - [11 heures 15](temps)
+      - Pour [14h](heure)
+      - À [12h23](heure)
+      - [8:30](heure)
+      - À [15 heures 30](heure)
+      - [20 heures](heure)
+      - [11 heures 15](heure)
+      - à [15:45](heure)
+      - à [12 heures 20](heure)
+      - à [07h20](heure)
+  - intent: inform_date
+    examples: | 
+      - Le [9 janvier](date)
+      - [27 novembre](date)
+      - [08/11](date)
+      - le [27/03](date)
+      - à la date du [5 mars](date)
+      - Le [18 avril 2025](date)
+      - à la date du [04/06/24](date)
+      - le [20/09/2025](date)
+      - [14/05/2024](date)
+      - [12 décembre](date)
+      - à la date du [25 Février](date)
+      - le [19 Août 2024](date)
+      - Le [01.02.2024](date)
+      - Le [01.02.24](date)
+      - [10.03](date)
+      - À la date du [14.02.2024](date)
+  - intent: affirm
+    examples: |
+      - yep
+      - Yep
+      - Oui
+      - ui
+      - oui
+      - Exactement
+      - yes
+      - Yes
+      - C'est ça
+      - c'est ça
+      - c'est ca
+      - c'est exact
+      - C'est exact
+      - exactement
+      - parfaitement
+      - parfait
+      - Parfait
+  - intent: refuse
+    examples: |
+      - non
+      - Non
+      - no
+      - nn
+      - Nn
+  - intent: annuler
+    examples: |
+      - cancel
+      - annuler
+      - Cancel
+      - Annuler
+      - stop
+      - Stop
+  - intent: goodbye
+    examples: |
+      - aurevoir
+      - au revoir
+      - bye
+      - adieu
+      - adieux
+      - bonne soirée
+      - bonne journée

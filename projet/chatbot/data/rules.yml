@@ -1,26 +1,48 @@
 version: "3.1"
 
 rules:
-# https://rasa.com/docs/rasa/forms/#deactivating-a-form
-- rule: Submit form ressource
-  condition:
-  # Condition that form is active.
+- rule: Saluer l'utilisateur
+  conversation_start: true
+  steps:
+    - intent: salutation
+    - action: action_salutation
+
+- rule: recommencer
+  steps:
+    - intent: annuler
+    - action: action_restart
+    - action: action_ask_ressource
+
+- rule: activate Form ressource
+  steps:
+    - intent: ressource_gather
+    - action: get_ressource_form
     - active_loop: get_ressource_form
+
+- rule: Submit Form ressource
+  condition:
+  - active_loop: get_ressource_form
   steps:
-  # Form is deactivated
-  - action: get_ressource_form
-  - active_loop: null
-  - slot_was_set:
-    - requested_slot: null
-  - action: utter_ressource
-  wait_for_user_input: false
-  # The actions we want to run when the form is submitted.
-  # - action: utter_submit
-  # - action: utter_slots_values
+    - action: get_ressource_form
+    - active_loop: null
+    - slot_was_set:
+      - requested_slot: null
+    - action: utter_confirm_ressource
 
 
-# https://rasa.com/docs/rasa/fallback-handoff/#nlu-fallback
-- rule: Ask the user to rephrase whenever they send a message with low NLU confidence
+- rule: activate Form Date Heure
   steps:
-  - intent: nlu_fallback
-  - action: utter_please_rephrase
+    - intent: affirm
+    - action: get_date_heure_form
+    - active_loop: get_date_heure_form
+
+- rule: Submit Form Date Heure
+  condition:
+  - active_loop: get_date_heure_form
+  steps:
+    - action: get_date_heure_form
+    - active_loop: null
+    - slot_was_set:
+      - requested_slot: null
+    - action: utter_date_heure
+    - action: action_restart

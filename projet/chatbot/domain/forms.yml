@@ -5,4 +5,13 @@ forms:
     required_slots:
       - ressource
     ignored_intents:
-      - gather_no_ressource
+      - inform_date
+      - inform_heure
+      - ressource_gather
+      
+  get_date_heure_form:
+    required_slots:
+      - date
+      - heure
+    ignored_intents:
+      - ressource_gather

@@ -6,8 +6,7 @@ version: "3.1"
 entities:
 - ressource
 - salutation
-- reservation_w_ress_action
-- reservation_wo_ress_action
-- temps
+- date
+- heure
 
   

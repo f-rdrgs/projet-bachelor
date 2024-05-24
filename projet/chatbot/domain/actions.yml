@@ -3,5 +3,9 @@ version: "3.1"
 
 actions:
   - validate_existance_ressource
-  - action_ask_ressource
   - validate_get_ressource_form
+  - validate_get_date_heure_form
+  - action_ask_date
+  - action_ask_heure
+  - action_ask_ressource
+  - action_salutation

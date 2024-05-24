@@ -3,50 +3,62 @@ version: "3.1"
 stories:
   - story: salutation_bot
     steps:
-        - intent: salutation
-        - action: utter_salutation
+      - intent: salutation
+      - action: action_salutation
 
-  # Mettre un slot_was_set pour tester si on était pas déjà dans un form de réservation et revenir à la suite
-  # Implémenter un form qui va boucler tant qu'une réservation n'est pas fournie ou un "annuler"
-  - story: debut_reservation_w_ressource
+  - story: goodbye
+    steps:
+      - intent: goodbye
+      - action: action_restart
+
+  # - story: selection_ressource_succes
+  #   steps:
+  #     - intent: ressource_gather
+  #     - action: validate_existance_ressource
+  #     - slot_was_set:
+  #         - ressource: Tennis
+  #     - checkpoint: validate_current_ressource
+
+  - story: selection_ressource
     steps:
       - intent: ressource_gather
-      - checkpoint: check_value_ressource
-
-  - story: debut_reservation_wo_ressource
-    steps:
-      - intent: gather_no_ressource
-      - action: utter_gather_no_ressource
-      - checkpoint: start_form_ressource
-
-
-  - story: pre_check_value_ressource_failed
-    steps:
-      - checkpoint: check_value_ressource
-      - action: validate_existance_ressource
-      - slot_was_set: 
-        - ressource: None
-      - checkpoint: start_form_ressource
-
-  - story: pre_check_value_ressource_succeeded
-    steps:
-      - checkpoint: check_value_ressource
-      - action: validate_existance_ressource
-      - slot_was_set: 
-        - ressource: Tennis
-      - checkpoint: select_horaire
-
-  - story: start_form_ressource
-    steps:
-      - checkpoint: start_form_ressource
       - action: get_ressource_form
       - active_loop: get_ressource_form
-      - checkpoint: select_horaire
+      - intent: inform_ressource
+      - slot_was_set:
+          - ressource: Basket
+      - slot_was_set:
+          - requested_slot: null
+      - active_loop: null
+      - action: utter_confirm_ressource
+      - checkpoint: validate_current_ressource
 
-  - story: start_form_horaire
+  - story: current_ressource_valid
     steps:
-      - checkpoint: select_horaire
-      - action: utter_fin
+      - checkpoint: validate_current_ressource
+      - intent: affirm
+      - checkpoint: form_horaire
+  - story: current_ressource_invalid
+    steps:
+      - checkpoint: validate_current_ressource
+      - intent: refuse
+      - action: action_restart
+      - action: utter_what_ressource
+      - action: action_listen
 
-
-  
+  - story: start_form_horaire_normal
+    steps:
+      - checkpoint: form_horaire
+      - action: get_date_heure_form
+      - active_loop: get_date_heure_form
+      - intent: inform_date
+      - slot_was_set:
+          - date: "20/05/2024"
+      - intent: inform_heure
+      - slot_was_set:
+          - heure: "12h23"
+      - slot_was_set:
+          - requested_slot: null
+      - active_loop: null
+      - action: utter_date_heure
+      - action: action_restart

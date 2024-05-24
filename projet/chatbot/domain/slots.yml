@@ -6,12 +6,25 @@ slots:
     mappings:
         - type: from_entity
           entity: ressource
-          # conditions:
-          # - active_loop: get_ressource_form # Récolte la ressource QUE lorsqu'on est dans un form
-    influence_conversation: true
-  temps:
-    type: text
+          intent: inform_ressource
+          conditions:
+            - active_loop: get_ressource_form # Récolte la ressource QUE lorsqu'on est dans un form
+    influence_conversation: false
+  date:
+    type: any
     mappings:
       - type: from_entity
-        entity: temps
-    influence_conversation: true
+        entity: date
+        intent: inform_date
+        conditions:
+          - active_loop: get_date_heure_form # Récolte la ressource QUE lorsqu'on est dans un form
+    influence_conversation: false
+  heure:
+    type: any
+    mappings:
+      - type: from_entity
+        entity: heure
+        intent: inform_heure
+        conditions:
+          - active_loop: get_date_heure_form # Récolte la ressource QUE lorsqu'on est dans un form
+    influence_conversation: false

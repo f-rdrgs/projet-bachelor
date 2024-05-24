@@ -2,3 +2,4 @@ rasa
 rasa[spacy]
 pyspellchecker
 nltk
+peewee
