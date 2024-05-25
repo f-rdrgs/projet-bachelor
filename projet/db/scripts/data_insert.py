@@ -6,3 +6,5 @@ if __name__ == "__main__":
     
     # Commande pour exécuter fichiers sql
     # psql -h 0.0.0.0 -U admin -d chatbot-rasa -p 3401 -a -f db/scripts/data_insert.sql 
+
+    # Créer un fichier csv temporaire avec SEULEMENT les choses à copier avec COPY car toute colonne additionnelle pose un problème puis delete le csv
