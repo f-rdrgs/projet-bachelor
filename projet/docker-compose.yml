@@ -14,6 +14,7 @@ services:
       - "3401"
     volumes:
       - chatbot_volume:${POSTGRES_DATA}
+      - ./db/data:/data
     ports:
       - "3401:3401"
     restart: unless-stopped
