@@ -42,6 +42,12 @@ tuple d'info sur les fichiers traités
 '''
 csv_files: Annotated[list[tuple[str,str,list[str],list[str],str]],"Tuple(Filepath originel, Filepath temp, header originel, header temporaire, table DB)"] = []
 
+"""
+Process un fichier csv pour insérer les données ensuite dans la DB
+file: fichier csv dans le dossier data
+table_name: nom de la table dans la DB dans laquelle insérer les données
+*args: suite d'arguments étant les colonnes à ne pas utiliser (process_csv(file, table_name, col1, col2, col3, ...))
+"""
 def process_csv(file:str,table_name:str,*args:str):
     try:
         script_path = os.path.dirname(os.path.realpath(__file__))
@@ -84,15 +90,17 @@ def update_sql_script():
 
 
 def execute_script():
-    with psycopg2.connect(**load_config()) as conn:
-        conn.autocommit = True
-        cursor = conn.cursor()
-        sql = open("data_insert.sql", "r").read()
-        cursor.execute(sql)
-    while csv_files.__len__() > 0:
-        file = csv_files.pop()
-        os.remove(file[1])
-
+    try:
+        with psycopg2.connect(**load_config()) as conn:
+            conn.autocommit = True
+            cursor = conn.cursor()
+            sql = open("data_insert.sql", "r").read()
+            cursor.execute(sql)
+        while csv_files.__len__() > 0:
+            file = csv_files.pop()
+            os.remove(file[1])
+    except Exception as e:
+        print(f"Error while executing script on postgresql database: {e}")
     
 
 if __name__ == "__main__":
