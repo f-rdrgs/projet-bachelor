@@ -1,8 +1,5 @@
--- COPY ressource(label,description)
--- FROM '/data/ressource.csv'
--- WITH (FORMAT csv);
-
-
 COPY jour_horaire(jour,debut,fin)
-FROM '/data/horaire.csv'
+FROM '/data/horaire_temp.csv'
+WITH (FORMAT csv, HEADER);COPY ressource(label,description)
+FROM '/data/ressource_temp.csv'
 WITH (FORMAT csv, HEADER);
