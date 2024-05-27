@@ -78,7 +78,7 @@ def update_sql_script():
                     col_string+=col+","
                 col_string = col_string.removesuffix(",")
             total_string+=f"COPY {table_name}({col_string})\nFROM '/data/{file}'\nWITH (FORMAT csv, HEADER);"
-    
+
         # COPY jour_horaire(jour,debut,fin)
         # FROM '/data/horaire.csv'
         # WITH (FORMAT csv, HEADER);
@@ -86,8 +86,6 @@ def update_sql_script():
             f.write(total_string)
     except Exception as e:
         print(f"Error while updating SQL script: {e}")
-        
-
 
 def execute_script():
     try:
@@ -113,7 +111,7 @@ if __name__ == "__main__":
     # S'assurer que les en-têtes dans les fichiers CSV sont les mêmes que dans la table et dans le même ordre
     script_path = os.path.dirname(os.path.realpath(__file__))
 
-    process_csv("horaire.csv","jour_horaire","title_ressource")
     process_csv("ressource.csv","ressource")
+    process_csv("horaire.csv","jour_horaire")
     update_sql_script()
     execute_script()
