@@ -18,6 +18,7 @@ CREATE TABLE "jour_horaire" (
   "jour" jour_semaine NOT NULL,
   "debut" time NOT NULL,
   "fin" time NOT NULL,
+  "temps_reservation" time NOT NULL,
   "label" varchar
 );
 

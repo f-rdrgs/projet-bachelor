@@ -21,6 +21,7 @@ Table jour_horaire {
   jour jour_semaine [not null]
   debut time [not null] 
   fin time [not null]
+  temps_reservation time [not null]
   label varchar
 }
 

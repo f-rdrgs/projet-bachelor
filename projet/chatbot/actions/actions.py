@@ -31,22 +31,39 @@ class Day_week(Enum):
 
 @staticmethod
 def get_ressource_list()->list[str]:
-    return ["tennis","badminton","ping-pong","pétanque","handball","basket"]
+    res = requests.get("http://api:5500/get-ressources").json()
+    print(res)
+    if(len(res)>0):
+        return [ressource['label'] for ressource in res]
+
+    return []
 
 @staticmethod
-def get_jours_semaine()->list:
+def get_jours_semaine(ressource_label: str)->list:
+    # get-jours-semaine/{ressource_label}
+    res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}").json()
+    if(len(res)>0):
+        return [ressource for ressource in res]
+
     return [Day_week.lundi.value,Day_week.mercredi.value,Day_week.jeudi.value,Day_week.vendredi.value]
+
+# res = requests.get(f"http://api:5500/get-horaires/{jour_semaine}/{ressource}").json()
+#     print(res)
+#     if(len(res)>0):
+#         return [horaire for horaire in res["horaire_heures"]]
+
 
 @staticmethod
 def get_heures():
+    # Récupérer jour semaine depuis slot date mais assurer au préalable que la date est VALIDE en utilisant duckling pour la récupérer lors de la validation
     return ["11h00","11h30","12h00","13h00","13h30","14h00"]
 
 @staticmethod
-def get_dates()->list[datetime.date]:
+def get_dates(ressource:str)->list[datetime.date]:
     curr_date = datetime.datetime.now().date()
     dates_dispo = []
     for date in range(30):
-        if (curr_date + datetime.timedelta(days=date)).weekday() in get_jours_semaine():
+        if (curr_date + datetime.timedelta(days=date)).weekday() in get_jours_semaine(ressource):
             dates_dispo.append(curr_date + datetime.timedelta(days=date))
     return dates_dispo
 class ActionCheckRessource(Action):
@@ -62,7 +79,7 @@ class ActionCheckRessource(Action):
         if ressource not in get_ressource_list():
             dispatcher.utter_message(text=f"{ressource.capitalize()} n'existe pas. Veuillez réessayer avec une ressource valide.")
             SlotSet("ressource",None)
-            return [FollowupAction()]
+            return []
         
         SlotSet("ressource",ressource)
         dispatcher.utter_message(tracker.get_slot("ressource"))
@@ -143,20 +160,21 @@ class ValidateHeuresForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        ressource = str(slot_value)
-        jours_dispo = get_jours_semaine()
+        date = str(slot_value)
+        ressource = str(tracker.get_slot("ressource"))
+        jours_dispo = get_jours_semaine(ressource)
         data = {
             "locale":"fr_FR",
-            "text":ressource
+            "text":date
         }
         res = requests.post("http://duckling:8000/parse",data=data)
         if res.status_code == 200:
             dispatcher.utter_message(text=f"{res.json()}")
         
-        dispatcher.utter_message(text=f"Date : {ressource}")
+        dispatcher.utter_message(text=f"Date : {date}")
 
       
-        return {"date":ressource}
+        return {"date":date}
 
     def validate_heure(
         self,
@@ -165,20 +183,21 @@ class ValidateHeuresForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        ressource = str(slot_value)
-        jours_dispo = get_jours_semaine()
+        heure = str(slot_value)
+        ressource = str(tracker.get_slot("ressource"))
+        jours_dispo = get_jours_semaine(ressource)
         data = {
             "locale":"fr_FR",
-            "text":ressource
+            "text":heure
         }
         res = requests.post("http://duckling:8000/parse",data=data)
         if res.status_code == 200:
             dispatcher.utter_message(text=f"{res.json()}")
 
-        dispatcher.utter_message(text=f"Heure : {ressource}")
+        dispatcher.utter_message(text=f"Heure : {heure}")
 
       
-        return {"heure":ressource}
+        return {"heure":heure}
     
     # async def extract_date(self,
     #     dispatcher: CollectingDispatcher,
@@ -275,7 +294,8 @@ class AskForDateAction(Action):
         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
     ) -> List[EventType]:
         response_mess = "Les dates disponibles à la réservation sont :"
-        for date  in get_dates():
+        ressource = tracker.get_slot("ressource")
+        for date  in get_dates(ressource):
             response_mess += f"\n\t- {date.day}/{date.month}/{date.year}"
         dispatcher.utter_message(text=response_mess)
         dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
