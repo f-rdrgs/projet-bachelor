@@ -54,16 +54,21 @@ def get_jours_semaine(ressource_label: str)->list:
 
 
 @staticmethod
-def get_heures():
+def get_heures(jour_semaine:Day_week,ressource:str):
     # Récupérer jour semaine depuis slot date mais assurer au préalable que la date est VALIDE en utilisant duckling pour la récupérer lors de la validation
-    return ["11h00","11h30","12h00","13h00","13h30","14h00"]
+    res = requests.get(f"http://api:5500/get-horaires/{jour_semaine.name}/{ressource}").json()
+    if(len(res)>0):
+        return res["horaire_heures"]
+    else:
+        return []
 
 @staticmethod
 def get_dates(ressource:str)->list[datetime.date]:
     curr_date = datetime.datetime.now().date()
     dates_dispo = []
+    jours_semaine = get_jours_semaine(ressource)
     for date in range(30):
-        if (curr_date + datetime.timedelta(days=date)).weekday() in get_jours_semaine(ressource):
+        if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaine:
             dates_dispo.append(curr_date + datetime.timedelta(days=date))
     return dates_dispo
 class ActionCheckRessource(Action):
@@ -162,19 +167,34 @@ class ValidateHeuresForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         date = str(slot_value)
         ressource = str(tracker.get_slot("ressource"))
-        jours_dispo = get_jours_semaine(ressource)
         data = {
             "locale":"fr_FR",
             "text":date
         }
+        dispatcher.utter_message(text=f"Date : {date}")
         res = requests.post("http://duckling:8000/parse",data=data)
         if res.status_code == 200:
-            dispatcher.utter_message(text=f"{res.json()}")
+            res_json = res.json()
+            dim_time_index = -1
+            for index in range(len(res_json)):
+                if res_json[index]["dim"] == "time" and dim_time_index == -1:
+                    dim_time_index = index
+            if dim_time_index >= 0:
+                dates_dispo = get_dates(ressource)
+                date = res_json[index]["value"]["value"]
+                date_datetime = datetime.datetime.fromisoformat(date).date()
+                if(date_datetime in dates_dispo):
+                    dispatcher.utter_message(text=f"{res.json()}")
+                    return {"date": res_json[index]["value"]["value"]}
+                else:
+                    dispatcher.utter_message(f"La date du {date_datetime.day}/{date_datetime.month}/{date_datetime.year} n'est pas disponible. Veuillez choisir une autre date")
+            else:
+                dispatcher.utter_message(text=f"Pouvez-vous répéter la date d'une autre manière ?")
+            
         
-        dispatcher.utter_message(text=f"Date : {date}")
 
       
-        return {"date":date}
+        return {"date":None}
 
     def validate_heure(
         self,
@@ -185,19 +205,39 @@ class ValidateHeuresForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         heure = str(slot_value)
         ressource = str(tracker.get_slot("ressource"))
-        jours_dispo = get_jours_semaine(ressource)
+        date = str(tracker.get_slot("date"))
+        
+
         data = {
             "locale":"fr_FR",
             "text":heure
         }
         res = requests.post("http://duckling:8000/parse",data=data)
-        if res.status_code == 200:
-            dispatcher.utter_message(text=f"{res.json()}")
-
         dispatcher.utter_message(text=f"Heure : {heure}")
+        if res.status_code == 200:
+            res_json = res.json()
+            dispatcher.utter_message(text=f"{res_json}")
+            dim_time_index = -1
+            for index in range(len(res_json)):
+                if res_json[index]["dim"] == "time" and dim_time_index == -1:
+                    dim_time_index = index
+            if dim_time_index >= 0:
+                heures_horaire = get_heures(Day_week(datetime.datetime.fromisoformat(date).weekday()),ressource)
+                heures_dispo = [datetime.datetime.strptime(heure_disp,"%H:%M:%S").time() 
+                for heure_disp in heures_horaire]
+                heure_duckling = res_json[dim_time_index]["value"]["value"]
+                heure_conv = datetime.datetime.fromisoformat(heure_duckling)
 
-      
-        return {"heure":heure}
+                dispatcher.utter_message(f"{heure_conv} {heures_dispo}")
+
+                if heure_conv.time() in heures_dispo:
+                    return {"heure": heure_duckling}
+                else:
+                    dispatcher.utter_message(f"{heure_conv.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
+            else:
+                dispatcher.utter_message(text=f"Pouvez-vous répéter l'heure d'une autre manière ?")
+    
+        return {"heure":None}
     
     # async def extract_date(self,
     #     dispatcher: CollectingDispatcher,
@@ -266,7 +306,8 @@ class AskForRessourceAction(Action):
         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
     ) -> List[EventType]:
         response_mess = "Les ressources possible à réserver sont :"
-        for ress in get_ressource_list():
+        liste_ressources = get_ressource_list()
+        for ress in liste_ressources:
             response_mess += f"\n\t- {ress}"
         dispatcher.utter_message(text=response_mess)
         dispatcher.utter_message(text="Que souhaitez-vous réserver ?")
@@ -279,8 +320,12 @@ class AskForHeureAction(Action):
     def run(
         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
     ) -> List[EventType]:
+        ressource = tracker.get_slot("ressource")
+        date = tracker.get_slot("date")
+        weekday_date = Day_week(datetime.datetime.fromisoformat(date).weekday())
         response_mess = "Les heures disponibles à la réservation sont :"
-        for ress in get_heures():
+        heures_horaires = get_heures(weekday_date,ressource)
+        for ress in [datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires]:
             response_mess += f"\n\t- {ress}"
         dispatcher.utter_message(text=response_mess)
         dispatcher.utter_message(text="Pour quelle heure souhaitez-vous réserver ?")
@@ -295,7 +340,8 @@ class AskForDateAction(Action):
     ) -> List[EventType]:
         response_mess = "Les dates disponibles à la réservation sont :"
         ressource = tracker.get_slot("ressource")
-        for date  in get_dates(ressource):
+        dates_for_ressource = get_dates(ressource)
+        for date in dates_for_ressource:
             response_mess += f"\n\t- {date.day}/{date.month}/{date.year}"
         dispatcher.utter_message(text=response_mess)
         dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
