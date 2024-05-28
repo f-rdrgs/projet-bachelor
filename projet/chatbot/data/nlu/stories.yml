@@ -19,6 +19,7 @@ stories:
   #         - ressource: Tennis
   #     - checkpoint: validate_current_ressource
 
+
   - story: selection_ressource
     steps:
       - intent: ressource_gather

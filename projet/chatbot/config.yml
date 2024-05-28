@@ -38,7 +38,7 @@ pipeline:
     epochs: 100
     constrain_similarities: true
   - name: "FallbackClassifier"
-    threshold: 0.3
+    threshold: 0.6
     ambiguity_threshold: 0.1
 
 # Configuration for Rasa Core.
@@ -53,6 +53,6 @@ policies:
 #     max_history: 5
 #     epochs: 100
   - name: TEDPolicy
-    max_history: 2
+    max_history: 4
     epochs: 100
     constrain_similarities: true

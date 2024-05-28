@@ -18,7 +18,9 @@ responses:
   utter_what_ressource:
   - text: "Que souhaitez-vous donc réserver ?"
 
-  # utter_default:
-  #   - text: "Je ne suis pas sûr d'avoir compris. Pouvez-vous reformuler votre message ?"
+  utter_default:
+    - text: "Je ne suis pas sûr d'avoir compris. Pouvez-vous reformuler votre message ?"
   utter_date_heure:
     - text: "Vous avez bien réservé pour {heure} le {date}"
+  utter_please_stay_on_topic:
+    - text: "Veuillez entrer une ressource"

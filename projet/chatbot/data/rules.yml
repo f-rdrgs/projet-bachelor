@@ -10,8 +10,7 @@ rules:
 - rule: recommencer
   steps:
     - intent: annuler
-    - action: action_restart
-    - action: action_ask_ressource
+    - action: restart_convo
 
 - rule: activate Form ressource
   steps:
@@ -29,6 +28,22 @@ rules:
       - requested_slot: null
     - action: utter_confirm_ressource
 
+
+- rule: handle out_of_context during form
+  condition:
+    - active_loop: get_ressource_form
+  steps:
+    - intent: out_of_context
+    - action: utter_please_stay_on_topic
+    - action: get_ressource_form
+
+- rule: handle other during form
+  condition:
+    - active_loop: get_ressource_form
+  steps:
+    - intent: ressource_gather
+    - action: utter_please_stay_on_topic
+    - action: get_ressource_form
 
 - rule: activate Form Date Heure
   steps:

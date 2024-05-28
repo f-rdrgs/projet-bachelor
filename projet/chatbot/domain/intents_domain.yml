@@ -18,3 +18,4 @@ intents:
   - refuse
   - annuler
   - goodbye
+  - out_of_context

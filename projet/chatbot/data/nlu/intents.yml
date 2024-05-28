@@ -45,6 +45,10 @@ nlu:
       - à [15:45](heure)
       - à [12 heures 20](heure)
       - à [07h20](heure)
+      - pour [12h00](heure)
+      - le pour [08:00](heure)
+      - pour [06:34](heure)
+      - pour [17 heures 10](heure)
   - intent: inform_date
     examples: | 
       - Le [9 janvier](date)
@@ -63,6 +67,9 @@ nlu:
       - Le [01.02.24](date)
       - [10.03](date)
       - À la date du [14.02.2024](date)
+      - pour le [17.09.2024](date)
+      - Pour le [25/11](date)
+      - Pour le [20/12/2024](date)
   - intent: affirm
     examples: |
       - yep
@@ -106,3 +113,16 @@ nlu:
       - adieux
       - bonne soirée
       - bonne journée
+  - intent: out_of_context
+    examples: |
+      - lfdkseifésedwkoékleswdifoéfsewd
+      - oiiqwuwqourwiejrfwiruwe
+      - akaalsadasd
+      - asdffg
+      - kajioefwewofsmowélkfkàpqawfmkjkbmdjkoléiàspoqakpgw
+      - Hhahahhaha ohoohoh
+      - AIiaiaiia
+      - 1929931293129053290mewdfjjewio392
+      - Nonononononononononininindindfifind
+      - annadfjsfs
+      
