@@ -26,30 +26,11 @@ rules:
     - active_loop: null
     - slot_was_set:
       - requested_slot: null
-    - action: utter_confirm_ressource
-
-
-- rule: handle out_of_context during form
-  condition:
-    - active_loop: get_ressource_form
-  steps:
-    - intent: out_of_context
-    - action: utter_please_stay_on_topic
-    - action: get_ressource_form
-
-- rule: handle other during form
-  condition:
-    - active_loop: get_ressource_form
-  steps:
-    - intent: ressource_gather
-    - action: utter_please_stay_on_topic
-    - action: get_ressource_form
-
-- rule: activate Form Date Heure
-  steps:
-    - intent: affirm
+    - action: utter_ressource
+    - action: reset_validation
     - action: get_date_heure_form
     - active_loop: get_date_heure_form
+  wait_for_user_input: false
 
 - rule: Submit Form Date Heure
   condition:
@@ -60,4 +41,85 @@ rules:
     - slot_was_set:
       - requested_slot: null
     - action: utter_date_heure
+    - action: reset_validation
+    - action: get_nom_prenom_form
+    - active_loop: get_nom_prenom_form
+  wait_for_user_input: false
+
+- rule: Submit Form Nom Prenom
+  condition:
+  - active_loop: get_nom_prenom_form
+  steps:
+    - action: get_nom_prenom_form
+    - active_loop: null
+    - slot_was_set:
+      - requested_slot: null
+    - action: utter_nom_prenom
+    - action: utter_fin_reservation
+    - action: reset_validation
+    - action: utter_aurevoir
     - action: action_restart
+  wait_for_user_input: false
+
+# - rule: handle out_of_context during form
+#   condition:
+#     - active_loop: get_ressource_form
+#   steps:
+#     - intent: out_of_context
+#     - action: utter_please_stay_on_topic
+#     - action: get_ressource_form
+
+# - rule: handle other during form
+#   condition:
+#     - active_loop: get_ressource_form
+#   steps:
+#     - intent: ressource_gather
+#     - action: utter_please_stay_on_topic
+#     - action: get_ressource_form
+
+# - rule: activate Form Date Heure
+#   condition:
+#     - slot_was_set:
+#         - ressource: true
+#     - slot_was_set:
+#         - date: false
+#     - slot_was_set:
+#         - heure: false
+#     - slot_was_set:
+#         - nom: false
+#     - slot_was_set:
+#         - prenom: false
+#   steps:
+#     - intent: affirm
+#     - action: get_date_heure_form
+#     - active_loop: get_date_heure_form
+
+
+# - rule: activate Form Nom Prenom
+#   condition:
+#     - slot_was_set:
+#         - ressource: true
+#     - slot_was_set:
+#         - date: true
+#     - slot_was_set:
+#         - heure: true
+#     - slot_was_set:
+#         - nom: false
+#     - slot_was_set:
+#         - prenom: false
+#   steps:
+#     - intent: affirm
+#     - action: get_nom_prenom_form
+#     - active_loop: get_nom_prenom_form
+
+# - rule: Submit Form Nom Prenom
+#   condition:
+#   - active_loop: get_nom_prenom_form
+#   steps:
+#     - action: get_nom_prenom_form
+#     - active_loop: null
+#     - slot_was_set:
+#       - requested_slot: null
+#     - action: utter_nom_prenom
+#     - action: action_restart
+

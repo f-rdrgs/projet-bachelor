@@ -11,7 +11,7 @@ slots:
             - active_loop: get_ressource_form # Récolte la ressource QUE lorsqu'on est dans un form
     influence_conversation: false
   date:
-    type: any
+    type: text
     mappings:
       - type: from_entity
         entity: date
@@ -20,11 +20,39 @@ slots:
           - active_loop: get_date_heure_form # Récolte la ressource QUE lorsqu'on est dans un form
     influence_conversation: false
   heure:
-    type: any
+    type: text
     mappings:
       - type: from_entity
         entity: heure
         intent: inform_heure
         conditions:
           - active_loop: get_date_heure_form # Récolte la ressource QUE lorsqu'on est dans un form
+    influence_conversation: false
+  
+  accept_deny:
+    type: bool
+    mappings:
+      - type: from_intent
+        value: true
+        intent: affirm
+        not_intent: refuse
+      - type: from_intent
+        value: false
+        intent: refuse
+        not_intent: affirm
+  nom:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: get_nom_prenom_form
+            requested_slot: nom
+    influence_conversation: false
+  prenom:
+    type: text
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: get_nom_prenom_form
+            requested_slot: prenom
     influence_conversation: false

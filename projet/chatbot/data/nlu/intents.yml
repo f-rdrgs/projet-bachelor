@@ -34,6 +34,11 @@ nlu:
       - Une table de [ping-pong](ressource)
       - un terrain de [handball](ressource)
       - un terrain de [basket](ressource)
+      - [pétanque](ressource)
+      - [tennis](ressource)
+      - [handball](ressource)
+      - [Tennis](ressource)
+      - [Basket](ressource)
   - intent: inform_heure
     examples: |
       - Pour [14h](heure)
@@ -70,6 +75,12 @@ nlu:
       - pour le [17.09.2024](date)
       - Pour le [25/11](date)
       - Pour le [20/12/2024](date)
+  # - intent: inform_nom
+  #   examples: |
+  #     - [Dubois](nom)
+  #     - [Dupuis](nom)
+  #     - [Girard](nom)
+  #     - [Rodrigues dos santos](nom)
   - intent: affirm
     examples: |
       - yep

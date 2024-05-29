@@ -81,7 +81,7 @@ class RestartConvo(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         dispatcher.utter_message("Pas de soucis")
-        return [Restarted(),FollowupAction("action_ask_ressource")]
+        return [Restarted(),FollowupAction("utter_que_faire")]
 
 class ActionCheckRessource(Action):
 
@@ -163,13 +163,75 @@ class ValidateRessourceForm(FormValidationAction):
             ressource = str(slot_value).lower()
             # print(f"RESSOURCE : {ressource}")
             if ressource in get_ressource_list():
-                return {"ressource":ressource}
+                return {"ressource":ressource,"accept_deny":None}
             dispatcher.utter_message(text=f"{ressource} n'existe pas. Veuillez réserver une ressource qui existe")
             # print("LEAVING FORM")
             return {"ressource":None}
         else:
             dispatcher.utter_message("Veuillez spécifier une ressource")
             return {"ressource":None}
+    def validate_accept_deny(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        if slot_value is not None:
+            yes_no = bool(slot_value)
+            dispatcher.utter_message(f"{yes_no}")
+            if yes_no:
+                return {"accept_deny":True}
+            else:
+                SlotSet("ressource", None)
+                return {"accept_deny":None,"ressource": None}
+        else:
+            dispatcher.utter_message("Veuillez répondre oui ou non")
+            return {"accept_deny":None}
+        
+
+class ValidateNomPrenomForm(FormValidationAction):
+    def name(self)->Text:
+        return "validate_get_nom_prenom_form"
+    
+    def validate_prenom( self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        return {"prenom":slot_value,"accept_deny":None}
+
+    def validate_accept_deny(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        if slot_value is not None:
+            yes_no = bool(slot_value)
+            dispatcher.utter_message(f"{yes_no}")
+            if yes_no:
+                return {"accept_deny":True}
+            else:
+                SlotSet("nom", None)
+                SlotSet("prenom", None)
+                return {"accept_deny":None,"nom": None,"prenom":None}
+        else:
+            dispatcher.utter_message("Veuillez répondre oui ou non")
+            return {"accept_deny":None}
+
+
+class ActionResetValidation(Action):
+    def name(self)->Text:
+        return "reset_validation"
+    
+
+    def run(self, dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        return [SlotSet("accept_deny",None)]
 
 class ValidateHeuresForm(FormValidationAction):
     def name(self)->Text:
@@ -188,9 +250,7 @@ class ValidateHeuresForm(FormValidationAction):
             "locale":"fr_FR",
             "text":date
         }
-        print(f"ENTERED VAL DATE , SLOT: {slot_value}")
         if  slot_value is not None:
-            print("PASSED SLOT VALUE CHECK")
             dispatcher.utter_message(text=f"Date : {date}")
             res = requests.post("http://duckling:8000/parse",data=data)
             if res.status_code == 200:
@@ -207,13 +267,11 @@ class ValidateHeuresForm(FormValidationAction):
                         date_duckling = res_json[index]["value"]["value"]
                         date_datetime = datetime.datetime.fromisoformat(date_duckling).date()
                         if(date_datetime in dates_dispo):
-                            dispatcher.utter_message(text=f"{res.json()}")
                             return {"date": date_duckling}
                         else:
                             dispatcher.utter_message(f"La date du {date_datetime.day}/{date_datetime.month}/{date_datetime.year} n'est pas disponible. Veuillez choisir une autre date")
                     else:
                         dispatcher.utter_message(text=f"2. Pouvez-vous répéter la date d'une autre manière ?")
-                        return {"date":tracker.get_slot("date")}
                 else:
                     dispatcher.utter_message(text=f"Pouvez-vous répéter la date d'une autre manière ?")
                 
@@ -261,7 +319,7 @@ class ValidateHeuresForm(FormValidationAction):
                         heure_datetime = datetime.datetime.fromisoformat(heure_duckling)
 
                         if heure_datetime.time() in heures_dispo:
-                            return {"heure": heure_duckling}
+                            return {"heure": heure_duckling,"accept_deny":None}
                         else:
                             dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
                     else:
@@ -274,6 +332,25 @@ class ValidateHeuresForm(FormValidationAction):
             dispatcher.utter_message("Veuillez spécifier une heure")
             return {"heure":tracker.get_slot("heure")}
     
+    def validate_accept_deny(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        if slot_value is not None:
+            yes_no = bool(slot_value)
+            dispatcher.utter_message(f"{yes_no}")
+            if yes_no:
+                return {"accept_deny":True}
+            else:
+                SlotSet("heure", None)
+                SlotSet("date", None)
+                return {"accept_deny":None,"heure": None,"date":None}
+        else:
+            dispatcher.utter_message("Veuillez répondre oui ou non")
+            return {"accept_deny":None}
     # async def extract_date(self,
     #     dispatcher: CollectingDispatcher,
     #     tracker: Tracker,

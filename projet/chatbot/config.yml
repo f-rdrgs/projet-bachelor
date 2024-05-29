@@ -28,6 +28,7 @@ pipeline:
   - name: "EntitySynonymMapper"
   - name: "DIETClassifier"
     epochs: 100
+    constrain_similarities: true
   - name: "DucklingEntityExtractor"
     dimensions: ["time"]
     locale: "fr_FR"

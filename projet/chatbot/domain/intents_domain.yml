@@ -19,3 +19,9 @@ intents:
   - annuler
   - goodbye
   - out_of_context
+  - inform_nom:
+      use_entities:
+        - nom
+  - inform_prenom:
+      use_entities:
+        - prenom

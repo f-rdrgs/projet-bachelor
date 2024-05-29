@@ -5,19 +5,13 @@ stories:
     steps:
       - intent: salutation
       - action: action_salutation
+      - action: utter_que_faire
 
   - story: goodbye
     steps:
       - intent: goodbye
+      - action: utter_aurevoir
       - action: action_restart
-
-  # - story: selection_ressource_succes
-  #   steps:
-  #     - intent: ressource_gather
-  #     - action: validate_existance_ressource
-  #     - slot_was_set:
-  #         - ressource: Tennis
-  #     - checkpoint: validate_current_ressource
 
 
   - story: selection_ressource
@@ -25,41 +19,116 @@ stories:
       - intent: ressource_gather
       - action: get_ressource_form
       - active_loop: get_ressource_form
-      - intent: inform_ressource
       - slot_was_set:
-          - ressource: Basket
+        - ressource: Basket
+      - slot_was_set:
+        - accept_deny: true
       - slot_was_set:
           - requested_slot: null
       - active_loop: null
-      - action: utter_confirm_ressource
-      - checkpoint: validate_current_ressource
-
-  - story: current_ressource_valid
-    steps:
-      - checkpoint: validate_current_ressource
-      - intent: affirm
-      - checkpoint: form_horaire
-  - story: current_ressource_invalid
-    steps:
-      - checkpoint: validate_current_ressource
-      - intent: refuse
-      - action: action_restart
-      - action: utter_what_ressource
-      - action: action_listen
-
-  - story: start_form_horaire_normal
-    steps:
-      - checkpoint: form_horaire
+      - action: utter_ressource
+      - action: reset_validation
+      - slot_was_set:
+          - accept_deny: None
       - action: get_date_heure_form
       - active_loop: get_date_heure_form
-      - intent: inform_date
       - slot_was_set:
           - date: "20/05/2024"
-      - intent: inform_heure
       - slot_was_set:
           - heure: "12h23"
+      - slot_was_set:
+          - accept_deny: true
       - slot_was_set:
           - requested_slot: null
       - active_loop: null
       - action: utter_date_heure
+      - action: reset_validation
+      - slot_was_set:
+          - accept_deny: None
+      - action: get_nom_prenom_form
+      - active_loop: get_nom_prenom_form
+      - slot_was_set:
+          - nom: "Tarkovsky"
+      - slot_was_set:
+          - prenom: "Andrei"
+      - slot_was_set:
+          - accept_deny: true
+      - slot_was_set:
+          - requested_slot: null
+      - active_loop: null
+      - action: utter_nom_prenom
+      - action: utter_fin_reservation
+      - action: reset_validation
+      - slot_was_set:
+          - accept_deny: None
+      - action: utter_aurevoir
       - action: action_restart
+
+
+  # - story: current_ressource_valid
+  #   steps:
+  #     - checkpoint: validate_current_ressource
+  #     - intent: affirm
+  #     - checkpoint: form_horaire
+
+  # - story: current_ressource_invalid
+  #   steps:
+  #     - checkpoint: validate_current_ressource
+  #     - intent: refuse
+  #     - action: action_restart
+  #     - action: utter_what_ressource
+  #     - action: action_listen
+
+
+  # - story: current_date_heure_valid
+  #   steps:
+  #     - checkpoint: validate_current_date_heure
+  #     - intent: affirm
+  #     - checkpoint: get_info
+
+  # - story: current_date_heure_invalid
+  #   steps:
+  #     - checkpoint: validate_current_date_heure
+  #     - intent: refuse
+  #     - action: reset_heure_date
+  #     - slot_was_set:
+  #       - heure: null 
+  #     - slot_was_set:
+  #       - date: null
+  #     - checkpoint: form_horaire
+
+
+  # - story: start_form_horaire_normal
+  #   steps:
+  #     - checkpoint: form_horaire
+  #     - action: get_date_heure_form
+  #     - active_loop: get_date_heure_form
+  #     - intent: inform_date
+  #     - slot_was_set:
+  #         - date: "20/05/2024"
+  #     - intent: inform_heure
+  #     - slot_was_set:
+  #         - heure: "12h23"
+  #     - slot_was_set:
+  #         - requested_slot: null
+  #     - active_loop: null
+  #     - action: utter_date_heure
+  #     - action: utter_confirm_date_heure
+  #     - checkpoint: validate_current_date_heure
+  
+  # - story: get_client_info
+  #   steps:
+  #     - checkpoint: get_info
+  #     - action: get_nom_prenom_form
+  #     - active_loop: get_nom_prenom_form
+  #     - intent: inform_nom
+  #     - slot_was_set:
+  #         - nom: "Tarkovsky"
+  #     - intent: inform_prenom
+  #     - slot_was_set:
+  #         - prenom: "Andrei"
+  #     - slot_was_set:
+  #         - requested_slot: null
+  #     - active_loop: null
+  #     - action: utter_nom_prenom
+  #     - action: action_restart
