@@ -49,6 +49,11 @@ nlu:
       - [11 heures 15](heure)
       - à [15:45](heure)
       - à [12 heures 20](heure)
+      - [10h du matin](heure)
+      - [11h30 du soir](heure)
+      - à [10h du matin](heure)
+      - pour [10h du matin](heure)
+      - pour [8h du soir](heure)
       - à [07h20](heure)
       - pour [12h00](heure)
       - le pour [08:00](heure)
@@ -124,6 +129,15 @@ nlu:
       - adieux
       - bonne soirée
       - bonne journée
+  - intent: inform_num_phone
+    examples: |
+      - mon numéro est [+41795348339](numero_tel)
+      - mon numéro est [0795348339](numero_tel)
+      - mon numéro est [079 534 83 39](numero_tel)
+      - [079 534 83 39](numero_tel)
+      - [0795348339](numero_tel)
+      - [+41795348339](numero_tel)
+      - [+41 79 534 83 39](numero_tel)
   - intent: out_of_context
     examples: |
       - lfdkseifésedwkoékleswdifoéfsewd

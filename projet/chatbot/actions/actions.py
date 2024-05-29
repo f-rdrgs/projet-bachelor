@@ -190,9 +190,9 @@ class ValidateRessourceForm(FormValidationAction):
             return {"accept_deny":None}
         
 
-class ValidateNomPrenomForm(FormValidationAction):
+class ValidateInfoReserv(FormValidationAction):
     def name(self)->Text:
-        return "validate_get_nom_prenom_form"
+        return "validate_get_info_reserv_form"
     
     def validate_prenom( self,
         slot_value: Any,
@@ -201,6 +201,42 @@ class ValidateNomPrenomForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         return {"prenom":slot_value,"accept_deny":None}
+
+    def validate_numero_tel(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        numero = str(slot_value)
+        data = {
+            "locale":"fr_FR",
+            "text":numero
+        }
+        if  slot_value is not None:
+            res = requests.post("http://duckling:8000/parse",data=data)
+            if res.status_code == 200:
+                res_json = res.json()
+                dispatcher.utter_message(f"Duckling: {res_json}")
+                dim_time_index = -1
+                for index in range(len(res_json)):
+                    if res_json[index]["dim"] == "phone-number" and dim_time_index == -1:
+                        dim_time_index = index
+                if dim_time_index >= 0:
+                        numero_duckling = res_json[index]["value"]["value"]
+                        return {"numero_tel": numero_duckling}
+                else:
+                    dispatcher.utter_message(text=f"Pouvez-vous répéter votre numéro de téléphone d'une autre manière ?")
+                
+            
+
+        
+            return {"date":None}
+        else:
+            dispatcher.utter_message("Veuillez spécifier une date")
+            return {"date":tracker.get_slot("date")}
+
 
     def validate_accept_deny(
         self,
@@ -217,7 +253,7 @@ class ValidateNomPrenomForm(FormValidationAction):
             else:
                 SlotSet("nom", None)
                 SlotSet("prenom", None)
-                return {"accept_deny":None,"nom": None,"prenom":None}
+                return {"accept_deny":None,"nom": None,"prenom":None,"numero_tel":None}
         else:
             dispatcher.utter_message("Veuillez répondre oui ou non")
             return {"accept_deny":None}
@@ -257,6 +293,7 @@ class ValidateHeuresForm(FormValidationAction):
                 res_json = res.json()
                 dim_time_index = -1
                 grain = "day"
+                dispatcher.utter_message(f"Duckling: {res_json}")
                 for index in range(len(res_json)):
                     if res_json[index]["dim"] == "time" and dim_time_index == -1:
                         dim_time_index = index
@@ -305,6 +342,7 @@ class ValidateHeuresForm(FormValidationAction):
                 res_json = res.json()
                 dim_time_index = -1
                 grain= "minute"
+                dispatcher.utter_message(f"Duckling: {res_json}")
                 for index in range(len(res_json)):
                     if res_json[index]["dim"] == "time" and dim_time_index == -1:
                         dim_time_index = index

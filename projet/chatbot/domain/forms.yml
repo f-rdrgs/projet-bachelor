@@ -18,10 +18,11 @@ forms:
     ignored_intents:
       - ressource_gather
   
-  get_nom_prenom_form:
+  get_info_reserv_form:
     required_slots:
       - nom
       - prenom
+      - numero_tel
       - accept_deny
     ignored_intents:
       - ressource_gather

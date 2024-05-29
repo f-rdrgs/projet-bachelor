@@ -5,7 +5,7 @@ rules:
   conversation_start: true
   steps:
     - intent: salutation
-    - action: action_salutation
+    - action: utter_que_faire
 
 - rule: recommencer
   steps:
@@ -42,15 +42,15 @@ rules:
       - requested_slot: null
     - action: utter_date_heure
     - action: reset_validation
-    - action: get_nom_prenom_form
-    - active_loop: get_nom_prenom_form
+    - action: get_info_reserv_form
+    - active_loop: get_info_reserv_form
   wait_for_user_input: false
 
 - rule: Submit Form Nom Prenom
   condition:
-  - active_loop: get_nom_prenom_form
+  - active_loop: get_info_reserv_form
   steps:
-    - action: get_nom_prenom_form
+    - action: get_info_reserv_form
     - active_loop: null
     - slot_was_set:
       - requested_slot: null
@@ -109,14 +109,14 @@ rules:
 #         - prenom: false
 #   steps:
 #     - intent: affirm
-#     - action: get_nom_prenom_form
-#     - active_loop: get_nom_prenom_form
+#     - action: get_info_reserv_form
+#     - active_loop: get_info_reserv_form
 
 # - rule: Submit Form Nom Prenom
 #   condition:
-#   - active_loop: get_nom_prenom_form
+#   - active_loop: get_info_reserv_form
 #   steps:
-#     - action: get_nom_prenom_form
+#     - action: get_info_reserv_form
 #     - active_loop: null
 #     - slot_was_set:
 #       - requested_slot: null

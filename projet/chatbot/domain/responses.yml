@@ -13,12 +13,14 @@ responses:
   - text: "Vous souhaitez donc bien réserver {ressource} ?"
   utter_ask_get_date_heure_form_accept_deny:
   - text: "Vous souhaitez donc bien réserver le {date} à {heure} ?"
-  utter_ask_get_nom_prenom_form_accept_deny:
-  - text: "Vous vous nommez donc bien {nom} {prenom} ?"
-  utter_ask_get_nom_prenom_form_nom:
+  utter_ask_get_info_reserv_form_accept_deny:
+  - text: "Vous vous nommez donc bien {nom} {prenom} et votre numéro est le {numero_tel}?"
+  utter_ask_get_info_reserv_form_nom:
   - text: "Quel est votre nom ?"
-  utter_ask_get_nom_prenom_form_prenom:
+  utter_ask_get_info_reserv_form_prenom:
   - text: "Quel est votre prénom ?"
+  utter_ask_get_info_reserv_form_numero_tel:
+  - text: "Quel est votre numéro de téléphone ?"
   utter_que_faire:
   - text: "Que souhaitez-vous donc faire ?"
   utter_fin_reservation:

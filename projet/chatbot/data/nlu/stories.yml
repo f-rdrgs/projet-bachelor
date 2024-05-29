@@ -4,7 +4,6 @@ stories:
   - story: salutation_bot
     steps:
       - intent: salutation
-      - action: action_salutation
       - action: utter_que_faire
 
   - story: goodbye
@@ -45,8 +44,8 @@ stories:
       - action: reset_validation
       - slot_was_set:
           - accept_deny: None
-      - action: get_nom_prenom_form
-      - active_loop: get_nom_prenom_form
+      - action: get_info_reserv_form
+      - active_loop: get_info_reserv_form
       - slot_was_set:
           - nom: "Tarkovsky"
       - slot_was_set:
@@ -119,8 +118,8 @@ stories:
   # - story: get_client_info
   #   steps:
   #     - checkpoint: get_info
-  #     - action: get_nom_prenom_form
-  #     - active_loop: get_nom_prenom_form
+  #     - action: get_info_reserv_form
+  #     - active_loop: get_info_reserv_form
   #     - intent: inform_nom
   #     - slot_was_set:
   #         - nom: "Tarkovsky"

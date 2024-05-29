@@ -45,7 +45,7 @@ slots:
     mappings:
       - type: from_text
         conditions:
-          - active_loop: get_nom_prenom_form
+          - active_loop: get_info_reserv_form
             requested_slot: nom
     influence_conversation: false
   prenom:
@@ -53,6 +53,16 @@ slots:
     mappings:
       - type: from_text
         conditions:
-          - active_loop: get_nom_prenom_form
+          - active_loop: get_info_reserv_form
             requested_slot: prenom
+    influence_conversation: false
+  numero_tel:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: numero_tel
+        intent: inform_num_phone
+        conditions:
+          - active_loop: get_info_reserv_form
+            requested_slot: numero_tel
     influence_conversation: false

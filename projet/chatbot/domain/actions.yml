@@ -5,7 +5,7 @@ actions:
   - validate_existance_ressource
   - validate_get_ressource_form
   - validate_get_date_heure_form
-  - validate_get_nom_prenom_form
+  - validate_get_info_reserv_form
   - action_ask_date
   - action_ask_heure
   - action_ask_ressource

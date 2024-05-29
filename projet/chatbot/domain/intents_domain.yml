@@ -25,3 +25,6 @@ intents:
   - inform_prenom:
       use_entities:
         - prenom
+  - inform_num_phone:
+      use_entities:
+        - numero_tel
