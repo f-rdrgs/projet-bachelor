@@ -60,6 +60,7 @@ stories:
       - action: reset_validation
       - slot_was_set:
           - accept_deny: None
+      - action: save_ressource
       - action: utter_aurevoir
       - action: action_restart
 

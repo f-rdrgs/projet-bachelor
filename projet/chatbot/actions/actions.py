@@ -9,6 +9,7 @@
 # This is a simple example for a custom action which utters "Hello World!"
 
 from enum import Enum
+import json
 from typing import Any, Text, Dict, List
 from urllib import response
 
@@ -73,6 +74,23 @@ def get_dates(ressource:str)->list[datetime.date]:
             dates_dispo.append(curr_date + datetime.timedelta(days=date))
     return dates_dispo
 
+@staticmethod
+def save_reservation(nom:str,prenom:str,numero_tel:str,date:datetime.date,ressource:str,heure:datetime.time)->bool:
+    try:
+
+        res = requests.post(f"http://api:5500/add-reservation",json={
+            "nom":nom,
+            "prenom":prenom,
+            "numero_tel":numero_tel,
+            "ressource":ressource,
+            "heure":str(heure),
+            "date":str(date)
+        })
+    except Exception as e:
+        print(e)
+        return False
+    else:
+        return res.status_code == 200
 
 class RestartConvo(Action):
     def name(self)-> Text:
@@ -83,6 +101,28 @@ class RestartConvo(Action):
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         dispatcher.utter_message("Pas de soucis")
         return [Restarted(),FollowupAction("utter_que_faire")]
+
+class ActionSaveRessource(Action):
+    def name(self) -> Text:
+        return "save_ressource"
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        ressource = tracker.get_slot("ressource")
+        date = tracker.get_slot("date")
+        heure = tracker.get_slot("heure")
+        nom = tracker.get_slot("nom")
+        prenom = tracker.get_slot("prenom")   
+        num_tel = tracker.get_slot("numero_tel")  
+        if ressource is not None and heure is not None and date is not None and prenom is not None and nom is not None and num_tel is not None:
+            date_conv = datetime.datetime.fromisoformat(date).date()
+            heure_conv = datetime.datetime.fromisoformat(heure).time()
+            if save_reservation(nom,prenom,num_tel,date_conv,ressource,heure_conv):
+                dispatcher.utter_message("Réservation enregistrée !")
+            else:
+                dispatcher.utter_message("Une erreur s'est produite lors de l'enregistrement de la réservation")
+        else:
+            dispatcher.utter_message(f"Des informations sont manquantes : {ressource} {date} {heure} {nom} {prenom} {num_tel}")
 
 class ActionCheckRessource(Action):
 
