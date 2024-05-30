@@ -1,0 +1,153 @@
+version: "3.1"
+
+nlu:
+  - intent: salutation
+    examples: |
+      - [Bonjour](salutation)
+      - [Salut](salutation)
+      - [Yo](salutation)
+      - [Bonsoir](salutation)
+      - [Bjr](salutation)
+
+  - intent: ressource_gather
+    examples: |
+      - Je veux réserver un terrain de [tennis](ressource)
+      - J'aimerai réserver un terrain de [Handball](ressource)
+      - J'aimerai réserver un terrain de [tennis](ressource)
+      - J'aimerai réserver un terrain de [Pétanque](ressource)
+      - Je souhaite réserver un terrain de [Basket](ressource)
+      - Je voudrai réserver une table de [Ping-Pong](ressource)
+      - Je voudrai réserver un terrain de [basket](ressource)
+      - Je voudrai réserver un terrain de [Handball]
+      - Je voudrai réserver un terrain de [tennis](ressource)
+      - Je veux réserver une table de [Ping-Pong](ressource)
+      - Je veux réserver un terrain de [basket](ressource)
+      - Je souhaiterai réserver un terrain de [Pétanque](ressource)
+      - Je veux faire une réservation pour un terrain de [tennis](ressource)
+      - J'aimerai faire une réservation d'un terrain de [Badminton](ressource)
+      - J'aimerai faire une réservation pour un terrain de [pétanque](ressource)
+
+  - intent: inform_ressource
+    examples: |
+      - Un terrain de [tennis](ressource)
+      - Un terrain de [badminton](ressource)
+      - Une table de [ping-pong](ressource)
+      - un terrain de [handball](ressource)
+      - un terrain de [basket](ressource)
+      - [pétanque](ressource)
+      - [tennis](ressource)
+      - [handball](ressource)
+      - [Tennis](ressource)
+      - [Basket](ressource)
+  - intent: inform_heure
+    examples: |
+      - Pour [14h](heure)
+      - À [12h23](heure)
+      - [8:30](heure)
+      - À [15 heures 30](heure)
+      - [20 heures](heure)
+      - [11 heures 15](heure)
+      - à [15:45](heure)
+      - à [12 heures 20](heure)
+      - [10h du matin](heure)
+      - [11h30 du soir](heure)
+      - à [10h du matin](heure)
+      - pour [10h du matin](heure)
+      - pour [8h du soir](heure)
+      - à [07h20](heure)
+      - pour [12h00](heure)
+      - le pour [08:00](heure)
+      - pour [06:34](heure)
+      - pour [17 heures 10](heure)
+  - intent: inform_date
+    examples: | 
+      - Le [9 janvier](date)
+      - [27 novembre](date)
+      - [08/11](date)
+      - le [27/03](date)
+      - à la date du [5 mars](date)
+      - Le [18 avril 2025](date)
+      - à la date du [04/06/24](date)
+      - le [20/09/2025](date)
+      - [14/05/2024](date)
+      - [12 décembre](date)
+      - à la date du [25 Février](date)
+      - le [19 Août 2024](date)
+      - Le [01.02.2024](date)
+      - Le [01.02.24](date)
+      - [10.03](date)
+      - À la date du [14.02.2024](date)
+      - pour le [17.09.2024](date)
+      - Pour le [25/11](date)
+      - Pour le [20/12/2024](date)
+  # - intent: inform_nom
+  #   examples: |
+  #     - [Dubois](nom)
+  #     - [Dupuis](nom)
+  #     - [Girard](nom)
+  #     - [Rodrigues dos santos](nom)
+  - intent: affirm
+    examples: |
+      - yep
+      - Yep
+      - Oui
+      - ui
+      - oui
+      - Exactement
+      - yes
+      - Yes
+      - C'est ça
+      - c'est ça
+      - c'est ca
+      - c'est exact
+      - C'est exact
+      - exactement
+      - parfaitement
+      - parfait
+      - Parfait
+  - intent: refuse
+    examples: |
+      - non
+      - Non
+      - no
+      - nn
+      - Nn
+  - intent: annuler
+    examples: |
+      - cancel
+      - annuler
+      - Cancel
+      - Annuler
+      - stop
+      - Stop
+  - intent: goodbye
+    examples: |
+      - aurevoir
+      - au revoir
+      - bye
+      - adieu
+      - adieux
+      - bonne soirée
+      - bonne journée
+  - intent: inform_num_phone
+    examples: |
+      - mon numéro est [+41795348339](numero_tel)
+      - mon numéro est [0795348339](numero_tel)
+      - mon numéro est [079 534 83 39](numero_tel)
+      - [079 534 83 39](numero_tel)
+      - [0795348339](numero_tel)
+      - [+41795348339](numero_tel)
+      - [+41 79 534 83 39](numero_tel)
+  - intent: out_of_context
+    examples: |
+      - lfdkseifésedwkoékleswdifoéfsewd
+      - oiiqwuwqourwiejrfwiruwe
+      - akaalsadasd
+      - asdffg
+      - kajioefwewofsmowélkfkàpqawfmkjkbmdjkoléiàspoqakpgw
+      - Hhahahhaha ohoohoh
+      - AIiaiaiia
+      - 1929931293129053290mewdfjjewio392
+      - Nonononononononononininindindfifind
+      - annadfjsfs
+      

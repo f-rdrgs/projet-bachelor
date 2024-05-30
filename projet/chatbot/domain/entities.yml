@@ -1,0 +1,11 @@
+version: "3.1"
+
+# Similar intent fix ?
+# https://forum.rasa.com/t/difficulties-in-training-the-bot-with-similar-text-for-differrent-intents/13229/7
+
+entities:
+- ressource
+- salutation
+- date
+- heure
+- numero_tel

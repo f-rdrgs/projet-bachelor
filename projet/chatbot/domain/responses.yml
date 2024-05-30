@@ -1,0 +1,47 @@
+version: "3.1"
+
+responses:
+  utter_ressource:
+  - text: "Fin Form, La ressource : {ressource}"
+  utter_nom_prenom:
+  - text: "Vous vous appelez {nom} {prenom}"
+  utter_confirm_ressource:
+  - text: "Vous avez bien choisi {ressource}, est-ce bien ça ? Entrez 'non' si ce n'est pas le cas"
+  utter_confirm_date_heure:
+  - text: "Vous souhaitez donc bien réserver le {date} à {heure}, est-ce bien ça ? Entrez 'Non' si ce n'est pas le cas"
+  utter_ask_get_ressource_form_accept_deny:
+  - text: "Vous souhaitez donc bien réserver {ressource} ?"
+  utter_ask_get_date_heure_form_accept_deny:
+  - text: "Vous souhaitez donc bien réserver le {date} à {heure} ?"
+  utter_ask_get_info_reserv_form_accept_deny:
+  - text: "Vous vous nommez donc bien {nom} {prenom} et votre numéro est le {numero_tel}?"
+  utter_ask_get_info_reserv_form_nom:
+  - text: "Quel est votre nom ?"
+  utter_ask_get_info_reserv_form_prenom:
+  - text: "Quel est votre prénom ?"
+  utter_ask_get_info_reserv_form_numero_tel:
+  - text: "Quel est votre numéro de téléphone ?"
+  utter_que_faire:
+  - text: "Que souhaitez-vous donc faire ?"
+  utter_fin_reservation:
+  - text: "Vous ({nom} {prenom}) avez bien réservé {ressource} le {date} à {heure}"
+  # https://rasa.com/docs/rasa/forms/
+  # utter_ask_<form>_<slot> ou utter_ask_<slot> est appelé automatiquement dans un form
+  # action_ask_<slot> est possible aussi pour une action custom, voir https://rasa.com/docs/rasa/forms/#using-a-custom-action-to-ask-for-the-next-slot
+  #utter_ask_ressource:
+  #- text: "Que souhaitez-vous réserver ?"
+  utter_fin:
+    - text: "Vous avez bien réservé la ressource {ressource}"
+  # Appelé lors de fallback
+  utter_please_rephrase:
+  - text: "Je n'ai pas bien compris ce que vous vouliez dire. Pouvez-vous répéter votre phrase ?"
+  utter_what_ressource:
+  - text: "Que souhaitez-vous donc réserver ?"
+  utter_aurevoir:
+  - text: "Au revoir!"
+  utter_default:
+    - text: "Je ne suis pas sûr d'avoir compris. Pouvez-vous reformuler votre message ?"
+  utter_date_heure:
+    - text: "Vous avez bien réservé pour {heure} le {date}"
+  utter_please_stay_on_topic:
+    - text: "Veuillez entrer une ressource"

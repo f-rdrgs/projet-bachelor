@@ -19,25 +19,27 @@ pipeline:
   - name: "SpacyTokenizer"
   - name: "SpacyFeaturizer"
     pooling: "mean"
-  - name: "EntitySynonymMapper"
-  - name: "DucklingEntityExtractor"
-    url: "http://duckling:8000"
-    dimensions: ["time"]
-    locale: "fr_FR"
   - name: "RegexFeaturizer"
   - name: "LexicalSyntacticFeaturizer"
   - name: "CountVectorsFeaturizer"
     analyzer: "char_wb"
     min_ngram: 1
     max_ngram: 4
+  - name: "EntitySynonymMapper"
   - name: "DIETClassifier"
     epochs: 100
+    constrain_similarities: true
+  - name: "DucklingEntityExtractor"
+    dimensions: ["time"]
+    locale: "fr_FR"
+    url: "http://duckling:8000"
+  - name: RegexEntityExtractor
     constrain_similarities: true
   - name: "ResponseSelector"
     epochs: 100
     constrain_similarities: true
   - name: "FallbackClassifier"
-    threshold: 0.3
+    threshold: 0.6
     ambiguity_threshold: 0.1
 
 # Configuration for Rasa Core.
@@ -52,6 +54,6 @@ policies:
 #     max_history: 5
 #     epochs: 100
   - name: TEDPolicy
-    max_history: 5
+    max_history: 4
     epochs: 100
     constrain_similarities: true

@@ -1,0 +1,30 @@
+version: "3.1"
+
+intents:
+  - salutation
+  - ressource_gather:
+      use_entities: 
+      - ressource
+  - inform_ressource:
+      use_entities:
+        - ressource
+  - inform_heure:
+      use_entities:
+        - heure
+  - inform_date:
+      use_entities:
+        - date
+  - affirm
+  - refuse
+  - annuler
+  - goodbye
+  - out_of_context
+  - inform_nom:
+      use_entities:
+        - nom
+  - inform_prenom:
+      use_entities:
+        - prenom
+  - inform_num_phone:
+      use_entities:
+        - numero_tel

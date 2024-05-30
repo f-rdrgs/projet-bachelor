@@ -1,13 +1,125 @@
 version: "3.1"
 
 rules:
-
-- rule: Say goodbye anytime the user says goodbye
+- rule: Saluer l'utilisateur
+  conversation_start: true
   steps:
-  - intent: goodbye
-  - action: utter_goodbye
+    - intent: salutation
+    - action: utter_que_faire
 
-- rule: Say 'I am a bot' anytime the user challenges
+- rule: recommencer
   steps:
-  - intent: bot_challenge
-  - action: utter_iamabot
+    - intent: annuler
+    - action: restart_convo
+
+- rule: activate Form ressource
+  steps:
+    - intent: ressource_gather
+    - action: get_ressource_form
+    - active_loop: get_ressource_form
+
+- rule: Submit Form ressource
+  condition:
+  - active_loop: get_ressource_form
+  steps:
+    - action: get_ressource_form
+    - active_loop: null
+    - slot_was_set:
+      - requested_slot: null
+    - action: utter_ressource
+    - action: reset_validation
+    - action: get_date_heure_form
+    - active_loop: get_date_heure_form
+  wait_for_user_input: false
+
+- rule: Submit Form Date Heure
+  condition:
+  - active_loop: get_date_heure_form
+  steps:
+    - action: get_date_heure_form
+    - active_loop: null
+    - slot_was_set:
+      - requested_slot: null
+    - action: utter_date_heure
+    - action: reset_validation
+    - action: get_info_reserv_form
+    - active_loop: get_info_reserv_form
+  wait_for_user_input: false
+
+- rule: Submit Form Nom Prenom
+  condition:
+  - active_loop: get_info_reserv_form
+  steps:
+    - action: get_info_reserv_form
+    - active_loop: null
+    - slot_was_set:
+      - requested_slot: null
+    - action: utter_nom_prenom
+    - action: utter_fin_reservation
+    - action: reset_validation
+    - action: utter_aurevoir
+    - action: action_restart
+  wait_for_user_input: false
+
+# - rule: handle out_of_context during form
+#   condition:
+#     - active_loop: get_ressource_form
+#   steps:
+#     - intent: out_of_context
+#     - action: utter_please_stay_on_topic
+#     - action: get_ressource_form
+
+# - rule: handle other during form
+#   condition:
+#     - active_loop: get_ressource_form
+#   steps:
+#     - intent: ressource_gather
+#     - action: utter_please_stay_on_topic
+#     - action: get_ressource_form
+
+# - rule: activate Form Date Heure
+#   condition:
+#     - slot_was_set:
+#         - ressource: true
+#     - slot_was_set:
+#         - date: false
+#     - slot_was_set:
+#         - heure: false
+#     - slot_was_set:
+#         - nom: false
+#     - slot_was_set:
+#         - prenom: false
+#   steps:
+#     - intent: affirm
+#     - action: get_date_heure_form
+#     - active_loop: get_date_heure_form
+
+
+# - rule: activate Form Nom Prenom
+#   condition:
+#     - slot_was_set:
+#         - ressource: true
+#     - slot_was_set:
+#         - date: true
+#     - slot_was_set:
+#         - heure: true
+#     - slot_was_set:
+#         - nom: false
+#     - slot_was_set:
+#         - prenom: false
+#   steps:
+#     - intent: affirm
+#     - action: get_info_reserv_form
+#     - active_loop: get_info_reserv_form
+
+# - rule: Submit Form Nom Prenom
+#   condition:
+#   - active_loop: get_info_reserv_form
+#   steps:
+#     - action: get_info_reserv_form
+#     - active_loop: null
+#     - slot_was_set:
+#       - requested_slot: null
+#     - action: utter_nom_prenom
+#     - action: action_restart
+

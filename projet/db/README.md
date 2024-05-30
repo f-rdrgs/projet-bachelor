@@ -6,6 +6,8 @@
 
 - Docker
 - Postgres (Pour se connecter manuellement)
+- libpq-dev
+- python3.10-dev
 
 ## Schéma 
 ![Schéma base de données](./documentation/db.png)
@@ -31,6 +33,9 @@ Recréer l'image si la base de données à changé
 
 Supprimer le volume associé
 >docker volume rm projet_chatbot_volume
+
+Vider une table et reset son incrément (Après connection à la DB)
+>TRUNCATE TABLE [table] RESTART IDENTITY CASCADE;
 
 ## Sources
 

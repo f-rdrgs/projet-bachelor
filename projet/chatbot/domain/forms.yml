@@ -1,0 +1,31 @@
+version: "3.1"
+
+forms:
+  get_ressource_form:
+    required_slots:
+      - ressource
+      - accept_deny
+    ignored_intents:
+      - inform_date
+      - inform_heure
+      - ressource_gather
+      
+  get_date_heure_form:
+    required_slots:
+      - date
+      - heure
+      - accept_deny
+    ignored_intents:
+      - ressource_gather
+  
+  get_info_reserv_form:
+    required_slots:
+      - nom
+      - prenom
+      - numero_tel
+      - accept_deny
+    ignored_intents:
+      - ressource_gather
+      - inform_date
+      - inform_ressource
+      - inform_heure
