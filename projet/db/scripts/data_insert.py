@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from __future__ import annotations
 from typing import Annotated
 
 import psycopg2
@@ -9,7 +8,9 @@ from configparser import ConfigParser
 # https://www.postgresqltutorial.com/postgresql-python/connect/
 def load_config(filename='database.ini', section='postgresql'):
     parser = ConfigParser()
-    parser.read(filename)
+    script_path = os.path.dirname(os.path.realpath(__file__))
+    filepath = os.path.join(script_path,"database.ini")
+    parser.read(filepath)
 
     # get section, default to postgresql
     config = {}
@@ -82,7 +83,8 @@ def update_sql_script():
         # COPY jour_horaire(jour,debut,fin)
         # FROM '/data/horaire.csv'
         # WITH (FORMAT csv, HEADER);
-        with open(os.path.join(script_path,"data_insert.sql"),"w") as f:
+        sql_filepath = os.path.join(script_path,"data_insert.sql")
+        with open(os.path.join(script_path,sql_filepath),"w") as f:
             f.write(total_string)
     except Exception as e:
         print(f"Error while updating SQL script: {e}")
@@ -92,7 +94,9 @@ def execute_script():
         with psycopg2.connect(**load_config()) as conn:
             conn.autocommit = True
             cursor = conn.cursor()
-            sql = open("data_insert.sql", "r").read()
+            script_path = os.path.dirname(os.path.realpath(__file__))
+            sql_filepath = os.path.join(script_path,"data_insert.sql")
+            sql = open(sql_filepath, "r").read()
             cursor.execute(sql)
         while csv_files.__len__() > 0:
             file = csv_files.pop()
