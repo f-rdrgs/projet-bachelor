@@ -5,6 +5,7 @@
 # https://rasa.com/docs/rasa/custom-actions
 
 
+
 # This is a simple example for a custom action which utters "Hello World!"
 
 from enum import Enum
