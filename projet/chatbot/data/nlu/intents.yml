@@ -80,12 +80,7 @@ nlu:
       - pour le [17.09.2024](date)
       - Pour le [25/11](date)
       - Pour le [20/12/2024](date)
-  # - intent: inform_nom
-  #   examples: |
-  #     - [Dubois](nom)
-  #     - [Dupuis](nom)
-  #     - [Girard](nom)
-  #     - [Rodrigues dos santos](nom)
+
   - intent: affirm
     examples: |
       - yep

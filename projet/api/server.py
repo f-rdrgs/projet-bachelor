@@ -164,6 +164,7 @@ async def add_reservation(data:Reservation_API):
                     "data":{"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource)}
                 },status_code=status.HTTP_200_OK)
         except Exception as e:
+            print(e)
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=str(e))
         
             

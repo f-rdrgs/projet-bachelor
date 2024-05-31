@@ -75,9 +75,17 @@ def get_dates(ressource:str)->list[datetime.date]:
     return dates_dispo
 
 @staticmethod
-def save_reservation(nom:str,prenom:str,numero_tel:str,date:datetime.date,ressource:str,heure:datetime.time)->bool:
+def save_reservation(nom:str,prenom:str,numero_tel:str,date:datetime.date,ressource:str,heure:datetime.time)->tuple[bool,str]:
     try:
-
+        print(nom,prenom,numero_tel,str(date),ressource,str(heure))
+        print({
+            "nom":nom,
+            "prenom":prenom,
+            "numero_tel":numero_tel,
+            "ressource":ressource,
+            "heure":str(heure),
+            "date":str(date)
+        })
         res = requests.post(f"http://api:5500/add-reservation",json={
             "nom":nom,
             "prenom":prenom,
@@ -88,9 +96,9 @@ def save_reservation(nom:str,prenom:str,numero_tel:str,date:datetime.date,ressou
         })
     except Exception as e:
         print(e)
-        return False
+        return False,e
     else:
-        return res.status_code == 200
+        return res.status_code == 200, ""
 
 class RestartConvo(Action):
     def name(self)-> Text:
@@ -113,14 +121,15 @@ class ActionSaveRessource(Action):
         heure = tracker.get_slot("heure")
         nom = tracker.get_slot("nom")
         prenom = tracker.get_slot("prenom")   
-        num_tel = tracker.get_slot("numero_tel")  
+        num_tel = str(tracker.get_slot("numero_tel")  )
         if ressource is not None and heure is not None and date is not None and prenom is not None and nom is not None and num_tel is not None:
             date_conv = datetime.datetime.fromisoformat(date).date()
             heure_conv = datetime.datetime.fromisoformat(heure).time()
-            if save_reservation(nom,prenom,num_tel,date_conv,ressource,heure_conv):
+            succes,err = save_reservation(nom,prenom,num_tel,date_conv,ressource,heure_conv)
+            if succes:
                 dispatcher.utter_message("Réservation enregistrée !")
             else:
-                dispatcher.utter_message("Une erreur s'est produite lors de l'enregistrement de la réservation")
+                dispatcher.utter_message(f"Une erreur s'est produite lors de l'enregistrement de la réservation: {err}")
         else:
             dispatcher.utter_message(f"Des informations sont manquantes : {ressource} {date} {heure} {nom} {prenom} {num_tel}")
 
@@ -199,7 +208,7 @@ class ValidateRessourceForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        print(f"SLOT VALUE{slot_value}")
+        # print(f"SLOT VALUE{slot_value}")
         if slot_value is not None:
             ressource = str(slot_value).lower()
             # print(f"RESSOURCE : {ressource}")
@@ -266,7 +275,16 @@ class ValidateInfoReserv(FormValidationAction):
                         dim_time_index = index
                 if dim_time_index >= 0:
                         numero_duckling = res_json[index]["value"]["value"]
-                        return {"numero_tel": numero_duckling}
+                        ressource = tracker.get_slot("ressource")
+                        date = tracker.get_slot("date")
+                        heure = tracker.get_slot("heure")
+                        nom = tracker.get_slot("nom")
+                        prenom = tracker.get_slot("prenom")   
+                        num_tel = tracker.get_slot("numero_tel")  
+                        date_conv = datetime.datetime.fromisoformat(date).date()
+                        heure_conv = datetime.datetime.fromisoformat(heure).time()
+                        dispatcher.utter_message(f"{ressource} {str(heure_conv)} {str(date_conv)} {nom} {prenom} {num_tel}")
+                        return {"numero_tel": str(numero_duckling)}
                 else:
                     dispatcher.utter_message(text=f"Pouvez-vous répéter votre numéro de téléphone d'une autre manière ?")
                 
