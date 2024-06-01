@@ -238,9 +238,12 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
 
                 slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
 
+
+
                 print(f"Number of slots : {slot_count}")
                 new_schedule = [str(debut_delta+(decoupage_delta*offset)) for offset in range(int(slot_count))]
                 new_schedule_no_reserved_schedules = []
+                # S'assurer qu'aucun des horaires spécifiés ne correspond déjà à une heure de réservation
                 for schedule in new_schedule:
                     if(datetime.datetime.strptime(schedule,"%H:%M:%S").time() not in query_reservations_time):
                         new_schedule_no_reserved_schedules.append(schedule)
