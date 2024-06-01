@@ -20,6 +20,16 @@ from rasa_sdk.events import EventType, UserUtteranceReverted, FollowupAction
 from rasa_sdk.events import SlotSet, Restarted
 import datetime
 import requests
+from dataclasses import dataclass
+
+@dataclass
+class Reservation_save_API():
+    nom:str
+    prenom:str
+    numero_tel:str
+    date:datetime.date
+    ressource:str
+    heure:datetime.time
 
 class Day_week(Enum):
     lundi = 0
@@ -56,9 +66,9 @@ def get_jours_semaine(ressource_label: str)->list:
 
 
 @staticmethod
-def get_heures(jour_semaine:Day_week,ressource:str):
+def get_heures(jour:datetime.date,ressource:str):
     # Récupérer jour semaine depuis slot date mais assurer au préalable que la date est VALIDE en utilisant duckling pour la récupérer lors de la validation
-    res = requests.get(f"http://api:5500/get-horaires/{jour_semaine.name}/{ressource}").json()
+    res = requests.get(f"http://api:5500/get-horaires/{str(jour)}/{ressource}").json()
     if(len(res)>0):
         return res["horaire_heures"]
     else:
@@ -75,9 +85,15 @@ def get_dates(ressource:str)->list[datetime.date]:
     return dates_dispo
 
 @staticmethod
-def save_reservation(nom:str,prenom:str,numero_tel:str,date:datetime.date,ressource:str,heure:datetime.time)->tuple[bool,str]:
+def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
     try:
-        print(nom,prenom,numero_tel,str(date),ressource,str(heure))
+        nom = data.nom
+        prenom = data.prenom
+        numero_tel = data.numero_tel
+        date = data.date
+        ressource = data.ressource
+        heure = data.heure
+        print(data.nom,data.prenom,data.numero_tel,data.date,data.ressource,data.heure)
         print({
             "nom":nom,
             "prenom":prenom,
@@ -125,7 +141,8 @@ class ActionSaveRessource(Action):
         if ressource is not None and heure is not None and date is not None and prenom is not None and nom is not None and num_tel is not None:
             date_conv = datetime.datetime.fromisoformat(date).date()
             heure_conv = datetime.datetime.fromisoformat(heure).time()
-            succes,err = save_reservation(nom,prenom,num_tel,date_conv,ressource,heure_conv)
+            save_reserv_data = Reservation_save_API(nom=str(nom),prenom=str(prenom),numero_tel=str(num_tel),date=str(date_conv),heure=str(heure_conv),ressource=ressource)
+            succes,err = save_reservation(save_reserv_data)
             if succes:
                 dispatcher.utter_message("Réservation enregistrée !")
             else:
@@ -409,7 +426,7 @@ class ValidateHeuresForm(FormValidationAction):
                 if dim_time_index >= 0:
                     dispatcher.utter_message(f"Grain {grain}")
                     if grain == "minute" or grain == "hour":
-                        heures_horaire_ressource = get_heures(Day_week(datetime.datetime.fromisoformat(date).weekday()),ressource)
+                        heures_horaire_ressource = get_heures(datetime.datetime.fromisoformat(date),ressource)
                         heures_dispo = [datetime.datetime.strptime(heure_disp,"%H:%M:%S").time() 
                         for heure_disp in heures_horaire_ressource]
                         heure_duckling = res_json[dim_time_index]["value"]["value"]
@@ -531,9 +548,9 @@ class AskForHeureAction(Action):
     ) -> List[EventType]:
         ressource = tracker.get_slot("ressource")
         date = tracker.get_slot("date")
-        weekday_date = Day_week(datetime.datetime.fromisoformat(date).weekday())
+        date_datetime = datetime.datetime.fromisoformat(date)
         response_mess = "Les heures disponibles à la réservation sont :"
-        heures_horaires = get_heures(weekday_date,ressource)
+        heures_horaires = get_heures(date_datetime,ressource)
         for ress in [datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires]:
             response_mess += f"\n\t- {ress}"
         dispatcher.utter_message(text=response_mess)
