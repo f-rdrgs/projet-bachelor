@@ -167,7 +167,22 @@ async def add_reservation(data:Reservation_API):
             print(e)
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=str(e))
         
-            
+
+@app.get("/get-reservations-ressources/")    
+async def get_reservations_ressources():
+    with Session.begin() as session:
+        query = session.query(Reservations_Client_Resource).distinct().all()
+        
+        return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+
+@app.get("/get-reservations-ressources/{ressource}")    
+async def get_reservations_ressources(ressource:str):
+    with Session.begin() as session:
+        query = session.query(Reservations_Client_Resource).where(Reservations_Client_Resource.resource == ressource).distinct().all()
+        
+        return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+
+
 
 @app.get("/get-jours-semaine/{ressource_label}")
 async def get_jours_semaine(ressource_label:str):
@@ -187,20 +202,28 @@ async def get_horaires_for_ressource(ressource_label: str):
         print(query_result)
         return JSONResponse(content=query_result,status_code=status.HTTP_200_OK)
 
-@app.get("/get-horaires/{jour_semaine}/{ressource_label}")
-async def get_horaires_for_ressource(jour_semaine:str,ressource_label: str):
-    try:
+@app.get("/get-horaires/{jour}/{ressource_label}")
+async def get_horaires_for_ressource(jour:str,ressource_label: str):
+
         with Session.begin() as session:
             decoupage = datetime.time(minute=30)
-            print(decoupage.__str__())
-            query = session.query(Jour_Horaire).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.jour == Jours_Semaine[jour_semaine]).all()
+            jour_date = datetime.datetime.fromisoformat(jour).date()
+            # Récupère les horaires d'une ressource pour un jour de la semaine donné
+            query = session.query(Jour_Horaire).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.jour == Jours_Semaine(jour_date.weekday())).all()
+            # Récupère toutes les réservations correspondant à la date donnée
+            query_reservations = session.query(Reservations_Client_Resource.heure).where(Reservations_Client_Resource.resource == ressource_label).where(Reservations_Client_Resource.date_reservation == jour_date).all()
+            # Ressort une liste de temps
+            query_reservations_time = [time[0] for time in query_reservations]
             query_result = jsonable_encoder(query)
+            # query_reservations_result = jsonable_encoder(query_reservations)
+            print(f"Réservations: {query_reservations_time}")
             print(query_result)
 
             total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
 
             
             final_schedule = []
+            # Créer une liste d'horaires sous format `HEURE:MINUTE:SECONDE`
             for schedule in query_result:
                 print(f"Schedule {schedule}")
                 debut = datetime.datetime.strptime(schedule['debut'], '%H:%M:%S').time()
@@ -217,12 +240,14 @@ async def get_horaires_for_ressource(jour_semaine:str,ressource_label: str):
 
                 print(f"Number of slots : {slot_count}")
                 new_schedule = [str(debut_delta+(decoupage_delta*offset)) for offset in range(int(slot_count))]
-                final_schedule += new_schedule
+                new_schedule_no_reserved_schedules = []
+                for schedule in new_schedule:
+                    if(datetime.datetime.strptime(schedule,"%H:%M:%S").time() not in query_reservations_time):
+                        new_schedule_no_reserved_schedules.append(schedule)
+                final_schedule += new_schedule_no_reserved_schedules
 
 
             return JSONResponse(content={"horaire_heures":final_schedule,"horaire":query_result},status_code=status.HTTP_200_OK)
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 
