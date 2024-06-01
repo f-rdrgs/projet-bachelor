@@ -12,3 +12,4 @@ actions:
   - action_salutation
   - restart_convo
   - reset_validation
+  - save_ressource

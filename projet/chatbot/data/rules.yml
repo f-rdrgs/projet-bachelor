@@ -57,6 +57,7 @@ rules:
     - action: utter_nom_prenom
     - action: utter_fin_reservation
     - action: reset_validation
+    - action: save_ressource
     - action: utter_aurevoir
     - action: action_restart
   wait_for_user_input: false

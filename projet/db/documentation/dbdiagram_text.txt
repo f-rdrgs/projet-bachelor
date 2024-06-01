@@ -43,7 +43,7 @@ Table reservations_client_resource {
   id integer [pk]
   reservation integer [not null]
   resource varchar [not null]
-  jour_horaire jour_semaine [not null]
+  date_reservation date [not null]
   heure time [not null]
 }
 

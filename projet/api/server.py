@@ -1,4 +1,5 @@
 import datetime
+from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,6 +18,14 @@ class Communicate_Rasa(BaseModel):
 
 class Test_rasa_nlu(BaseModel):
     text:str
+
+class Reservation_API(BaseModel):
+    nom:str
+    prenom:str
+    numero_tel:str
+    ressource:str
+    date:datetime.date
+    heure:datetime.time
 
 origins = [
     "http://0.0.0.0",
@@ -54,7 +63,7 @@ def load_config(filename='database.ini', section='postgresql'):
 
 
 
-from sqlalchemy import Column, ForeignKey, Time, create_engine, select
+from sqlalchemy import Column, ForeignKey, Time, create_engine, TIMESTAMP
 from sqlalchemy.engine import URL
 
 config = load_config()
@@ -74,7 +83,7 @@ engine = create_engine(url)
 
 # https://coderpad.io/blog/development/sqlalchemy-with-postgresql/
 from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime, Text, VARCHAR,Enum
+from sqlalchemy import Column, Integer, Date, Text, VARCHAR,Enum, Time
 
 import enum
 
@@ -106,65 +115,112 @@ class Jour_Horaire(Base):
     temps_reservation = Column(Time(),nullable=False)
     label = Column(VARCHAR(),ForeignKey('ressource.label'),nullable=True)
 
+class Reservation(Base):
+    __tablename__ = 'reservation'
+    id = Column(Integer(),primary_key=True,autoincrement="auto")
+    nom = Column(VARCHAR(),nullable=False)
+    prenom = Column(VARCHAR(),nullable=False)
+    numero_tel = Column(VARCHAR(),nullable=False)
+    date_reservation = Column(TIMESTAMP(),nullable=False)
+
+class Reservations_Client_Resource(Base):
+    __tablename__ = 'reservations_client_resource'
+    id = Column(Integer(),primary_key=True,autoincrement="auto")
+    reservation = Column(Integer(),ForeignKey('reservation.id'), nullable=False)
+    resource = Column(VARCHAR(),ForeignKey('ressource.label'),nullable=False)
+    date_reservation = Column(Date(),nullable=False)
+    heure = Column(Time(),nullable=False)
+
 from sqlalchemy.orm import sessionmaker
 
 Session = sessionmaker(bind=engine)
-session = Session()
 
 def seconds_to_hour_min_sec(seconds:int)-> tuple[int,int,int]:
     hour = seconds / 3600
 
+# Temps stocké en UTC (2h en moins qu'en Suisse)
+
+@app.post("/add-reservation/")
+async def add_reservation(data:Reservation_API):
+    
+        new_reservation = Reservation(nom=data.nom,prenom=data.prenom,numero_tel=data.numero_tel,date_reservation=datetime.datetime.now(ZoneInfo('Europe/Paris')))
+        print(datetime.datetime.now())
+        output_reserv = Reservation()
+        output_reserv_ressource = Reservations_Client_Resource()
+        try:
+            with Session.begin() as session:
+                session.add(new_reservation)
+                session.flush()
+                session.refresh(new_reservation)
+                output_reserv = {"id": new_reservation.id,"nom": new_reservation.nom,"prenom": new_reservation.prenom,"numero_tel": new_reservation.numero_tel,"date_reservation": new_reservation.date_reservation}
+            with Session.begin() as session:
+                reservation_ressource = Reservations_Client_Resource(reservation=output_reserv["id"],resource=data.ressource,date_reservation=data.date,heure=data.heure)
+                session.add(reservation_ressource)
+                session.flush()
+                session.refresh(reservation_ressource)
+                output_reserv_ressource = {"id": reservation_ressource.id,"heure": reservation_ressource.heure,"date_reservation": reservation_ressource.date_reservation,"ressource": reservation_ressource.resource,"date_reservation": reservation_ressource.date_reservation}
+            return JSONResponse(content={
+                    "message":"Réservation ajoutée",
+                    "data":{"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource)}
+                },status_code=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=str(e))
+        
+            
+
 @app.get("/get-jours-semaine/{ressource_label}")
 async def get_jours_semaine(ressource_label:str):
-    query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).distinct().all()
-    query_result = []
-    if query.__len__() > 0:
-       query_result = [Jours_Semaine(jour[0]).value for jour in query]
-    # query_result = jsonable_encoder(query)
-    # print(query)
-    return JSONResponse(content=query_result,status_code=status.HTTP_200_OK)
+    with Session.begin() as session:
+        query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).distinct().all()
+        query_result = []
+        if query.__len__() > 0:
+            query_result = [Jours_Semaine(jour[0]).value for jour in query]
+        return JSONResponse(content=query_result,status_code=status.HTTP_200_OK)
 
 
 @app.get("/get-horaires/{ressource_label}")
 async def get_horaires_for_ressource(ressource_label: str):
-    query = session.query(Jour_Horaire).where(Jour_Horaire.label.like(ressource_label)).all()
-    query_result = jsonable_encoder(query)
-    print(query_result)
-    return JSONResponse(content=query_result,status_code=status.HTTP_200_OK)
+    with Session.begin() as session:
+        query = session.query(Jour_Horaire).where(Jour_Horaire.label.like(ressource_label)).all()
+        query_result = jsonable_encoder(query)
+        print(query_result)
+        return JSONResponse(content=query_result,status_code=status.HTTP_200_OK)
 
 @app.get("/get-horaires/{jour_semaine}/{ressource_label}")
 async def get_horaires_for_ressource(jour_semaine:str,ressource_label: str):
     try:
-        decoupage = datetime.time(minute=30)
-        print(decoupage.__str__())
-        query = session.query(Jour_Horaire).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.jour == Jours_Semaine[jour_semaine]).all()
-        query_result = jsonable_encoder(query)
-        print(query_result)
+        with Session.begin() as session:
+            decoupage = datetime.time(minute=30)
+            print(decoupage.__str__())
+            query = session.query(Jour_Horaire).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.jour == Jours_Semaine[jour_semaine]).all()
+            query_result = jsonable_encoder(query)
+            print(query_result)
 
-        total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
+            total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
 
-        
-        final_schedule = []
-        for schedule in query_result:
-            print(f"Schedule {schedule}")
-            debut = datetime.datetime.strptime(schedule['debut'], '%H:%M:%S').time()
-            debut_delta = datetime.timedelta(seconds=total_sec_calc(debut.hour,debut.minute,debut.second))
-            fin = datetime.datetime.strptime(schedule['fin'], '%H:%M:%S').time()
-            fin_delta = datetime.timedelta(seconds=total_sec_calc(fin.hour,fin.minute,fin.second))
-            print(f"Debut {debut}")
-            print(f"Fin {fin}")
-
-
-            decoupage_delta = datetime.timedelta(seconds=total_sec_calc(decoupage.hour,decoupage.minute,decoupage.second))
-
-            slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
-
-            print(f"Number of slots : {slot_count}")
-            new_schedule = [str(debut_delta+(decoupage_delta*offset)) for offset in range(int(slot_count))]
-            final_schedule += new_schedule
+            
+            final_schedule = []
+            for schedule in query_result:
+                print(f"Schedule {schedule}")
+                debut = datetime.datetime.strptime(schedule['debut'], '%H:%M:%S').time()
+                debut_delta = datetime.timedelta(seconds=total_sec_calc(debut.hour,debut.minute,debut.second))
+                fin = datetime.datetime.strptime(schedule['fin'], '%H:%M:%S').time()
+                fin_delta = datetime.timedelta(seconds=total_sec_calc(fin.hour,fin.minute,fin.second))
+                print(f"Debut {debut}")
+                print(f"Fin {fin}")
 
 
-        return JSONResponse(content={"horaire_heures":final_schedule,"horaire":query_result},status_code=status.HTTP_200_OK)
+                decoupage_delta = datetime.timedelta(seconds=total_sec_calc(decoupage.hour,decoupage.minute,decoupage.second))
+
+                slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
+
+                print(f"Number of slots : {slot_count}")
+                new_schedule = [str(debut_delta+(decoupage_delta*offset)) for offset in range(int(slot_count))]
+                final_schedule += new_schedule
+
+
+            return JSONResponse(content={"horaire_heures":final_schedule,"horaire":query_result},status_code=status.HTTP_200_OK)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
@@ -172,8 +228,9 @@ async def get_horaires_for_ressource(jour_semaine:str,ressource_label: str):
 
 @app.get("/get-ressources")
 async def get_ressources():
-    query = session.query(Ressource).all()
-    return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+    with Session.begin() as session:
+        query = session.query(Ressource).all()
+        return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
 
 @app.post("/test-nlu")
 async def test_nlu_rasa(data:Test_rasa_nlu):
