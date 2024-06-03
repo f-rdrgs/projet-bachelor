@@ -51,13 +51,18 @@ def get_ressource_list()->list[str]:
     return []
 
 @staticmethod
-def get_jours_semaine(ressource_label: str)->list:
+def get_jours_disponibles(ressource_label: str,nombre_jours:int)->list[datetime.date]:
     # get-jours-semaine/{ressource_label}
-    res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}").json()
-    if(len(res)>0):
-        return [ressource for ressource in res]
+    
+        res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}/{nombre_jours}").json()
+        if(len(res["dates"])>0):
+            return [datetime.date.fromisoformat(date) for date in res["dates"]]
+        else:
+            print("No dates found")
+            return []
 
-    return [Day_week.lundi.value,Day_week.mercredi.value,Day_week.jeudi.value,Day_week.vendredi.value]
+
+    
 
 # res = requests.get(f"http://api:5500/get-horaires/{jour_semaine}/{ressource}").json()
 #     print(res)
@@ -75,24 +80,31 @@ def get_heures(jour:datetime.date,ressource:str):
         return []
 
 @staticmethod
-def get_dates(ressource:str)->list[datetime.date]:
-    curr_date = datetime.datetime.now().date()
-    dates_dispo = []
-    jours_semaine = get_jours_semaine(ressource)
-    for date in range(30):
-        if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaine:
-            dates_dispo.append(curr_date + datetime.timedelta(days=date))
+def get_reserved_ressources_since_date(date:datetime.date,ressource:str):
+    res = requests.get(f"http://api:5500/get-reservations-ressources-from-date/{ressource}/{str(date)}").json()
+    if(len(res)>0):
+        return res
+    else:
+        return []
+
+# @staticmethod
+# def get_fully_reserved_dates():
+
+# Changer le fait de ne plsu récupérer les jours de la semaine mais que l'api retourne directement les dates, le calcul se fait coté API
+@staticmethod
+def get_dates(ressource:str,nombre_jours:int)->list[datetime.date]:
+    dates_dispo = get_jours_disponibles(ressource,nombre_jours)
     return dates_dispo
 
 @staticmethod
 def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
     try:
-        nom = data.nom
-        prenom = data.prenom
-        numero_tel = data.numero_tel
-        date = data.date
-        ressource = data.ressource
-        heure = data.heure
+        nom = str(data.nom)
+        prenom = str(data.prenom)
+        numero_tel = str(data.numero_tel)
+        date = str(data.date)
+        ressource = str(data.ressource)
+        heure = str(data.heure)
         print(data.nom,data.prenom,data.numero_tel,data.date,data.ressource,data.heure)
         print({
             "nom":nom,
@@ -132,12 +144,12 @@ class ActionSaveRessource(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        ressource = tracker.get_slot("ressource")
-        date = tracker.get_slot("date")
-        heure = tracker.get_slot("heure")
+        ressource = str(tracker.get_slot("ressource"))
+        date = str(tracker.get_slot("date"))
+        heure = str(tracker.get_slot("heure"))
         nom = tracker.get_slot("nom")
         prenom = tracker.get_slot("prenom")   
-        num_tel = str(tracker.get_slot("numero_tel")  )
+        num_tel = str(tracker.get_slot("numero_tel"))
         if ressource is not None and heure is not None and date is not None and prenom is not None and nom is not None and num_tel is not None:
             date_conv = datetime.datetime.fromisoformat(date).date()
             heure_conv = datetime.datetime.fromisoformat(heure).time()
@@ -291,16 +303,15 @@ class ValidateInfoReserv(FormValidationAction):
                     if res_json[index]["dim"] == "phone-number" and dim_time_index == -1:
                         dim_time_index = index
                 if dim_time_index >= 0:
-                        numero_duckling = res_json[index]["value"]["value"]
+                        numero_duckling = str(res_json[dim_time_index]["value"]["value"])
                         ressource = tracker.get_slot("ressource")
                         date = tracker.get_slot("date")
                         heure = tracker.get_slot("heure")
                         nom = tracker.get_slot("nom")
-                        prenom = tracker.get_slot("prenom")   
-                        num_tel = tracker.get_slot("numero_tel")  
+                        prenom = tracker.get_slot("prenom")
                         date_conv = datetime.datetime.fromisoformat(date).date()
                         heure_conv = datetime.datetime.fromisoformat(heure).time()
-                        dispatcher.utter_message(f"{ressource} {str(heure_conv)} {str(date_conv)} {nom} {prenom} {num_tel}")
+                        dispatcher.utter_message(f"{ressource} {str(heure_conv)} {str(date_conv)} {nom} {prenom} {numero_duckling}")
                         return {"numero_tel": str(numero_duckling)}
                 else:
                     dispatcher.utter_message(text=f"Pouvez-vous répéter votre numéro de téléphone d'une autre manière ?")
@@ -376,7 +387,7 @@ class ValidateHeuresForm(FormValidationAction):
                         grain = res_json[index]["value"]["grain"]
                 if dim_time_index >= 0:
                     if grain == "day":
-                        dates_dispo = get_dates(ressource)
+                        dates_dispo = get_jours_disponibles(ressource,30)
                         date_duckling = res_json[index]["value"]["value"]
                         date_datetime = datetime.datetime.fromisoformat(date_duckling).date()
                         if(date_datetime in dates_dispo):
@@ -465,64 +476,7 @@ class ValidateHeuresForm(FormValidationAction):
         else:
             dispatcher.utter_message("Veuillez répondre oui ou non")
             return {"accept_deny":None}
-    # async def extract_date(self,
-    #     dispatcher: CollectingDispatcher,
-    #     tracker: Tracker,
-    #     domain: DomainDict,
-    # ) -> Dict[Text, Any]:
-    #     last_intent = tracker.latest_message.get("intent")["name"]
-    #     dispatcher.utter_message(tracker.latest_message)
-    #     dispatcher.utter_message(f"INTENT :{last_intent}")
-    #     if last_intent == "inform_date":
-    #         date_value = next(tracker.get_latest_entity_values("date"),None)
-    #         dispatcher.utter_message(f"VALUE DATE: {date_value}")
-    #         # SlotSet("date",date_value)
-    #         return {"date":date_value}
-
-    #     return []
-    
-    # async def extract_heure(self,
-    #     dispatcher: CollectingDispatcher,
-    #     tracker: Tracker,
-    #     domain: DomainDict,
-    # ) -> Dict[Text, Any]:
-    #     last_intent = tracker.latest_message.get("intent")["name"]
-    #     dispatcher.utter_message(tracker.latest_message)
-    #     dispatcher.utter_message(f"INTENT :{last_intent}")
-    #     if last_intent == "inform_heure":
-    #         heure_value = next(tracker.get_latest_entity_values("heure"),None)
-    #         dispatcher.utter_message(f"VALUE heure: {heure_value}")
-    #         # SlotSet("heure",heure_value)
-    #         return {"heure":heure_value}
-
-    #     return []
-
-
-
-
-# https://rasa.com/docs/rasa/action-server/validation-action/
-# class ValidateRessourceSlot(ValidationAction):
-#     def validate_ressource(
-#         self,
-#         slot_value: Any,
-#         dispatcher: CollectingDispatcher,
-#         tracker: Tracker,
-#         domain: DomainDict,
-#     ) -> Dict[Text, Any]:
-#         """Validate location value."""
-#         if isinstance(slot_value, str):
-#             ressource :str = str(slot_value).lower()
-#             dispatcher.utter_message(f"Ressource: {ressource}")
-
-#             if ressource in get_ressource_list():
-#                 return {"ressource": ressource.capitalize()}
-#             else:
-#                 dispatcher.utter_message(f"{ressource.capitalize()} n'existe pas. Veuillez suggérer une ressource valide.")
-#                 return {"ressource": None}
-#         else:
-#             # validation failed, set this slot to None
-#             return {"ressource": None}
-        
+ 
 # https://rasa.com/docs/rasa/forms/#using-a-custom-action-to-ask-for-the-next-slot
 class AskForRessourceAction(Action):
     def name(self) -> Text:
@@ -566,9 +520,10 @@ class AskForDateAction(Action):
     ) -> List[EventType]:
         response_mess = "Les dates disponibles à la réservation sont :"
         ressource = tracker.get_slot("ressource")
-        dates_for_ressource = get_dates(ressource)
+        dates_for_ressource = get_jours_disponibles(ressource,30)
+        # dispatcher.utter_message(dates_for_ressource)
         for date in dates_for_ressource:
-            response_mess += f"\n\t- {date.day}/{date.month}/{date.year}"
+            response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
         dispatcher.utter_message(text=response_mess)
         dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
         return []
