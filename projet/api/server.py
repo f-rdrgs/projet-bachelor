@@ -207,36 +207,8 @@ def get_reservations_for_dates_for_ressource(ressource:str,dates:list[datetime.d
     except Exception as e:
         return []
     
-def check_horaires_jour_available(ressource:str,dates_to_check:dict[datetime.date,list[datetime.time]]):
-    try:
-        horaires = get_heures_semaine_for_ressource(ressource)
-        # horaires_reserves = 
-        for date in horaires.keys():
-            heures_pour_date = horaires[date]
-            if date in dates_to_check.keys():
-                heures_pour_date_a_check = dates_to_check[date]
-                heures_post_check = []
-                for heure in heures_pour_date_a_check:
-                    if heure not in heures_pour_date:
-                        heures_post_check.append(heure)
-                dates_to_check[date] = heures_post_check 
-
-
-    except Exception as e:
-        print(e)
-
-# def check_if_dates_available(dates:list[datetime.date])->list[datetime.date]:
-
 
 # Temps stocké en UTC (2h en moins qu'en Suisse)
-
-@app.get("/test/{ressource}")
-async def test_func(ressource:str):
-    horaires = get_heures_semaine_for_ressource(ressource)
-    dates_to_check = []
-    curr_date = datetime.datetime.now().date()
-   
-    return JSONResponse(content=horaires,status_code=status.HTTP_200_OK)
 
 @app.post("/add-reservation/")
 async def add_reservation(data:Reservation_API):

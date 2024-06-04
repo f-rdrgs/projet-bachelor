@@ -9,14 +9,12 @@
 # This is a simple example for a custom action which utters "Hello World!"
 
 from enum import Enum
-import json
 from typing import Any, Text, Dict, List
-from urllib import response
 
 from rasa_sdk import Action, Tracker, FormValidationAction, ValidationAction
 from rasa_sdk.executor import CollectingDispatcher
 from rasa_sdk.types import DomainDict
-from rasa_sdk.events import EventType, UserUtteranceReverted, FollowupAction
+from rasa_sdk.events import EventType, FollowupAction
 from rasa_sdk.events import SlotSet, Restarted
 import datetime
 import requests
@@ -62,14 +60,6 @@ def get_jours_disponibles(ressource_label: str,nombre_jours:int)->list[datetime.
             return []
 
 
-    
-
-# res = requests.get(f"http://api:5500/get-horaires/{jour_semaine}/{ressource}").json()
-#     print(res)
-#     if(len(res)>0):
-#         return [horaire for horaire in res["horaire_heures"]]
-
-
 @staticmethod
 def get_heures(jour:datetime.date,ressource:str):
     # Récupérer jour semaine depuis slot date mais assurer au préalable que la date est VALIDE en utilisant duckling pour la récupérer lors de la validation
@@ -86,15 +76,6 @@ def get_reserved_ressources_since_date(date:datetime.date,ressource:str):
         return res
     else:
         return []
-
-# @staticmethod
-# def get_fully_reserved_dates():
-
-# Changer le fait de ne plsu récupérer les jours de la semaine mais que l'api retourne directement les dates, le calcul se fait coté API
-@staticmethod
-def get_dates(ressource:str,nombre_jours:int)->list[datetime.date]:
-    dates_dispo = get_jours_disponibles(ressource,nombre_jours)
-    return dates_dispo
 
 @staticmethod
 def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
@@ -162,24 +143,6 @@ class ActionSaveRessource(Action):
         else:
             dispatcher.utter_message(f"Des informations sont manquantes : {ressource} {date} {heure} {nom} {prenom} {num_tel}")
 
-class ActionCheckRessource(Action):
-
-    def name(self) -> Text:
-        return "validate_existance_ressource"
-
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        
-        ressource = next(tracker.get_latest_entity_values("ressource"),None).lower()
-        if ressource not in get_ressource_list():
-            dispatcher.utter_message(text=f"{ressource.capitalize()} n'existe pas. Veuillez réessayer avec une ressource valide.")
-            SlotSet("ressource",None)
-            return []
-        
-        SlotSet("ressource",ressource)
-        dispatcher.utter_message(tracker.get_slot("ressource"))
-        return []
 
 class ActionSalutation(Action):
 
@@ -199,32 +162,6 @@ class ActionSalutation(Action):
         return []
 
 
-class ActionConfirmSwitchRessource(Action):
-
-    def name(self) -> Text:
-        return "action_ask_switch_ressource"
-
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
-        dispatcher.utter_message(text=f"Voulez-vous vraiment réserver {next(tracker.get_latest_entity_values('ressource'),None).lower()} à la place ?")
-
-        return []
-    
-class ActionSwitchRessource(Action):
-
-    def name(self) -> Text:
-        return "action_switch_ressource"
-
-    def run(self, dispatcher: CollectingDispatcher,
-            tracker: Tracker,
-            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-
-        SlotSet("ressource",next(tracker.get_latest_entity_values("ressource"),None).lower())
-
-        return []
-    
 
 # https://learning.rasa.com/rasa-forms-3/validation/
 class ValidateRessourceForm(FormValidationAction):
