@@ -16,4 +16,4 @@
 - ~~Ajout système d'horaires (Peut que réserver dans une plage d'horaire valide) avec pour des plages d'horaire une "tranche" d'horaire (30 mins, 1h, 2h, etc.)~~
 - Ajout système "Déjà réservé", proposition à l'utilisateur d'un autre horaire dans la plage si possible ou d'une autre date la plus proche qui n'est pas réservée
 - Ajout de détails supplémentaires à la réservation pouvant être sélectionnés
-
+- Ajout système gestion réservations simultanées (pré-réservations dans une table)
