@@ -9,7 +9,7 @@ rules:
 
 - rule: recommencer
   steps:
-    - intent: annuler
+    - intent: stop
     - action: restart_convo
 
 - rule: activate Form ressource

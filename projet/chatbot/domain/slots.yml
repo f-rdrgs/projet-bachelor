@@ -40,22 +40,30 @@ slots:
         value: false
         intent: refuse
         not_intent: affirm
-  nom:
+  nom_prenom:
     type: text
     mappings:
       - type: from_text
         conditions:
           - active_loop: get_info_reserv_form
-            requested_slot: nom
+            requested_slot: nom_prenom
     influence_conversation: false
-  prenom:
-    type: text
-    mappings:
-      - type: from_text
-        conditions:
-          - active_loop: get_info_reserv_form
-            requested_slot: prenom
-    influence_conversation: false
+  # nom:
+  #   type: text
+  #   mappings:
+  #     - type: from_text
+  #       conditions:
+  #         - active_loop: get_info_reserv_form
+  #           requested_slot: nom
+  #   influence_conversation: false
+  # prenom:
+  #   type: text
+  #   mappings:
+  #     - type: from_text
+  #       conditions:
+  #         - active_loop: get_info_reserv_form
+  #           requested_slot: prenom
+  #   influence_conversation: false
   numero_tel:
     type: text
     mappings:

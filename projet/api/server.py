@@ -141,7 +141,7 @@ Session = sessionmaker(bind=engine)
 def seconds_to_hour_min_sec(seconds:int)-> tuple[int,int,int]:
     hour = seconds / 3600
 
-# Ressort les horaires de la semaine sous ce format :
+# Ressort les horaires de la semaine pour une ressource sous ce format :
 """
 {
  "0": [ Array d'heures de début[début1, début2], Array d'heures de fin[fin1,fin2], découpage horaire],
@@ -161,6 +161,14 @@ def get_all_horaires_semaine_for_ressource(ressource:str)-> dict[int,tuple[list[
         print(e)
         return {}
     
+# Permet de récupérer l'ensemble des heures pour chaque jour de la semaine pour une ressource
+"""
+{
+"0"(0 Correspond à lundi):[
+    "14:30:00", "15:00:00", ...
+]
+}
+"""
 def get_heures_semaine_for_ressource(ressource:str)->dict[int,list[datetime.time]]:
     try:
         horaires = get_all_horaires_semaine_for_ressource(ressource)
@@ -198,6 +206,7 @@ def get_heures_semaine_for_ressource(ressource:str)->dict[int,list[datetime.time
     except Exception as e:
         return {}
 
+# Récupérer les réservations pour une date et ressource donnée
 def get_reservations_for_dates_for_ressource(ressource:str,dates:list[datetime.date])->dict[datetime.date,list[datetime.time]]:
     try:
         with Session.begin() as session:
@@ -218,11 +227,13 @@ async def add_reservation(data:Reservation_API):
         output_reserv = Reservation()
         output_reserv_ressource = Reservations_Client_Resource()
         try:
+            # Ajout de la nouvelle réservation (infos client)
             with Session.begin() as session:
                 session.add(new_reservation)
                 session.flush()
                 session.refresh(new_reservation)
                 output_reserv = {"id": new_reservation.id,"nom": new_reservation.nom,"prenom": new_reservation.prenom,"numero_tel": new_reservation.numero_tel,"date_reservation": new_reservation.date_reservation}
+            # Ajout de la réservation coté ressources
             with Session.begin() as session:
                 reservation_ressource = Reservations_Client_Resource(reservation=output_reserv["id"],resource=data.ressource,date_reservation=data.date,heure=data.heure)
                 session.add(reservation_ressource)
@@ -263,32 +274,29 @@ async def get_reservations_ressources_from_date(ressource:str,date:datetime.date
 @app.get("/get-jours-semaine/{ressource_label}/{num_jours}")
 async def get_jours_semaine(ressource_label:str,num_jours:int):
     with Session.begin() as session:
+        # Récupération des jours de la semaine possédant des horaires
         query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).distinct().all()
         query_result = []
         dates_dispo :list[datetime.date] = []
         if query.__len__() > 0:
             curr_date = datetime.datetime.now().date()
+            # Filtrage en format [0, 1, 2, 3](lundi, mardi, mercredi, ...)
             jours_semaines_values = [Jours_Semaine(jour[0]).value for jour in query]
+            # Création array de dates selon les jours disponibles
             for date in range(num_jours):
                 if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaines_values:
                     date_found = curr_date + datetime.timedelta(days=date)
                     dates_dispo.append(date_found)
             curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
             heures_for_semaine = get_heures_semaine_for_ressource(ressource_label)
-            # print(f"Heures semaine: {heures_for_semaine}")
             print(dates_dispo)
+            # Retire toutes les dates ne possédant aucun horaire de disponible
             for date in curr_reservations.keys():
                 diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
-                # print(f"\nDifference for {date} {diff}\nHeures semaine: {heures_for_semaine[datetime.date.fromisoformat(date).weekday()]}\nRéservations à date: {curr_reservations[date]}")
-                # print(f"Liste dispos: {dates_dispo} date: {[datetime.date.fromisoformat(date)]}")
                 if diff.__len__() == 0:
                     print(f"Removing {date}")
                     dates_dispo.remove(datetime.date.fromisoformat(date))
             
-
-            # dates_dispo = check_horaires_jour_available(dates_to_check=dates_dispo,ressource=ressource_label)
-            # 2024-06-24 full date
-            # dates_dispo = check_if_dates_available(dates_dispo)
         return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo])},status_code=status.HTTP_200_OK)
 
 
