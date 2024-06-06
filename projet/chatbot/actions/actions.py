@@ -69,7 +69,15 @@ def get_heures(jour:datetime.date,ressource:str):
     # Récupérer jour semaine depuis slot date mais assurer au préalable que la date est VALIDE en utilisant duckling pour la récupérer lors de la validation
     res = requests.get(f"http://api:5500/get-horaires/{str(jour)}/{ressource}").json()
     if(len(res)>0):
-        return res["horaire_heures"]
+        return res
+    else:
+        return []
+
+@staticmethod
+def get_heures_semaine(ressource:str):
+    res = requests.get(f"http://api:5500/get-horaires/{ressource}").json()
+    if(len(res)>0):
+        return res
     else:
         return []
 
@@ -394,9 +402,9 @@ class ValidateHeuresForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        heure = str(slot_value)
+        heure = slot_value
         ressource = str(tracker.get_slot("ressource"))
-        date = str(tracker.get_slot("date"))
+        date = tracker.get_slot("date")
         
         # latest_intent = tracker.latest_message["custom"]["intent"]["name"]
 
@@ -409,6 +417,8 @@ class ValidateHeuresForm(FormValidationAction):
         #     dispatcher.utter_message("Retour au choix des dates")
         #     return {"heure":None, "date":None}
         if slot_value is not None:
+            
+            heure = str(heure)
             # Récupération de l'heure parsée par duckling
             res = requests.post("http://duckling:8000/parse",data=data)
             if res.status_code == 200:
@@ -424,16 +434,39 @@ class ValidateHeuresForm(FormValidationAction):
                 if dim_time_index >= 0:
                     # dispatcher.utter_message(f"Grain {grain}")
                     if grain == "minute" or grain == "hour":
-                        heures_horaire_ressource = get_heures(datetime.datetime.fromisoformat(date),ressource)
-                        heures_dispo = [datetime.datetime.strptime(heure_disp,"%H:%M:%S").time() for heure_disp in heures_horaire_ressource]
-                        heure_duckling = res_json[dim_time_index]["value"]["value"]
-                        heure_datetime = datetime.datetime.fromisoformat(heure_duckling)
-                        # S'assure que l'heure choisie est disponible à la réservation
-                        if heure_datetime.time() in heures_dispo:
-                            dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
-                            return {"heure": heure_duckling,"accept_deny":None}
+                        if date is not None:
+                            date = str(date)
+                            heures_horaire_ressource = get_heures(datetime.datetime.fromisoformat(date),ressource)
+                            heures_dispo = [datetime.datetime.strptime(heure_disp,"%H:%M:%S").time() for heure_disp in heures_horaire_ressource]
+                            heure_duckling = res_json[dim_time_index]["value"]["value"]
+                            heure_datetime = datetime.datetime.fromisoformat(heure_duckling)
+                            # S'assure que l'heure choisie est disponible à la réservation
+                            if heure_datetime.time() in heures_dispo :
+                                dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
+                                return {"heure": heure_duckling,"accept_deny":None}
+                            else:
+                                dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
                         else:
-                            dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
+                            heure_duckling = res_json[dim_time_index]["value"]["value"]
+                            heure_datetime = datetime.datetime.fromisoformat(heure_duckling)
+                            result_query_heures = get_heures_semaine(ressource)
+                            list_heures_dispo : dict[int,dict[str,list[datetime.time]]] = result_query_heures["heures_dispo"]
+                            dict_horaires_jour : dict[str,dict] = result_query_heures["horaires"]
+
+                            found_heure_in_horaire = False
+                            # dispatcher.utter_message(json_message=list_heures_dispo)
+                            for day in list_heures_dispo.keys():
+                                if str(heure_datetime.time()) in list_heures_dispo[day] and not found_heure_in_horaire:
+                                    found_heure_in_horaire = True
+                            if found_heure_in_horaire:
+                                dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
+                                return {"heure": heure_duckling,"accept_deny":None}
+                            else:
+                                dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
+                                for day in dict_horaires_jour.keys():
+                                    for horaire in result_query_heures["horaires"][day]["horaires"]:
+                                        dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {result_query_heures['horaires'][day]['decoupage']}")
+
                     else:
                         dispatcher.utter_message(text=f"2. Pouvez-vous répéter l'heure d'une autre manière ?")
                 else:

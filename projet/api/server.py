@@ -334,11 +334,9 @@ async def get_jours_semaine(ressource_label:str,num_jours:int):
 
 @app.get("/get-horaires/{ressource_label}")
 async def get_horaires_for_ressource(ressource_label: str):
-    with Session.begin() as session:
-        query = session.query(Jour_Horaire).where(Jour_Horaire.label.like(ressource_label)).all()
-        query_result = jsonable_encoder(query)
-        print(query_result)
-        return JSONResponse(content=query_result,status_code=status.HTTP_200_OK)
+        heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
+            
+        return JSONResponse(content={"heures_dispo":jsonable_encoder(heures_for_semaine),"horaires":query_horaire},status_code=status.HTTP_200_OK)
 
 @app.get("/get-horaires/{jour}/{ressource_label}")
 async def get_horaires_for_ressource(jour:str,ressource_label: str):
