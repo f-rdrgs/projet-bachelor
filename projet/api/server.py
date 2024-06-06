@@ -1,5 +1,6 @@
 import datetime
 import time
+from typing import Any, List
 from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException, status
 from fastapi.encoders import jsonable_encoder
@@ -66,7 +67,7 @@ def load_config(filename='database.ini', section='postgresql'):
 
 
 
-from sqlalchemy import Column, ForeignKey, Time, create_engine, TIMESTAMP, func, tuple_
+from sqlalchemy import Column, ForeignKey, Row, Time, Tuple, create_engine, TIMESTAMP, func, tuple_
 from sqlalchemy.engine import URL
 
 config = load_config()
@@ -148,18 +149,20 @@ def seconds_to_hour_min_sec(seconds:int)-> tuple[int,int,int]:
  ...
 }
 """
-def get_all_horaires_semaine_for_ressource(ressource:str)-> dict[int,tuple[list[datetime.time],list[datetime.time],datetime.time]]:
+def get_all_horaires_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Semaine])-> tuple[dict[int,tuple[list[datetime.time],list[datetime.time],datetime.time]],Any]:
     try:
         with Session.begin() as session:
-            query = session.query(Jour_Horaire.jour,Jour_Horaire.temps_reservation,func.array_agg(Jour_Horaire.debut).label("heures_debut"),func.array_agg(Jour_Horaire.fin).label("heures_fin")).where(Jour_Horaire.label == ressource).group_by(Jour_Horaire.jour,Jour_Horaire.temps_reservation).distinct().all()
+            query = session.query(Jour_Horaire.jour,Jour_Horaire.temps_reservation,func.array_agg(Jour_Horaire.debut).label("heures_debut"),func.array_agg(Jour_Horaire.fin).label("heures_fin")).where(Jour_Horaire.label == ressource).filter(Jour_Horaire.jour.in_(jours_semaine)).group_by(Jour_Horaire.jour,Jour_Horaire.temps_reservation).distinct().all()
             output : dict[int,tuple[list[datetime.time],list[datetime.time]]] = {}
+            output_query = {}
             for day in query:
                 output[Jours_Semaine(day[0]).value] =tuple([day[2],day[3],day[1]])
-                print(day)
-            return jsonable_encoder(output)
+            for day in query:
+                output_query[Jours_Semaine(day[0]).value] = {"horaires":[[debut,fin]for debut,fin in zip(day[2],day[3])],"decoupage":day[1]}
+            return jsonable_encoder(output), jsonable_encoder(output_query)
     except Exception as e:
         print(e)
-        return {}
+        return {},[]
     
 # Permet de récupérer l'ensemble des heures pour chaque jour de la semaine pour une ressource
 """
@@ -169,9 +172,9 @@ def get_all_horaires_semaine_for_ressource(ressource:str)-> dict[int,tuple[list[
 ]
 }
 """
-def get_heures_semaine_for_ressource(ressource:str)->dict[int,list[datetime.time]]:
+def get_heures_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Semaine] = [Jours_Semaine.lundi,Jours_Semaine.mardi,Jours_Semaine.mercredi,Jours_Semaine.jeudi,Jours_Semaine.vendredi,Jours_Semaine.samedi,Jours_Semaine.dimanche])->tuple[dict[int,list[datetime.time]],Any]:
     try:
-        horaires = get_all_horaires_semaine_for_ressource(ressource)
+        horaires,query_horaire = get_all_horaires_semaine_for_ressource(ressource,jours_semaine)
         print(horaires)
         heures_semaine = {}
         for jour in horaires.keys():
@@ -201,7 +204,7 @@ def get_heures_semaine_for_ressource(ressource:str)->dict[int,list[datetime.time
                 heures_semaine[jour] = final_schedule
             
         
-        return heures_semaine
+        return heures_semaine,query_horaire
 
     except Exception as e:
         return {}
@@ -288,7 +291,7 @@ async def get_jours_semaine(ressource_label:str,num_jours:int):
                     date_found = curr_date + datetime.timedelta(days=date)
                     dates_dispo.append(date_found)
             curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
-            heures_for_semaine = get_heures_semaine_for_ressource(ressource_label)
+            heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
             print(dates_dispo)
             # Retire toutes les dates ne possédant aucun horaire de disponible
             for date in curr_reservations.keys():
@@ -297,7 +300,36 @@ async def get_jours_semaine(ressource_label:str,num_jours:int):
                     print(f"Removing {date}")
                     dates_dispo.remove(datetime.date.fromisoformat(date))
             
-        return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo])},status_code=status.HTTP_200_OK)
+        return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
+
+# @app.get("/get-jours-semaine/{ressource_label}/{num_jours}/{heure}")
+# async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.time):
+#     with Session.begin() as session:
+#         # Récupération des jours de la semaine possédant des horaires
+#         query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).where().distinct().all()
+#         query_result = []
+#         dates_dispo :list[datetime.date] = []
+#         if query.__len__() > 0:
+#             curr_date = datetime.datetime.now().date()
+#             # Filtrage en format [0, 1, 2, 3](lundi, mardi, mercredi, ...)
+#             jours_semaines_values = [Jours_Semaine(jour[0]).value for jour in query]
+#             # Création array de dates selon les jours disponibles
+#             for date in range(num_jours):
+#                 if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaines_values:
+#                     date_found = curr_date + datetime.timedelta(days=date)
+#                     dates_dispo.append(date_found)
+#             curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
+#             heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
+#             print(dates_dispo)
+#             # Retire toutes les dates ne possédant aucun horaire de disponible
+#             for date in curr_reservations.keys():
+#                 diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
+#                 if diff.__len__() == 0:
+#                     print(f"Removing {date}")
+#                     dates_dispo.remove(datetime.date.fromisoformat(date))
+            
+#         return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
+
 
 
 @app.get("/get-horaires/{ressource_label}")
@@ -312,50 +344,60 @@ async def get_horaires_for_ressource(ressource_label: str):
 async def get_horaires_for_ressource(jour:str,ressource_label: str):
 
         with Session.begin() as session:
-            decoupage = datetime.time(minute=30)
+            # decoupage = datetime.time(minute=30)
             jour_date = datetime.datetime.fromisoformat(jour).date()
             # Récupère les horaires d'une ressource pour un jour de la semaine donné
-            query = session.query(Jour_Horaire).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.jour == Jours_Semaine(jour_date.weekday())).all()
+            # query = session.query(Jour_Horaire).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.jour == Jours_Semaine(jour_date.weekday())).all()
+
             # Récupère toutes les réservations correspondant à la date donnée
             query_reservations = session.query(Reservations_Client_Resource.heure).where(Reservations_Client_Resource.resource == ressource_label).where(Reservations_Client_Resource.date_reservation == jour_date).all()
             # Ressort une liste de temps
             query_reservations_time = [time[0] for time in query_reservations]
-            query_result = jsonable_encoder(query)
+            # query_result = jsonable_encoder(query)
             # query_reservations_result = jsonable_encoder(query_reservations)
-            print(f"Réservations: {query_reservations_time}")
-            print(query_result)
+            print(f"Réservations: {query_reservations_time}\n")
+            # print(query_result)
 
             total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
-
+            heures_query, query_horaire = get_heures_semaine_for_ressource(ressource_label,[Jours_Semaine(jour_date.weekday())])
+            print(f"Heures query: {heures_query}")
+            horaires = [datetime.datetime.strptime(heure, '%H:%M:%S').time() for heure in heures_query[jour_date.weekday()]]
             
             final_schedule = []
+
+            for heure in horaires:
+                if heure not in query_reservations_time:
+                    
+                    final_schedule.append(str(heure))
             # Créer une liste d'horaires sous format `HEURE:MINUTE:SECONDE`
-            for schedule in query_result:
-                print(f"Schedule {schedule}")
-                debut = datetime.datetime.strptime(schedule['debut'], '%H:%M:%S').time()
-                debut_delta = datetime.timedelta(seconds=total_sec_calc(debut.hour,debut.minute,debut.second))
-                fin = datetime.datetime.strptime(schedule['fin'], '%H:%M:%S').time()
-                fin_delta = datetime.timedelta(seconds=total_sec_calc(fin.hour,fin.minute,fin.second))
-                print(f"Debut {debut}")
-                print(f"Fin {fin}")
+            # for schedule in query_result:
+            #     print(f"Schedule {schedule}")
+            #     decoupage = datetime.time.fromisoformat(schedule['temps_reservation'])
+            #     debut = datetime.datetime.strptime(schedule['debut'], '%H:%M:%S').time()
+            #     debut_delta = datetime.timedelta(seconds=total_sec_calc(debut.hour,debut.minute,debut.second))
+            #     fin = datetime.datetime.strptime(schedule['fin'], '%H:%M:%S').time()
+            #     fin_delta = datetime.timedelta(seconds=total_sec_calc(fin.hour,fin.minute,fin.second))
+            #     print(f"Debut {debut}")
+            #     print(f"Fin {fin}")
 
 
-                decoupage_delta = datetime.timedelta(seconds=total_sec_calc(decoupage.hour,decoupage.minute,decoupage.second))
+            #     decoupage_delta = datetime.timedelta(seconds=total_sec_calc(decoupage.hour,decoupage.minute,decoupage.second))
 
-                slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
+            #     slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
 
 
 
-                print(f"Number of slots : {slot_count}")
-                new_schedule = [str(debut_delta+(decoupage_delta*offset)) for offset in range(int(slot_count))]
-                new_schedule_no_reserved_schedules = []
-                # S'assurer qu'aucun des horaires spécifiés ne correspond déjà à une heure de réservation
-                for schedule in new_schedule:
-                    if(datetime.datetime.strptime(schedule,"%H:%M:%S").time() not in query_reservations_time):
-                        new_schedule_no_reserved_schedules.append(schedule)
-                final_schedule += new_schedule_no_reserved_schedules
+            #     print(f"Number of slots : {slot_count}")
+            #     new_schedule = [str(debut_delta+(decoupage_delta*offset)) for offset in range(int(slot_count))]
+            #     new_schedule_no_reserved_schedules = []
+            #     # S'assurer qu'aucun des horaires spécifiés ne correspond déjà à une heure de réservation
+            #     for schedule in new_schedule:
+            #         if(datetime.datetime.strptime(schedule,"%H:%M:%S").time() not in query_reservations_time):
+            #             new_schedule_no_reserved_schedules.append(schedule)
+            #     final_schedule += new_schedule_no_reserved_schedules
 
-            return JSONResponse(content={"horaire_heures":final_schedule,"horaire":query_result},status_code=status.HTTP_200_OK)
+            print("QUERY HORAIRE "+str(query_horaire))
+            return JSONResponse(content={"horaire_heures":final_schedule,"horaire":query_horaire},status_code=status.HTTP_200_OK)
 
 
 

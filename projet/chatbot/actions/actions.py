@@ -50,17 +50,20 @@ def get_ressource_list()->list[str]:
     return []
 
 @staticmethod
-def get_jours_disponibles(ressource_label: str,nombre_jours:int)->list[datetime.date]:
+def get_jours_disponibles(ressource_label: str,nombre_jours:int,heure_prechoisie:datetime.time|None)->list[datetime.date]:
     # get-jours-semaine/{ressource_label}
-    
-        res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}/{nombre_jours}").json()
+        res = []
+        if heure_prechoisie is not None:
+            res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}/{nombre_jours}/{heure_prechoisie}").json() 
+        else:
+            res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}/{nombre_jours}").json()
+        
+        print(heure_prechoisie)
         if(len(res["dates"])>0):
             return [datetime.date.fromisoformat(date) for date in res["dates"]]
         else:
             print("No dates found")
             return []
-
-
 @staticmethod
 def get_heures(jour:datetime.date,ressource:str):
     # Récupérer jour semaine depuis slot date mais assurer au préalable que la date est VALIDE en utilisant duckling pour la récupérer lors de la validation
@@ -125,9 +128,9 @@ class ActionSaveRessource(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        ressource = str(tracker.get_slot("ressource"))
-        date = str(tracker.get_slot("date"))
-        heure = str(tracker.get_slot("heure"))
+        ressource = tracker.get_slot("ressource")
+        date = tracker.get_slot("date")
+        heure = tracker.get_slot("heure")
         # nom = tracker.get_slot("nom")
         # prenom = tracker.get_slot("prenom")   
         nom_prenom = str(tracker.get_slot("nom_prenom"))
@@ -139,12 +142,13 @@ class ActionSaveRessource(Action):
         nom = nom.rstrip()
         prenom = nom_prenom_list[-1].capitalize()
 
-        num_tel = str(tracker.get_slot("numero_tel"))
+        num_tel = tracker.get_slot("numero_tel")
         # S'assure que toute les informations sont fournies avant de procéder à la sauvegarde
         if ressource is not None and heure is not None and date is not None and nom_prenom is not None and nom_prenom_list.__len__()>1 and num_tel is not None:
-            date_conv = datetime.datetime.fromisoformat(date).date()
-            heure_conv = datetime.datetime.fromisoformat(heure).time()
-           
+            ressource = str(ressource)
+            date_conv = datetime.datetime.fromisoformat(str(date)).date()
+            heure_conv = datetime.datetime.fromisoformat(str(heure)).time()
+            num_tel = str(num_tel)
             save_reserv_data = Reservation_save_API(nom=str(nom),prenom=str(prenom),numero_tel=str(num_tel),date=str(date_conv),heure=str(heure_conv),ressource=ressource)
             succes,err = save_reservation(save_reserv_data)
             if succes:
@@ -228,7 +232,12 @@ class ValidateInfoReserv(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        return {"nom_prenom":slot_value,"accept_deny":None}
+        nom_prenom_list = str(slot_value).split(' ')
+        if nom_prenom_list.__len__() >1:
+            return {"nom_prenom":slot_value,"accept_deny":None}
+        else:
+            dispatcher.utter_message("Veuillez entrer un nom et prénom")
+            return {"nom_prenom":None,"accept_deny":None}
 
     def validate_prenom( self,
         slot_value: Any,
@@ -328,13 +337,19 @@ class ValidateHeuresForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        date = str(slot_value)
+        date = slot_value
+        heure = tracker.get_slot("heure")
         ressource = str(tracker.get_slot("ressource"))
         data = {
             "locale":"fr_FR",
             "text":date
         }
+        # if heure is not None:
+        #     ...
+        # else:
+        #     ...
         if  slot_value is not None:
+            date = str(date)
             # dispatcher.utter_message(text=f"Date : {date}")
             # Récupère date parsé par Duckling
             res = requests.post("http://duckling:8000/parse",data=data)
@@ -351,7 +366,7 @@ class ValidateHeuresForm(FormValidationAction):
                 if dim_time_index >= 0:
                     if grain == "day":
                         # Si la date donnée est trouvable dans les dates disponibles et non réservées, sauvegarde dans le slot
-                        dates_dispo = get_jours_disponibles(ressource,30)
+                        dates_dispo = get_jours_disponibles(ressource,30,None)
                         date_duckling = res_json[index]["value"]["value"]
                         date_datetime = datetime.datetime.fromisoformat(date_duckling).date()
                         if(date_datetime in dates_dispo):
@@ -393,7 +408,6 @@ class ValidateHeuresForm(FormValidationAction):
         # if latest_intent == "annuler":
         #     dispatcher.utter_message("Retour au choix des dates")
         #     return {"heure":None, "date":None}
-        
         if slot_value is not None:
             # Récupération de l'heure parsée par duckling
             res = requests.post("http://duckling:8000/parse",data=data)
@@ -411,8 +425,7 @@ class ValidateHeuresForm(FormValidationAction):
                     # dispatcher.utter_message(f"Grain {grain}")
                     if grain == "minute" or grain == "hour":
                         heures_horaire_ressource = get_heures(datetime.datetime.fromisoformat(date),ressource)
-                        heures_dispo = [datetime.datetime.strptime(heure_disp,"%H:%M:%S").time() 
-                        for heure_disp in heures_horaire_ressource]
+                        heures_dispo = [datetime.datetime.strptime(heure_disp,"%H:%M:%S").time() for heure_disp in heures_horaire_ressource]
                         heure_duckling = res_json[dim_time_index]["value"]["value"]
                         heure_datetime = datetime.datetime.fromisoformat(heure_duckling)
                         # S'assure que l'heure choisie est disponible à la réservation
@@ -474,6 +487,7 @@ class AskForHeureAction(Action):
     def run(
         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
     ) -> List[EventType]:
+        # Ajouter test pour affichage variable pour récupérer date ou heure en premier
         ressource = tracker.get_slot("ressource")
         date = tracker.get_slot("date")
         date_datetime = datetime.datetime.fromisoformat(date)
@@ -492,9 +506,14 @@ class AskForDateAction(Action):
     def run(
         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
     ) -> List[EventType]:
+        # heure = tracker.get_slot("heure")
+        # if heure is not None:
+        #     ...
+        # else:
+            
         response_mess = "Les dates disponibles à la réservation sont :"
         ressource = tracker.get_slot("ressource")
-        dates_for_ressource = get_jours_disponibles(ressource,30)
+        dates_for_ressource = get_jours_disponibles(ressource,30,None)
         # dispatcher.utter_message(dates_for_ressource)
         for date in dates_for_ressource:
             response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"

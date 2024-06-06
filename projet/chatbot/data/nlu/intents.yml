@@ -43,6 +43,12 @@ nlu:
     examples: |
       - Pour [14h](heure)
       - À [12h23](heure)
+      - à [07h29](heure)
+      - Pour [10h38](heure)
+      - pour [16h17](heure)
+      - [8h03](heure)
+      - [19h22](heure)
+      - à [20h41]
       - [8:30](heure)
       - À [15 heures 30](heure)
       - [20 heures](heure)
