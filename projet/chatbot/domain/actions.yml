@@ -2,7 +2,6 @@ version: "3.1"
 
 
 actions:
-  - validate_existance_ressource
   - validate_get_ressource_form
   - validate_get_date_heure_form
   - validate_get_info_reserv_form

@@ -113,8 +113,12 @@ nlu:
       - annuler
       - Cancel
       - Annuler
+  - intent: stop
+    examples: |
       - stop
+      - STOP
       - Stop
+      - stoP
   - intent: goodbye
     examples: |
       - aurevoir

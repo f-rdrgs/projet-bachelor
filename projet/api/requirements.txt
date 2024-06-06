@@ -1,5 +1,6 @@
 fastapi 
 uvicorn[standard]
+numpy
 asyncio
 sqlalchemy 
 psycopg2-binary

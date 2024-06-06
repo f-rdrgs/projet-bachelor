@@ -20,8 +20,9 @@ forms:
   
   get_info_reserv_form:
     required_slots:
-      - nom
-      - prenom
+      # - nom
+      # - prenom
+      - nom_prenom
       - numero_tel
       - accept_deny
     ignored_intents:
