@@ -302,33 +302,35 @@ async def get_jours_semaine(ressource_label:str,num_jours:int):
             
         return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
 
-# @app.get("/get-jours-semaine/{ressource_label}/{num_jours}/{heure}")
-# async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.time):
-#     with Session.begin() as session:
-#         # Récupération des jours de la semaine possédant des horaires
-#         query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).where().distinct().all()
-#         query_result = []
-#         dates_dispo :list[datetime.date] = []
-#         if query.__len__() > 0:
-#             curr_date = datetime.datetime.now().date()
-#             # Filtrage en format [0, 1, 2, 3](lundi, mardi, mercredi, ...)
-#             jours_semaines_values = [Jours_Semaine(jour[0]).value for jour in query]
-#             # Création array de dates selon les jours disponibles
-#             for date in range(num_jours):
-#                 if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaines_values:
-#                     date_found = curr_date + datetime.timedelta(days=date)
-#                     dates_dispo.append(date_found)
-#             curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
-#             heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
-#             print(dates_dispo)
-#             # Retire toutes les dates ne possédant aucun horaire de disponible
-#             for date in curr_reservations.keys():
-#                 diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
-#                 if diff.__len__() == 0:
-#                     print(f"Removing {date}")
-#                     dates_dispo.remove(datetime.date.fromisoformat(date))
+@app.get("/get-jours-semaine/{ressource_label}/{num_jours}/{heure}")
+async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.time):
+    with Session.begin() as session:
+        # Récupération des jours de la semaine possédant des horaires
+        query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.debut <= heure).where(Jour_Horaire.fin>=heure).distinct().all()
+        print(query)
+        query_result = []
+        dates_dispo :list[datetime.date] = []
+        query_horaire = []
+        if query.__len__() > 0:
+            curr_date = datetime.datetime.now().date()
+            # Filtrage en format [0, 1, 2, 3](lundi, mardi, mercredi, ...)
+            jours_semaines_values = [Jours_Semaine(jour[0]).value for jour in query]
+            # Création array de dates selon les jours disponibles
+            for date in range(num_jours):
+                if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaines_values:
+                    date_found = curr_date + datetime.timedelta(days=date)
+                    dates_dispo.append(date_found)
+            curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
+            heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
+            print(dates_dispo)
+            # Retire toutes les dates ne possédant aucun horaire de disponible
+            for date in curr_reservations.keys():
+                diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
+                if diff.__len__() == 0:
+                    print(f"Removing {date}")
+                    dates_dispo.remove(datetime.date.fromisoformat(date))
             
-#         return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
+        return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
 
 
 

@@ -58,7 +58,7 @@ def get_jours_disponibles(ressource_label: str,nombre_jours:int,heure_prechoisie
         else:
             res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}/{nombre_jours}").json()
         
-        print(heure_prechoisie)
+        print(f"result res :{res}")
         if(len(res["dates"])>0):
             return [datetime.date.fromisoformat(date) for date in res["dates"]]
         else:
@@ -373,8 +373,12 @@ class ValidateHeuresForm(FormValidationAction):
                         grain = res_json[index]["value"]["grain"]
                 if dim_time_index >= 0:
                     if grain == "day":
-                        # Si la date donnée est trouvable dans les dates disponibles et non réservées, sauvegarde dans le slot
-                        dates_dispo = get_jours_disponibles(ressource,30,None)
+                        dates_dispo = []
+                        if heure is None:
+                            # Si la date donnée est trouvable dans les dates disponibles et non réservées, sauvegarde dans le slot
+                            dates_dispo = get_jours_disponibles(ressource,30,None)
+                        else:
+                            dates_dispo = get_jours_disponibles(ressource,30,datetime.datetime.fromisoformat(str(heure)).time())
                         date_duckling = res_json[index]["value"]["value"]
                         date_datetime = datetime.datetime.fromisoformat(date_duckling).date()
                         if(date_datetime in dates_dispo):
@@ -539,19 +543,43 @@ class AskForDateAction(Action):
     def run(
         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
     ) -> List[EventType]:
-        # heure = tracker.get_slot("heure")
-        # if heure is not None:
-        #     ...
-        # else:
-            
-        response_mess = "Les dates disponibles à la réservation sont :"
-        ressource = tracker.get_slot("ressource")
-        dates_for_ressource = get_jours_disponibles(ressource,30,None)
-        # dispatcher.utter_message(dates_for_ressource)
-        for date in dates_for_ressource:
-            response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
-        dispatcher.utter_message(text=response_mess)
-        dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
-        return []
-    
+        heure = tracker.get_slot("heure")
+        date = tracker.get_slot("date")
+        if heure is not None:
+            response_mess = f"Les dates disponibles à la réservation pour {str(heure)} sont :"
+            ressource = tracker.get_slot("ressource")
+            dates_for_ressource = get_jours_disponibles(ressource,30,datetime.datetime.fromisoformat(str(heure)).time())
+            # dispatcher.utter_message(dates_for_ressource)
+            for date in dates_for_ressource:
+                response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
+            dispatcher.utter_message(text=response_mess)
+            dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
+            return []     
+        elif heure is None and date is None:
+            ressource = str(tracker.get_slot("ressource"))
+            result_query_heures = get_heures_semaine(ressource)
+            dict_horaires_jour : dict[str,dict] = result_query_heures["horaires"]
+            dispatcher.utter_message("Les horaires de réservation sont les suivants: ")
+            for day in dict_horaires_jour.keys():
+                for horaire in result_query_heures["horaires"][day]["horaires"]:
+                    dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {result_query_heures['horaires'][day]['decoupage']}")
+            response_mess = "Les dates disponibles à la réservation pour le prochain mois sont :"
+            ressource = tracker.get_slot("ressource")
+            dates_for_ressource = get_jours_disponibles(ressource,30,None)
+            # dispatcher.utter_message(dates_for_ressource)
+            for date in dates_for_ressource:
+                response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
+            dispatcher.utter_message(text=response_mess)
+            dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
 
+        else:
+            response_mess = "Les dates disponibles à la réservation sont :"
+            ressource = tracker.get_slot("ressource")
+            dates_for_ressource = get_jours_disponibles(ressource,30,None)
+            # dispatcher.utter_message(dates_for_ressource)
+            for date in dates_for_ressource:
+                response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
+            dispatcher.utter_message(text=response_mess)
+            dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
+            
+            return []
