@@ -49,6 +49,8 @@ def get_ressource_list()->list[str]:
 
     return []
 
+    
+
 @staticmethod
 def get_jours_disponibles(ressource_label: str,nombre_jours:int,heure_prechoisie:datetime.time|None)->list[datetime.date]:
     # get-jours-semaine/{ressource_label}
@@ -421,7 +423,6 @@ class ValidateHeuresForm(FormValidationAction):
         #     dispatcher.utter_message("Retour au choix des dates")
         #     return {"heure":None, "date":None}
         if slot_value is not None:
-            
             heure = str(heure)
             # Récupération de l'heure parsée par duckling
             res = requests.post("http://duckling:8000/parse",data=data)
@@ -430,7 +431,6 @@ class ValidateHeuresForm(FormValidationAction):
                 dim_time_index = -1
                 grain= "minute"
                 # dispatcher.utter_message(f"Duckling: {res_json}")
-                # S'assure que l'on trouve une valeur de type time
                 for index in range(len(res_json)):
                     if res_json[index]["dim"] == "time" and dim_time_index == -1:
                         dim_time_index = index
@@ -441,7 +441,7 @@ class ValidateHeuresForm(FormValidationAction):
                         if date is not None:
                             date = str(date)
                             heures_horaire_ressource = get_heures(datetime.datetime.fromisoformat(date),ressource)
-                            heures_dispo = [datetime.datetime.strptime(heure_disp,"%H:%M:%S").time() for heure_disp in heures_horaire_ressource]
+                            heures_dispo = [datetime.datetime.strptime(heure_disp,"%H:%M:%S").time() for heure_disp in heures_horaire_ressource["horaire_heures"]]
                             heure_duckling = res_json[dim_time_index]["value"]["value"]
                             heure_datetime = datetime.datetime.fromisoformat(heure_duckling)
                             # S'assure que l'heure choisie est disponible à la réservation
@@ -530,7 +530,8 @@ class AskForHeureAction(Action):
         date_datetime = datetime.datetime.fromisoformat(date)
         response_mess = "Les heures disponibles à la réservation sont :"
         heures_horaires = get_heures(date_datetime,ressource)
-        for ress in [datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires]:
+        print(heures_horaires)
+        for ress in [datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires["horaire_heures"]]:
             response_mess += f"\n\t- {ress}"
         dispatcher.utter_message(text=response_mess)
         dispatcher.utter_message(text="Pour quelle heure souhaitez-vous réserver ?")

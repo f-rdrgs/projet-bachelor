@@ -48,8 +48,6 @@ stories:
       - active_loop: get_info_reserv_form
       - slot_was_set:
           - nom_prenom: "Tarkovsky Andrei"
-    #   - slot_was_set:
-    #       - prenom: "Andrei"
       - slot_was_set:
           - accept_deny: true
       - slot_was_set:
