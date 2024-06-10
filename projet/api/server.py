@@ -3,6 +3,7 @@ import time
 from typing import Any, List
 from zoneinfo import ZoneInfo
 from fastapi import FastAPI, HTTPException, status
+from fastapi.concurrency import asynccontextmanager
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -13,6 +14,16 @@ import httpx
 import os
 
 import numpy as np
+
+# async def remove_old_reservations(interval: int):
+#     while True:
+#         print("Task executed")
+#         await asyncio.sleep(interval)
+        
+# @asynccontextmanager
+# async def start_remove_reserv_task():
+
+#     ...
 
 app = FastAPI()
 
@@ -423,5 +434,9 @@ async def talk_to_rasa(data:Communicate_Rasa):
         response = await client.post('http://rasa-core:5005/webhooks/rest/webhook',data=data.model_dump_json(),headers=headers)    
         return JSONResponse(content=response.json(),status_code=status.HTTP_200_OK)
 
+
+
+
 if __name__ == "__main__":
+    # asyncio.create_task()
     uvicorn.run("server:app", host="0.0.0.0" , port=5500, log_level="info",reload = True,workers=4,reload_dirs=["/app"],reload_excludes=["/app/.venv"])

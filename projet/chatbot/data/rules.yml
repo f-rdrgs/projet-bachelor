@@ -15,8 +15,21 @@ rules:
 - rule: activate Form ressource
   steps:
     - intent: ressource_gather
+    - action: predefine_ressource
     - action: get_ressource_form
     - active_loop: get_ressource_form
+
+- rule: Annuler date heure
+  condition:
+  - active_loop: get_date_heure_form
+  steps:
+    - intent: annuler
+    - action: annuler_date_heure
+    - slot_was_set:
+        - heure: None
+    - slot_was_set:
+        - date: None
+    - action: get_date_heure_form
 
 - rule: Submit Form ressource
   condition:

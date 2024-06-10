@@ -326,6 +326,25 @@ class ValidateInfoReserv(FormValidationAction):
             return {"accept_deny":None}
 
 
+class ActionPreDefineRessourceSlot(Action):
+    def name(self)->Text:
+        return "predefine_ressource"
+    
+    def run(self, dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        pre_ressource = tracker.get_slot("ressource_prereserv")
+        if pre_ressource is not None:
+            pre_ressource_processed = str(pre_ressource).lower()
+            if pre_ressource_processed not in get_ressource_list():
+                dispatcher.utter_message(f"La ressource {pre_ressource_processed} n'est pas disponible")
+                return [SlotSet("ressource_prereserv",None)]
+            else:
+                dispatcher.utter_message(f"Préselection de {pre_ressource_processed}")
+                return [SlotSet("ressource",pre_ressource_processed)]
+        return []
+
 class ActionResetValidation(Action):
     def name(self)->Text:
         return "reset_validation"
@@ -336,6 +355,14 @@ class ActionResetValidation(Action):
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         return [SlotSet("accept_deny",None)]
 
+
+class AnnulerDateHeureReset(Action):
+    def name(self)->Text:
+        return "annuler_date_heure"
+    def run(self, dispatcher: CollectingDispatcher,tracker: Tracker,domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        dispatcher.utter_message("Retour au choix des dates ou heures")
+        return [SlotSet("heure",None),SlotSet("date",None), FollowupAction("action_ask_date"),FollowupAction("get_date_heure_form")]
+    
 class ValidateHeuresForm(FormValidationAction):
     def name(self)->Text:
         return "validate_get_date_heure_form"
@@ -354,10 +381,7 @@ class ValidateHeuresForm(FormValidationAction):
             "locale":"fr_FR",
             "text":date
         }
-        # if heure is not None:
-        #     ...
-        # else:
-        #     ...
+
         if  slot_value is not None:
             date = str(date)
             # dispatcher.utter_message(text=f"Date : {date}")
@@ -412,16 +436,11 @@ class ValidateHeuresForm(FormValidationAction):
         ressource = str(tracker.get_slot("ressource"))
         date = tracker.get_slot("date")
         
-        # latest_intent = tracker.latest_message["custom"]["intent"]["name"]
-
         data = {
             "locale":"fr_FR",
             "text":heure
         }
         
-        # if latest_intent == "annuler":
-        #     dispatcher.utter_message("Retour au choix des dates")
-        #     return {"heure":None, "date":None}
         if slot_value is not None:
             heure = str(heure)
             # Récupération de l'heure parsée par duckling
@@ -546,6 +565,7 @@ class AskForDateAction(Action):
     ) -> List[EventType]:
         heure = tracker.get_slot("heure")
         date = tracker.get_slot("date")
+        dispatcher.utter_message(f"Heure {heure} date {date}")
         if heure is not None:
             response_mess = f"Les dates disponibles à la réservation pour {str(heure)} sont :"
             ressource = tracker.get_slot("ressource")

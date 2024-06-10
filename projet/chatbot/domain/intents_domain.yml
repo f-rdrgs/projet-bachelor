@@ -28,3 +28,4 @@ intents:
   - inform_num_phone:
       use_entities:
         - numero_tel
+  - stop

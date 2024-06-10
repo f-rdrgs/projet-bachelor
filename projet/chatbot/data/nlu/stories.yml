@@ -16,6 +16,7 @@ stories:
   - story: selection_ressource
     steps:
       - intent: ressource_gather
+      - action: predefine_ressource
       - action: get_ressource_form
       - active_loop: get_ressource_form
       - slot_was_set:
