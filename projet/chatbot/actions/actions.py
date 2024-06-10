@@ -49,6 +49,8 @@ def get_ressource_list()->list[str]:
 
     return []
 
+    
+
 @staticmethod
 def get_jours_disponibles(ressource_label: str,nombre_jours:int,heure_prechoisie:datetime.time|None)->list[datetime.date]:
     # get-jours-semaine/{ressource_label}
@@ -58,7 +60,7 @@ def get_jours_disponibles(ressource_label: str,nombre_jours:int,heure_prechoisie
         else:
             res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}/{nombre_jours}").json()
         
-        print(heure_prechoisie)
+        print(f"result res :{res}")
         if(len(res["dates"])>0):
             return [datetime.date.fromisoformat(date) for date in res["dates"]]
         else:
@@ -69,7 +71,15 @@ def get_heures(jour:datetime.date,ressource:str):
     # Récupérer jour semaine depuis slot date mais assurer au préalable que la date est VALIDE en utilisant duckling pour la récupérer lors de la validation
     res = requests.get(f"http://api:5500/get-horaires/{str(jour)}/{ressource}").json()
     if(len(res)>0):
-        return res["horaire_heures"]
+        return res
+    else:
+        return []
+
+@staticmethod
+def get_heures_semaine(ressource:str):
+    res = requests.get(f"http://api:5500/get-horaires/{ressource}").json()
+    if(len(res)>0):
+        return res
     else:
         return []
 
@@ -316,6 +326,25 @@ class ValidateInfoReserv(FormValidationAction):
             return {"accept_deny":None}
 
 
+class ActionPreDefineRessourceSlot(Action):
+    def name(self)->Text:
+        return "predefine_ressource"
+    
+    def run(self, dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        pre_ressource = tracker.get_slot("ressource_prereserv")
+        if pre_ressource is not None:
+            pre_ressource_processed = str(pre_ressource).lower()
+            if pre_ressource_processed not in get_ressource_list():
+                dispatcher.utter_message(f"La ressource {pre_ressource_processed} n'est pas disponible")
+                return [SlotSet("ressource_prereserv",None)]
+            else:
+                dispatcher.utter_message(f"Préselection de {pre_ressource_processed}")
+                return [SlotSet("ressource",pre_ressource_processed)]
+        return []
+
 class ActionResetValidation(Action):
     def name(self)->Text:
         return "reset_validation"
@@ -326,6 +355,14 @@ class ActionResetValidation(Action):
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         return [SlotSet("accept_deny",None)]
 
+
+class AnnulerDateHeureReset(Action):
+    def name(self)->Text:
+        return "annuler_date_heure"
+    def run(self, dispatcher: CollectingDispatcher,tracker: Tracker,domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        dispatcher.utter_message("Retour au choix des dates ou heures")
+        return [SlotSet("heure",None),SlotSet("date",None), FollowupAction("action_ask_date"),FollowupAction("get_date_heure_form")]
+    
 class ValidateHeuresForm(FormValidationAction):
     def name(self)->Text:
         return "validate_get_date_heure_form"
@@ -344,10 +381,7 @@ class ValidateHeuresForm(FormValidationAction):
             "locale":"fr_FR",
             "text":date
         }
-        # if heure is not None:
-        #     ...
-        # else:
-        #     ...
+
         if  slot_value is not None:
             date = str(date)
             # dispatcher.utter_message(text=f"Date : {date}")
@@ -365,8 +399,12 @@ class ValidateHeuresForm(FormValidationAction):
                         grain = res_json[index]["value"]["grain"]
                 if dim_time_index >= 0:
                     if grain == "day":
-                        # Si la date donnée est trouvable dans les dates disponibles et non réservées, sauvegarde dans le slot
-                        dates_dispo = get_jours_disponibles(ressource,30,None)
+                        dates_dispo = []
+                        if heure is None:
+                            # Si la date donnée est trouvable dans les dates disponibles et non réservées, sauvegarde dans le slot
+                            dates_dispo = get_jours_disponibles(ressource,30,None)
+                        else:
+                            dates_dispo = get_jours_disponibles(ressource,30,datetime.datetime.fromisoformat(str(heure)).time())
                         date_duckling = res_json[index]["value"]["value"]
                         date_datetime = datetime.datetime.fromisoformat(date_duckling).date()
                         if(date_datetime in dates_dispo):
@@ -394,21 +432,17 @@ class ValidateHeuresForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        heure = str(slot_value)
+        heure = slot_value
         ressource = str(tracker.get_slot("ressource"))
-        date = str(tracker.get_slot("date"))
+        date = tracker.get_slot("date")
         
-        # latest_intent = tracker.latest_message["custom"]["intent"]["name"]
-
         data = {
             "locale":"fr_FR",
             "text":heure
         }
         
-        # if latest_intent == "annuler":
-        #     dispatcher.utter_message("Retour au choix des dates")
-        #     return {"heure":None, "date":None}
         if slot_value is not None:
+            heure = str(heure)
             # Récupération de l'heure parsée par duckling
             res = requests.post("http://duckling:8000/parse",data=data)
             if res.status_code == 200:
@@ -416,7 +450,6 @@ class ValidateHeuresForm(FormValidationAction):
                 dim_time_index = -1
                 grain= "minute"
                 # dispatcher.utter_message(f"Duckling: {res_json}")
-                # S'assure que l'on trouve une valeur de type time
                 for index in range(len(res_json)):
                     if res_json[index]["dim"] == "time" and dim_time_index == -1:
                         dim_time_index = index
@@ -424,16 +457,39 @@ class ValidateHeuresForm(FormValidationAction):
                 if dim_time_index >= 0:
                     # dispatcher.utter_message(f"Grain {grain}")
                     if grain == "minute" or grain == "hour":
-                        heures_horaire_ressource = get_heures(datetime.datetime.fromisoformat(date),ressource)
-                        heures_dispo = [datetime.datetime.strptime(heure_disp,"%H:%M:%S").time() for heure_disp in heures_horaire_ressource]
-                        heure_duckling = res_json[dim_time_index]["value"]["value"]
-                        heure_datetime = datetime.datetime.fromisoformat(heure_duckling)
-                        # S'assure que l'heure choisie est disponible à la réservation
-                        if heure_datetime.time() in heures_dispo:
-                            dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
-                            return {"heure": heure_duckling,"accept_deny":None}
+                        if date is not None:
+                            date = str(date)
+                            heures_horaire_ressource = get_heures(datetime.datetime.fromisoformat(date),ressource)
+                            heures_dispo = [datetime.datetime.strptime(heure_disp,"%H:%M:%S").time() for heure_disp in heures_horaire_ressource["horaire_heures"]]
+                            heure_duckling = res_json[dim_time_index]["value"]["value"]
+                            heure_datetime = datetime.datetime.fromisoformat(heure_duckling)
+                            # S'assure que l'heure choisie est disponible à la réservation
+                            if heure_datetime.time() in heures_dispo :
+                                dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
+                                return {"heure": heure_duckling,"accept_deny":None}
+                            else:
+                                dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
                         else:
-                            dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
+                            heure_duckling = res_json[dim_time_index]["value"]["value"]
+                            heure_datetime = datetime.datetime.fromisoformat(heure_duckling)
+                            result_query_heures = get_heures_semaine(ressource)
+                            list_heures_dispo : dict[int,dict[str,list[datetime.time]]] = result_query_heures["heures_dispo"]
+                            dict_horaires_jour : dict[str,dict] = result_query_heures["horaires"]
+
+                            found_heure_in_horaire = False
+                            # dispatcher.utter_message(json_message=list_heures_dispo)
+                            for day in list_heures_dispo.keys():
+                                if str(heure_datetime.time()) in list_heures_dispo[day] and not found_heure_in_horaire:
+                                    found_heure_in_horaire = True
+                            if found_heure_in_horaire:
+                                dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
+                                return {"heure": heure_duckling,"accept_deny":None}
+                            else:
+                                dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
+                                for day in dict_horaires_jour.keys():
+                                    for horaire in result_query_heures["horaires"][day]["horaires"]:
+                                        dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {result_query_heures['horaires'][day]['decoupage']}")
+
                     else:
                         dispatcher.utter_message(text=f"2. Pouvez-vous répéter l'heure d'une autre manière ?")
                 else:
@@ -493,7 +549,8 @@ class AskForHeureAction(Action):
         date_datetime = datetime.datetime.fromisoformat(date)
         response_mess = "Les heures disponibles à la réservation sont :"
         heures_horaires = get_heures(date_datetime,ressource)
-        for ress in [datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires]:
+        print(heures_horaires)
+        for ress in [datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires["horaire_heures"]]:
             response_mess += f"\n\t- {ress}"
         dispatcher.utter_message(text=response_mess)
         dispatcher.utter_message(text="Pour quelle heure souhaitez-vous réserver ?")
@@ -506,19 +563,44 @@ class AskForDateAction(Action):
     def run(
         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
     ) -> List[EventType]:
-        # heure = tracker.get_slot("heure")
-        # if heure is not None:
-        #     ...
-        # else:
-            
-        response_mess = "Les dates disponibles à la réservation sont :"
-        ressource = tracker.get_slot("ressource")
-        dates_for_ressource = get_jours_disponibles(ressource,30,None)
-        # dispatcher.utter_message(dates_for_ressource)
-        for date in dates_for_ressource:
-            response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
-        dispatcher.utter_message(text=response_mess)
-        dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
-        return []
-    
+        heure = tracker.get_slot("heure")
+        date = tracker.get_slot("date")
+        dispatcher.utter_message(f"Heure {heure} date {date}")
+        if heure is not None:
+            response_mess = f"Les dates disponibles à la réservation pour {str(heure)} sont :"
+            ressource = tracker.get_slot("ressource")
+            dates_for_ressource = get_jours_disponibles(ressource,30,datetime.datetime.fromisoformat(str(heure)).time())
+            # dispatcher.utter_message(dates_for_ressource)
+            for date in dates_for_ressource:
+                response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
+            dispatcher.utter_message(text=response_mess)
+            dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
+            return []     
+        elif heure is None and date is None:
+            ressource = str(tracker.get_slot("ressource"))
+            result_query_heures = get_heures_semaine(ressource)
+            dict_horaires_jour : dict[str,dict] = result_query_heures["horaires"]
+            dispatcher.utter_message("Les horaires de réservation sont les suivants: ")
+            for day in dict_horaires_jour.keys():
+                for horaire in result_query_heures["horaires"][day]["horaires"]:
+                    dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {result_query_heures['horaires'][day]['decoupage']}")
+            response_mess = "Les dates disponibles à la réservation pour le prochain mois sont :"
+            ressource = tracker.get_slot("ressource")
+            dates_for_ressource = get_jours_disponibles(ressource,30,None)
+            # dispatcher.utter_message(dates_for_ressource)
+            for date in dates_for_ressource:
+                response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
+            dispatcher.utter_message(text=response_mess)
+            dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
 
+        else:
+            response_mess = "Les dates disponibles à la réservation sont :"
+            ressource = tracker.get_slot("ressource")
+            dates_for_ressource = get_jours_disponibles(ressource,30,None)
+            # dispatcher.utter_message(dates_for_ressource)
+            for date in dates_for_ressource:
+                response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
+            dispatcher.utter_message(text=response_mess)
+            dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
+            
+            return []

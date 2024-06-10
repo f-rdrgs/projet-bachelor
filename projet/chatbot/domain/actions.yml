@@ -12,3 +12,5 @@ actions:
   - restart_convo
   - reset_validation
   - save_ressource
+  - predefine_ressource
+  - annuler_date_heure
