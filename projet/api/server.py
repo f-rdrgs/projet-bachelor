@@ -15,17 +15,7 @@ import os
 
 import numpy as np
 
-# async def remove_old_reservations(interval: int):
-#     while True:
-#         print("Task executed")
-#         await asyncio.sleep(interval)
-        
-# @asynccontextmanager
-# async def start_remove_reserv_task():
 
-#     ...
-
-app = FastAPI()
 
 class Communicate_Rasa(BaseModel):
     sender:str
@@ -42,6 +32,11 @@ class Reservation_API(BaseModel):
     date:datetime.date
     heure:datetime.time
 
+class Temp_Reservation_API(BaseModel):
+    ressource:str
+    heure: datetime.time
+    date_reserv: datetime.date
+
 origins = [
     "http://0.0.0.0",
     "http://0.0.0.0:5500",
@@ -50,13 +45,6 @@ origins = [
     "*",
 ]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 from configparser import ConfigParser
 
@@ -78,7 +66,7 @@ def load_config(filename='database.ini', section='postgresql'):
 
 
 
-from sqlalchemy import Column, ForeignKey, Row, Time, Tuple, create_engine, TIMESTAMP, func, tuple_
+from sqlalchemy import Column, ForeignKey, Row, Time, Tuple, create_engine, TIMESTAMP, func, null, tuple_
 from sqlalchemy.engine import URL
 
 config = load_config()
@@ -146,9 +134,48 @@ class Reservations_Client_Resource(Base):
     date_reservation = Column(Date(),nullable=False)
     heure = Column(Time(),nullable=False)
 
+class Temp_Reservation(Base):
+    __tablename__ = 'temp_reservation'
+    label_ressource = Column(VARCHAR(),primary_key=True, nullable=False)
+    heure = Column(Time(),primary_key=True, nullable=False)
+    date_reserv = Column(Date(),primary_key=True, nullable=False)
+    timestamp_reserv = Column(TIMESTAMP(), nullable=False)
+
 from sqlalchemy.orm import sessionmaker
 
 Session = sessionmaker(bind=engine)
+
+time_for_deletion = datetime.timedelta(minutes=2)
+
+async def delete_reservation_query():   
+    with Session.begin() as session:
+        query = session.query(Temp_Reservation).where(Temp_Reservation.timestamp_reserv < ( datetime.datetime.now(ZoneInfo('Europe/Paris')) - time_for_deletion)).delete()
+    return query
+
+async def remove_old_reservations(interval: int):
+    while True:
+        print("Task executed")
+        delete_reservation_query()
+
+        await asyncio.sleep(interval)
+        
+
+
+@asynccontextmanager
+async def start_remove_reserv_task():
+    remove_old_reservations()
+    ...
+
+
+
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def seconds_to_hour_min_sec(seconds:int)-> tuple[int,int,int]:
     hour = seconds / 3600

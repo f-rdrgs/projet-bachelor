@@ -25,11 +25,13 @@ Table jour_horaire {
   label varchar
 }
 
-// Table ressource_horaire {
-//   id integer [pk, increment]
-//   jour integer [not null]
-//   resource varchar [not null]
-// }
+
+
+Table temp_reservation {
+  label_ressource varchar [not null, pk]
+  heure time [not null, pk]
+  date_reserv date [not null, pk]
+}
 
 Table reservation {
   id integer [pk, increment]
@@ -40,15 +42,15 @@ Table reservation {
 }
 
 Table reservations_client_resource {
-  id integer [pk]
+  id integer [pk, increment]
   reservation integer [not null]
   resource varchar [not null]
   date_reservation date [not null]
   heure time [not null]
 }
 
-// Ref: ressource_horaire.jour > jour_horaire.id
-// Ref: ressource_horaire.resource > ressource.label
+
+Ref: temp_reservation.label_ressource > ressource.label
 Ref: jour_horaire.label > ressource.label
 Ref: reservations_client_resource.reservation > reservation.id
 Ref: reservations_client_resource.resource> ressource.label
