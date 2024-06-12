@@ -145,8 +145,8 @@ from sqlalchemy.orm import sessionmaker
 
 Session = sessionmaker(bind=engine)
 
-time_for_deletion = datetime.timedelta(minutes=2)
-
+time_for_deletion = datetime.timedelta(minutes=1,seconds=15)
+interval_exec_remove = 10
 async def delete_reservation_query():   
     with Session.begin() as session:
         query = session.query(Temp_Reservation).where(Temp_Reservation.timestamp_reserv < ( datetime.datetime.now(ZoneInfo('Europe/Paris')) - time_for_deletion)).delete()
@@ -154,21 +154,21 @@ async def delete_reservation_query():
 
 async def remove_old_reservations(interval: int):
     while True:
-        print("Task executed")
-        delete_reservation_query()
-
+        print(f"Removed old temp. reservations at {datetime.datetime.now(ZoneInfo('Europe/Paris'))}")
+        await delete_reservation_query()
         await asyncio.sleep(interval)
-        
-
 
 @asynccontextmanager
-async def start_remove_reserv_task():
-    remove_old_reservations()
-    ...
+async def start_remove_reserv_task(app:FastAPI):
+    print("Starting execution of removal of temp reservations")
+    task = asyncio.create_task(remove_old_reservations(interval_exec_remove))
+    yield
+    print("Stopping execution of removal of temp reservations")
+    task.cancel()
 
 
 
-app = FastAPI()
+app = FastAPI(lifespan=start_remove_reserv_task)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -257,8 +257,35 @@ def get_reservations_for_dates_for_ressource(ressource:str,dates:list[datetime.d
     except Exception as e:
         return []
     
+def get_reservations_temporaire_for_dates_for_ressource(ressource:str,dates:list[datetime.date])->dict[datetime.date,list[datetime.time]]:
+    try:
+        with Session.begin() as session:
+            query = session.query(Temp_Reservation.date_reserv, func.array_agg(Temp_Reservation.heure).label("heures")).filter(Temp_Reservation.date_reserv.in_(dates)).where(Temp_Reservation.label_ressource.like(ressource)).group_by(Temp_Reservation.date_reserv)
+            print(f"Temp Res: {query}")
+            return jsonable_encoder(query)
+    except Exception as e:
+        return []
 
 # Temps stocké en UTC (2h en moins qu'en Suisse)
+
+@app.post("/add-temp-reservation/")
+async def add_temp_reserv(data:Temp_Reservation_API):
+    new_temp_res = Temp_Reservation(label_ressource = data.ressource, heure = data.heure, date_reserv = data.date_reserv, timestamp_reserv = datetime.datetime.now(ZoneInfo('Europe/Paris')))
+
+    try:
+        output_pre_res = {}
+        with Session.begin() as session:
+            session.add(new_temp_res)
+            session.flush()
+            session.refresh(new_temp_res)
+            output_pre_res = Temp_Reservation(label_ressource = new_temp_res.label_ressource, heure = new_temp_res.heure, date_reserv = new_temp_res.date_reserv, timestamp_reserv = new_temp_res.timestamp_reserv)
+        return JSONResponse(content={
+                    "message":"Pré-Réservation ajoutée",
+                    "data":{"reservation":jsonable_encoder(output_pre_res)}
+                },status_code=status.HTTP_200_OK)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=str(e))
 
 @app.post("/add-reservation/")
 async def add_reservation(data:Reservation_API):
@@ -329,6 +356,10 @@ async def get_jours_semaine(ressource_label:str,num_jours:int):
                     date_found = curr_date + datetime.timedelta(days=date)
                     dates_dispo.append(date_found)
             curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
+            pre_reserv = get_reservations_temporaire_for_dates_for_ressource(ressource_label,dates_dispo)
+            for date in curr_reservations.keys():
+                if date in pre_reserv.keys():
+                    curr_reservations[date]+=pre_reserv[date]
             heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
             print(dates_dispo)
             # Retire toutes les dates ne possédant aucun horaire de disponible
@@ -359,8 +390,12 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
                     date_found = curr_date + datetime.timedelta(days=date)
                     dates_dispo.append(date_found)
             curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
+            print(f"CUR RES ! ! ! ! {curr_reservations}")
+            temp_res = get_reservations_temporaire_for_dates_for_ressource(ressource_label,dates_dispo)
             heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
-            print(dates_dispo)
+            # print(dates_dispo)
+            for date in curr_reservations.keys():
+                curr_reservations[date].append(temp_res[date])
             # Retire toutes les dates ne possédant aucun horaire de disponible
             for date in curr_reservations.keys():
                 diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
@@ -388,9 +423,18 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
             # query = session.query(Jour_Horaire).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.jour == Jours_Semaine(jour_date.weekday())).all()
 
             # Récupère toutes les réservations correspondant à la date donnée
-            query_reservations = session.query(Reservations_Client_Resource.heure).where(Reservations_Client_Resource.resource == ressource_label).where(Reservations_Client_Resource.date_reservation == jour_date).all()
+            query_reservations = get_reservations_for_dates_for_ressource(ressource_label,[jour_date])
+            # Récupère toutes les pré-réservations
+            query_pre_reserv = get_reservations_temporaire_for_dates_for_ressource(ressource_label,[jour_date])
             # Ressort une liste de temps
-            query_reservations_time = [time[0] for time in query_reservations]
+            print(query_reservations)
+            query_reservations_time = []
+            if str(jour_date) in query_reservations.keys():
+                query_reservations_time = [time for time in query_reservations[str(jour_date)]]
+            print(f"Query reserv {query_reservations}")
+            if str(jour_date) in query_pre_reserv.keys():
+                query_reservations_time+=query_pre_reserv[str(jour_date)]
+            print(f"Query reserv with pre {query_reservations}")
             # query_result = jsonable_encoder(query)
             # query_reservations_result = jsonable_encoder(query_reservations)
             print(f"Réservations: {query_reservations_time}\n")
@@ -399,40 +443,17 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
             total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
             heures_query, query_horaire = get_heures_semaine_for_ressource(ressource_label,[Jours_Semaine(jour_date.weekday())])
             print(f"Heures query: {heures_query}")
-            horaires = [datetime.datetime.strptime(heure, '%H:%M:%S').time() for heure in heures_query[jour_date.weekday()]]
+            horaires = []
+            if jour_date.weekday() in heures_query.keys():
+                horaires = [datetime.datetime.strptime(heure, '%H:%M:%S').time() for heure in heures_query[jour_date.weekday()]]
             
             final_schedule = []
 
             for heure in horaires:
-                if heure not in query_reservations_time:
+                print(f"{heure} not in {query_reservations_time}")
+                if str(heure) not in query_reservations_time:
                     
                     final_schedule.append(str(heure))
-            # Créer une liste d'horaires sous format `HEURE:MINUTE:SECONDE`
-            # for schedule in query_result:
-            #     print(f"Schedule {schedule}")
-            #     decoupage = datetime.time.fromisoformat(schedule['temps_reservation'])
-            #     debut = datetime.datetime.strptime(schedule['debut'], '%H:%M:%S').time()
-            #     debut_delta = datetime.timedelta(seconds=total_sec_calc(debut.hour,debut.minute,debut.second))
-            #     fin = datetime.datetime.strptime(schedule['fin'], '%H:%M:%S').time()
-            #     fin_delta = datetime.timedelta(seconds=total_sec_calc(fin.hour,fin.minute,fin.second))
-            #     print(f"Debut {debut}")
-            #     print(f"Fin {fin}")
-
-
-            #     decoupage_delta = datetime.timedelta(seconds=total_sec_calc(decoupage.hour,decoupage.minute,decoupage.second))
-
-            #     slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
-
-
-
-            #     print(f"Number of slots : {slot_count}")
-            #     new_schedule = [str(debut_delta+(decoupage_delta*offset)) for offset in range(int(slot_count))]
-            #     new_schedule_no_reserved_schedules = []
-            #     # S'assurer qu'aucun des horaires spécifiés ne correspond déjà à une heure de réservation
-            #     for schedule in new_schedule:
-            #         if(datetime.datetime.strptime(schedule,"%H:%M:%S").time() not in query_reservations_time):
-            #             new_schedule_no_reserved_schedules.append(schedule)
-            #     final_schedule += new_schedule_no_reserved_schedules
 
             print("QUERY HORAIRE "+str(query_horaire))
             return JSONResponse(content={"horaire_heures":final_schedule,"horaire":query_horaire},status_code=status.HTTP_200_OK)
