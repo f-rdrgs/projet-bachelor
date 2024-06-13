@@ -62,7 +62,7 @@ nlu:
       - pour [8h du soir](heure)
       - à [07h20](heure)
       - pour [12h00](heure)
-      - le pour [08:00](heure)
+      - pour [08:00](heure)
       - pour [06:34](heure)
       - pour [17 heures 10](heure)
   - intent: inform_date

@@ -128,11 +128,10 @@ class Reservation(Base):
 
 class Reservations_Client_Resource(Base):
     __tablename__ = 'reservations_client_resource'
-    id = Column(Integer(),primary_key=True,autoincrement="auto")
-    reservation = Column(Integer(),ForeignKey('reservation.id'), nullable=False)
-    resource = Column(VARCHAR(),ForeignKey('ressource.label'),nullable=False)
-    date_reservation = Column(Date(),nullable=False)
-    heure = Column(Time(),nullable=False)
+    reservation = Column(Integer(),ForeignKey('reservation.id'),  nullable=False)
+    resource = Column(VARCHAR(),ForeignKey('ressource.label'),primary_key=True,nullable=False)
+    date_reservation = Column(Date(),primary_key=True,nullable=False)
+    heure = Column(Time(),primary_key=True,nullable=False)
 
 class Temp_Reservation(Base):
     __tablename__ = 'temp_reservation'
@@ -307,7 +306,7 @@ async def add_reservation(data:Reservation_API):
                 session.add(reservation_ressource)
                 session.flush()
                 session.refresh(reservation_ressource)
-                output_reserv_ressource = {"id": reservation_ressource.id,"heure": reservation_ressource.heure,"date_reservation": reservation_ressource.date_reservation,"ressource": reservation_ressource.resource,"date_reservation": reservation_ressource.date_reservation}
+                output_reserv_ressource = {"heure": reservation_ressource.heure,"date_reservation": reservation_ressource.date_reservation,"ressource": reservation_ressource.resource,"date_reservation": reservation_ressource.date_reservation}
             return JSONResponse(content={
                     "message":"Réservation ajoutée",
                     "data":{"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource)}
