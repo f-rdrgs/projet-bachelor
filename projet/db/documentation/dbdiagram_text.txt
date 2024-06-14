@@ -31,6 +31,7 @@ Table temp_reservation {
   label_ressource varchar [not null, pk]
   heure time [not null, pk]
   date_reserv date [not null, pk]
+  timestamp_reserv timestamp [not null]
 }
 
 Table reservation {
@@ -42,14 +43,26 @@ Table reservation {
 }
 
 Table reservations_client_resource {
-  id integer [pk, increment]
   reservation integer [not null]
-  resource varchar [not null]
-  date_reservation date [not null]
-  heure time [not null]
+  resource varchar [pk, not null]
+  date_reservation date [pk, not null]
+  heure time [pk, not null]
 }
 
+Table options_resource {
+  label_resource varchar [not null, pk]
+  label_option varchar [not null, pk]
+  description text
+}
 
+Table options_resource_choix {
+  id integer [pk, increment]
+  label_option varchar [not null]
+  choix varchar [not null]
+}
+
+Ref: options_resource_choix.label_option > options_resource.label_option
+Ref: options_resource.label_resource > ressource.label
 Ref: temp_reservation.label_ressource > ressource.label
 Ref: jour_horaire.label > ressource.label
 Ref: reservations_client_resource.reservation > reservation.id

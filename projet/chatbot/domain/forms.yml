@@ -30,3 +30,12 @@ forms:
       - inform_date
       - inform_ressource
       - inform_heure
+
+  get_options_reserv_form:
+    required_slots:
+      - choix_option
+    ignored_intents:
+      - ressource_gather
+      - inform_date
+      - inform_ressource
+      - inform_heure   

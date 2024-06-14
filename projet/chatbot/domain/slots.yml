@@ -54,22 +54,26 @@ slots:
         - type: from_entity
           entity: ressource
       influence_conversation: false
-  # nom:
-  #   type: text
-  #   mappings:
-  #     - type: from_text
-  #       conditions:
-  #         - active_loop: get_info_reserv_form
-  #           requested_slot: nom
-  #   influence_conversation: false
-  # prenom:
-  #   type: text
-  #   mappings:
-  #     - type: from_text
-  #       conditions:
-  #         - active_loop: get_info_reserv_form
-  #           requested_slot: prenom
-  #   influence_conversation: false
+  options_ressource:
+      type: list
+      initial_value: []
+      influence_conversation: false
+  choix_option:
+      type: float
+      min_value: 0.0
+      max_value: 50.0
+      mappings:
+        - type: from_text
+          conditions:
+            - active_loop: get_options_reserv_form
+              requested_slot: choix_option
+    influence_conversation: false
+# S'incrémente à chaque option passée pour track progression
+  option_count:
+      type: float
+      min_value: 0.0
+      max_value: 50.0
+    influence_conversation: false
   numero_tel:
     type: text
     mappings:

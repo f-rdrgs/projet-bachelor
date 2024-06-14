@@ -78,7 +78,7 @@ def update_sql_script():
                 for col in columns:
                     col_string+=col+","
                 col_string = col_string.removesuffix(",")
-            total_string+=f"COPY {table_name}({col_string})\nFROM '/data/{file}'\nWITH (FORMAT csv, HEADER);"
+            total_string+=f"COPY {table_name}({col_string})\nFROM '/data/{file}'\nWITH (FORMAT csv, HEADER);\n"
 
         # COPY jour_horaire(jour,debut,fin)
         # FROM '/data/horaire.csv'
@@ -117,5 +117,8 @@ if __name__ == "__main__":
 
     process_csv("ressource.csv","ressource")
     process_csv("horaire.csv","jour_horaire")
+    process_csv("options.csv","options_resource")
+    process_csv("options_choix.csv","options_resource_choix")
+
     update_sql_script()
     execute_script()

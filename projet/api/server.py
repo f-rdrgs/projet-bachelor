@@ -135,10 +135,22 @@ class Reservations_Client_Resource(Base):
 
 class Temp_Reservation(Base):
     __tablename__ = 'temp_reservation'
-    label_ressource = Column(VARCHAR(),primary_key=True, nullable=False)
+    label_ressource = Column(VARCHAR(),ForeignKey('ressource.label'),primary_key=True, nullable=False)
     heure = Column(Time(),primary_key=True, nullable=False)
     date_reserv = Column(Date(),primary_key=True, nullable=False)
     timestamp_reserv = Column(TIMESTAMP(), nullable=False)
+
+class Options_Resource(Base):
+    __tablename__ = 'options_resource'
+    label_resource = Column(VARCHAR(),ForeignKey('ressource.label'),nullable=False,primary_key=True)
+    label_option = Column(VARCHAR(),nullable=False, primary_key=True)
+    description = Column(Text(),nullable=True)
+
+class Options_Resource_Choix(Base):
+    __tablename__ = 'options_resource_choix'
+    id = Column(Integer(),primary_key=True,autoincrement="auto")
+    label_option = Column(VARCHAR(),ForeignKey('ressource.label'), nullable=False)
+    choix = Column(VARCHAR(), nullable=False)
 
 from sqlalchemy.orm import sessionmaker
 
