@@ -49,7 +49,20 @@ def get_ressource_list()->list[str]:
 
     return []
 
-    
+@staticmethod
+def add_temp_reservation(ressource:str, date_reserv:datetime.date,heure_reserv:datetime.time):
+    try:
+        data = {
+            "ressource":ressource,
+            "heure":heure_reserv,
+            "date_reserv":date_reserv
+        }
+        res = requests.post("http://api:5500/add-temp-reservation/",data=data)
+        return (res.status_code == 200)
+    except Exception as e:
+        print(e)
+        return False
+
 
 @staticmethod
 def get_jours_disponibles(ressource_label: str,nombre_jours:int,heure_prechoisie:datetime.time|None)->list[datetime.date]:
@@ -141,8 +154,6 @@ class ActionSaveRessource(Action):
         ressource = tracker.get_slot("ressource")
         date = tracker.get_slot("date")
         heure = tracker.get_slot("heure")
-        # nom = tracker.get_slot("nom")
-        # prenom = tracker.get_slot("prenom")   
         nom_prenom = str(tracker.get_slot("nom_prenom"))
         nom_prenom_list = nom_prenom.split(' ')
         nom = ""
@@ -199,16 +210,11 @@ class ValidateRessourceForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
-        # print(f"SLOT VALUE{slot_value}")
         if slot_value is not None:
             ressource = str(slot_value).lower()
-            # print(f"RESSOURCE : {ressource}")
-
-            
             if ressource in get_ressource_list():
                 return {"ressource":ressource,"accept_deny":None}
             dispatcher.utter_message(text=f"{ressource} n'existe pas. Veuillez réserver une ressource qui existe")
-            # print("LEAVING FORM")
             return {"ressource":None}
         else:
             dispatcher.utter_message("Veuillez spécifier une ressource")
@@ -318,8 +324,6 @@ class ValidateInfoReserv(FormValidationAction):
             if yes_no:
                 return {"accept_deny":True}
             else:
-                # SlotSet("nom", None)
-                # SlotSet("prenom", None)
                 return {"accept_deny":None,"nom_prenom": None,"numero_tel":None}
         else:
             dispatcher.utter_message("Veuillez répondre oui ou non")
@@ -384,14 +388,12 @@ class ValidateHeuresForm(FormValidationAction):
 
         if  slot_value is not None:
             date = str(date)
-            # dispatcher.utter_message(text=f"Date : {date}")
             # Récupère date parsé par Duckling
             res = requests.post("http://duckling:8000/parse",data=data)
             if res.status_code == 200:
                 res_json = res.json()
                 dim_time_index = -1
                 grain = "day"
-                # dispatcher.utter_message(f"Duckling: {res_json}")
                 # S'assure de trouver une valeur de type temps dans la réponse
                 for index in range(len(res_json)):
                     if res_json[index]["dim"] == "time" and dim_time_index == -1:
@@ -477,7 +479,6 @@ class ValidateHeuresForm(FormValidationAction):
                             dict_horaires_jour : dict[str,dict] = result_query_heures["horaires"]
 
                             found_heure_in_horaire = False
-                            # dispatcher.utter_message(json_message=list_heures_dispo)
                             for day in list_heures_dispo.keys():
                                 if str(heure_datetime.time()) in list_heures_dispo[day] and not found_heure_in_horaire:
                                     found_heure_in_horaire = True
@@ -511,6 +512,10 @@ class ValidateHeuresForm(FormValidationAction):
             yes_no = bool(slot_value)
             # dispatcher.utter_message(f"{yes_no}")
             if yes_no:
+                ressource = str(tracker.get_slot("ressource"))
+                heure = str(tracker.get_slot("heure"))
+                date = str(tracker.get_slot("date"))
+                add_temp_reservation(ressource,heure,date)
                 return {"accept_deny":True}
             else:
                 SlotSet("heure", None)
