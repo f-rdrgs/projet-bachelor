@@ -327,6 +327,12 @@ async def add_reservation(data:Reservation_API):
             print(e)
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=str(e))
         
+@app.get("/get-options-choix/{ressource}")
+async def get_options_choix(ressource:str):
+    with Session.begin() as session:
+        query = session.query(Options_Resource.label_option,Options_Resource.description,func.array_agg(Options_Resource_Choix.choix).label("choix")).join(Options_Resource_Choix,Options_Resource.label_option == Options_Resource_Choix.label_option).where(Options_Resource.label_resource.like(ressource)).group_by(Options_Resource.label_option).group_by(Options_Resource.description).all()
+        query = {elem[0]: elem[1:elem.__len__()] for elem in query}
+        return JSONResponse(content={"options":jsonable_encoder(query)},status_code=status.HTTP_200_OK)
 
 @app.get("/get-reservations-ressources/")    
 async def get_reservations_ressources():
