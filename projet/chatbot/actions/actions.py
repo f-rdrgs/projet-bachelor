@@ -9,6 +9,7 @@
 # This is a simple example for a custom action which utters "Hello World!"
 
 from enum import Enum
+import enum
 import json
 from typing import Any, Text, Dict, List
 
@@ -135,6 +136,15 @@ def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
     else:
         return res.status_code == 200, ""
 
+@staticmethod
+def get_options(ressource:str)->dict[str,list]:
+    res = requests.get(f"http://api:5500/get-options-choix/{ressource}").json()
+    if(len(res)>0):
+        if len(res["options"]) > 0:
+            return res["options"]
+        
+    return []
+
 class RestartConvo(Action):
     def name(self)-> Text:
         return "restart_convo"
@@ -197,7 +207,55 @@ class ActionSalutation(Action):
        
         return []
 
+class UtterListOptions(Action):
+    def name(self) -> Text:
+        return "list_list_options"
+    
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        list_options = tracker.get_slot("options_ressource")
+        if list_options is not None or str(list_options) != "None":
+            dispatcher.utter_message(str(list_options))
+        return []
 
+class ValidateGetOptionsReservForm(FormValidationAction):
+    def name(self)->Text:
+        return "validate_get_options_reserv_form"
+    
+    def validate_choix_option(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        ressource = tracker.get_slot("ressource")
+        option_count = tracker.get_slot("option_count")
+        choix_option = tracker.get_slot("choix_option")
+        options_list = tracker.get_slot("options_ressource")
+        options = get_options(ressource)
+        print(f"List choix: {str(options_list)}")
+        if tracker.latest_message.get("intent")["name"] == "stop":
+            return {}
+        if options.keys().__len__()>0 and option_count is not None and choix_option is not None:
+            option_count = int(option_count)
+            print(f"{int(choix_option)} in {range(0,options.keys().__len__())} {int(choix_option) in range(0,options.keys().__len__()+1)}")
+            if int(choix_option) in range(0,options.keys().__len__()+1):
+                options_list.append(int(choix_option))
+                if option_count+1 < options.keys().__len__():
+                    print(f"LIST : {options_list}")
+                    return {"choix_option":None,"option_count":float(option_count+1),"options_ressource":options_list}
+                else:
+                    print(f"LIST : {options_list}")
+                    return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
+            else:
+                dispatcher.utter_message("Choix invalide")
+                return {"choix_option":None}
+        else:
+            dispatcher.utter_message("Erreur lors de la sélection de choix")
+            return {"choix_option":None}
+    
 
 # https://learning.rasa.com/rasa-forms-3/validation/
 class ValidateRessourceForm(FormValidationAction):
@@ -525,6 +583,35 @@ class ValidateHeuresForm(FormValidationAction):
             dispatcher.utter_message("Veuillez répondre oui ou non")
             return {"accept_deny":None}
  
+class AskForChoixOptionAction(Action):
+    def name(self)->Text:
+        return "action_ask_choix_option"
+    
+    def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
+    ) -> List[EventType]:
+        ressource = tracker.get_slot("ressource")
+        option_count = tracker.get_slot("option_count")
+        options_list = tracker.get_slot("options_ressource")
+        dispatcher.utter_message(str(options_list))
+        if ressource is not None and option_count is not None:
+            ressource = str(ressource)
+            options = get_options(ressource)
+            option_count = int(option_count)
+            if option_count < options.keys().__len__():
+                message_sent = ""
+                for i,option in enumerate(options.keys()):
+                    if i == option_count:
+                        message_sent =f"Les options disponible pour {option} sont: \n"
+                        for j,value in enumerate(options[option][1]):
+                            message_sent+=f"{j}: {value}\n"
+                        message_sent+="Veuillez entrer le nombre correspondant"
+                dispatcher.utter_message(message_sent)
+            else:
+                dispatcher.utter_message("Aucune autre option correspondant")
+        else:
+            dispatcher.utter_message("Aucune ressource trouvée pour récupérer ses options")
+        return []
 # https://rasa.com/docs/rasa/forms/#using-a-custom-action-to-ask-for-the-next-slot
 class AskForRessourceAction(Action):
     def name(self) -> Text:

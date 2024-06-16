@@ -28,7 +28,6 @@ slots:
         conditions:
           - active_loop: get_date_heure_form # Récolte la ressource QUE lorsqu'on est dans un form
     influence_conversation: false
-  
   accept_deny:
     type: bool
     mappings:
@@ -49,30 +48,35 @@ slots:
             requested_slot: nom_prenom
     influence_conversation: false
   ressource_prereserv:
-      type: text
-      mappings:
-        - type: from_entity
-          entity: ressource
-      influence_conversation: false
+    type: text
+    mappings:
+      - type: from_entity
+        entity: ressource
+    influence_conversation: false
   options_ressource:
       type: list
       initial_value: []
       influence_conversation: false
-  choix_option:
-      type: float
-      min_value: 0.0
-      max_value: 50.0
       mappings:
-        - type: from_text
-          conditions:
-            - active_loop: get_options_reserv_form
-              requested_slot: choix_option
+        - type: custom
+  choix_option:
+    type: float
+    min_value: 0.0
+    max_value: 50.0
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: get_options_reserv_form
+            requested_slot: choix_option
     influence_conversation: false
 # S'incrémente à chaque option passée pour track progression
   option_count:
-      type: float
-      min_value: 0.0
-      max_value: 50.0
+    type: float
+    min_value: 0.0
+    max_value: 50.0
+    initial_value: 0
+    mappings:
+      - type: custom
     influence_conversation: false
   numero_tel:
     type: text
