@@ -31,6 +31,7 @@ class Reservation_API(BaseModel):
     ressource:str
     date:datetime.date
     heure:datetime.time
+    list_options:list[int]
 
 class Temp_Reservation_API(BaseModel):
     ressource:str
@@ -152,6 +153,12 @@ class Options_Resource_Choix(Base):
     label_option = Column(VARCHAR(),ForeignKey('ressource.label'), nullable=False)
     choix = Column(VARCHAR(), nullable=False)
 
+class Reservations_Client_Choix(Base):
+    __tablename__ = 'reservations_client_choix'
+    id = Column(Integer(),primary_key=True,autoincrement="auto")
+    reservation = Column(Integer(),ForeignKey('reservation.id'),nullable=False)
+    resource = Column(VARCHAR(),ForeignKey('ressource.label'),nullable=False)
+    id_choix_ressource = Column(Integer(),ForeignKey('options_resource_choix.id'),nullable=False)
 from sqlalchemy.orm import sessionmaker
 
 Session = sessionmaker(bind=engine)
@@ -301,10 +308,11 @@ async def add_temp_reserv(data:Temp_Reservation_API):
 @app.post("/add-reservation/")
 async def add_reservation(data:Reservation_API):
     
-        new_reservation = Reservation(nom=data.nom,prenom=data.prenom,numero_tel=data.numero_tel,date_reservation=datetime.datetime.now(ZoneInfo('Europe/Paris')))
+        new_reservation = Reservation(nom=data.nom,prenom=data.prenom,numero_tel=data.numero_tel,date_reservation=datetime.datetime.now(ZoneInfo('Europe/Paris')),)
         print(datetime.datetime.now())
         output_reserv = Reservation()
         output_reserv_ressource = Reservations_Client_Resource()
+        output_choix_res = {}
         try:
             # Ajout de la nouvelle réservation (infos client)
             with Session.begin() as session:
@@ -319,9 +327,17 @@ async def add_reservation(data:Reservation_API):
                 session.flush()
                 session.refresh(reservation_ressource)
                 output_reserv_ressource = {"heure": reservation_ressource.heure,"date_reservation": reservation_ressource.date_reservation,"ressource": reservation_ressource.resource,"date_reservation": reservation_ressource.date_reservation}
+            with Session.begin() as session:
+                print(data.list_options[0])
+                for id in data.list_options:
+                    reserv_choix = Reservations_Client_Choix(reservation=output_reserv["id"],resource=data.ressource,id_choix_ressource=id)
+                    session.add(reserv_choix)
+                    session.flush()
+                    session.refresh(reserv_choix)
+                    output_choix_res[str(id)] = {"id":reserv_choix.id,"ressource":reserv_choix.resource,"res_id":reserv_choix.reservation,"id_choix":reserv_choix.id_choix_ressource}
             return JSONResponse(content={
                     "message":"Réservation ajoutée",
-                    "data":{"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource)}
+                    "data":{"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res)}
                 },status_code=status.HTTP_200_OK)
         except Exception as e:
             print(e)
@@ -330,8 +346,12 @@ async def add_reservation(data:Reservation_API):
 @app.get("/get-options-choix/{ressource}")
 async def get_options_choix(ressource:str):
     with Session.begin() as session:
-        query = session.query(Options_Resource.label_option,Options_Resource.description,func.array_agg(Options_Resource_Choix.choix).label("choix")).join(Options_Resource_Choix,Options_Resource.label_option == Options_Resource_Choix.label_option).where(Options_Resource.label_resource.like(ressource)).group_by(Options_Resource.label_option).group_by(Options_Resource.description).all()
-        query = {elem[0]: elem[1:elem.__len__()] for elem in query}
+        query = session.query(Options_Resource.label_option,Options_Resource.description,func.array_agg(Options_Resource_Choix.choix).label("choix"),func.array_agg(Options_Resource_Choix.id).label("id")).join(Options_Resource_Choix,Options_Resource.label_option == Options_Resource_Choix.label_option).where(Options_Resource.label_resource.like(ressource)).group_by(Options_Resource.label_option).group_by(Options_Resource.description).all()
+        query = {elem[0]: [elem[1],{id: choix for id, choix in zip(elem[3],elem[2])}]for elem in query}
+        test = [1,3]
+        # print(list(jsonable_encoder(query).items()))
+        for i,item in enumerate(list(jsonable_encoder(query).items())):
+            print(list(item[1][1].items())[test[i]-1])
         print(query.keys().__len__())
         return JSONResponse(content={"options":jsonable_encoder(query)},status_code=status.HTTP_200_OK)
 

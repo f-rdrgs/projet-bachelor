@@ -30,6 +30,7 @@ class Reservation_save_API():
     date:datetime.date
     ressource:str
     heure:datetime.time
+    list_choix:list[int]
 
 class Day_week(Enum):
     lundi = 0
@@ -114,13 +115,15 @@ def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
         date = str(data.date)
         ressource = str(data.ressource)
         heure = str(data.heure)
+        list_choix = data.list_choix
         print({
             "nom":nom,
             "prenom":prenom,
             "numero_tel":numero_tel,
             "ressource":ressource,
             "heure":str(heure),
-            "date":str(date)
+            "date":str(date),
+            "list_options":list_choix
         })
         res = requests.post(f"http://api:5500/add-reservation",json={
             "nom":nom,
@@ -128,7 +131,8 @@ def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
             "numero_tel":numero_tel,
             "ressource":ressource,
             "heure":str(heure),
-            "date":str(date)
+            "date":str(date),
+            "list_options":list_choix
         })
     except Exception as e:
         print(e)
@@ -164,6 +168,7 @@ class ActionSaveRessource(Action):
         ressource = tracker.get_slot("ressource")
         date = tracker.get_slot("date")
         heure = tracker.get_slot("heure")
+        list_choix = tracker.get_slot("options_ressource")
         nom_prenom = str(tracker.get_slot("nom_prenom"))
         nom_prenom_list = nom_prenom.split(' ')
         nom = ""
@@ -180,7 +185,7 @@ class ActionSaveRessource(Action):
             date_conv = datetime.datetime.fromisoformat(str(date)).date()
             heure_conv = datetime.datetime.fromisoformat(str(heure)).time()
             num_tel = str(num_tel)
-            save_reserv_data = Reservation_save_API(nom=str(nom),prenom=str(prenom),numero_tel=str(num_tel),date=str(date_conv),heure=str(heure_conv),ressource=ressource)
+            save_reserv_data = Reservation_save_API(nom=str(nom),prenom=str(prenom),numero_tel=str(num_tel),date=str(date_conv),heure=str(heure_conv),ressource=ressource,list_choix=list_choix)
             succes,err = save_reservation(save_reserv_data)
             if succes:
                 dispatcher.utter_message("Réservation enregistrée !")
@@ -238,10 +243,13 @@ class ValidateGetOptionsReservForm(FormValidationAction):
         print(f"List choix: {str(options_list)}")
         if tracker.latest_message.get("intent")["name"] == "stop":
             return {}
-        if options.keys().__len__()>0 and option_count is not None and choix_option is not None:
-            option_count = int(option_count)
-            print(f"{int(choix_option)} in {range(0,options.keys().__len__())} {int(choix_option) in range(0,options.keys().__len__()+1)}")
-            if int(choix_option) in range(0,options.keys().__len__()+1):
+        if option_count is None:
+            return {"choix_option":None}
+        option_count = int(option_count)
+        
+        if options.keys().__len__()>0 and option_count >=0 and option_count < options.keys().__len__() and choix_option is not None:
+            # print(f"{int(choix_option)} in {range(0,options.keys().__len__())} {int(choix_option) in range(0,options.keys().__len__()+1)}")
+            if int(choix_option) in range(0,list(options.items())[option_count][1][1].keys().__len__()+1):
                 options_list.append(int(choix_option))
                 if option_count+1 < options.keys().__len__():
                     print(f"LIST : {options_list}")
@@ -603,8 +611,8 @@ class AskForChoixOptionAction(Action):
                 for i,option in enumerate(options.keys()):
                     if i == option_count:
                         message_sent =f"Les options disponible pour {option} sont: \n"
-                        for j,value in enumerate(options[option][1]):
-                            message_sent+=f"{j}: {value}\n"
+                        for j,value in enumerate(options[option][1].items()):
+                            message_sent+=f"{j}: {value[1]}\n"
                         message_sent+="Veuillez entrer le nombre correspondant"
                 dispatcher.utter_message(message_sent)
             else:
