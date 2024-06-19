@@ -72,7 +72,7 @@ slots:
 # S'incrémente à chaque option passée pour track progression
   option_count:
     type: float
-    min_value: 0.0
+    min_value: -1.0
     max_value: 50.0
     initial_value: 0
     mappings:

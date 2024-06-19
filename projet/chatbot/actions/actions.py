@@ -250,7 +250,8 @@ class ValidateGetOptionsReservForm(FormValidationAction):
         if options.keys().__len__()>0 and option_count >=0 and option_count < options.keys().__len__() and choix_option is not None:
             # print(f"{int(choix_option)} in {range(0,options.keys().__len__())} {int(choix_option) in range(0,options.keys().__len__()+1)}")
             if int(choix_option) in range(0,list(options.items())[option_count][1][1].keys().__len__()+1):
-                options_list.append(int(choix_option))
+                # list(list(dico.items())[option_count][1][1].items())[2-1][0]
+                options_list.append(int(list(list(options.items())[option_count][1][1].items())[int(choix_option)-1][0]))
                 if option_count+1 < options.keys().__len__():
                     print(f"LIST : {options_list}")
                     return {"choix_option":None,"option_count":float(option_count+1),"options_ressource":options_list}
@@ -616,7 +617,8 @@ class AskForChoixOptionAction(Action):
                         message_sent+="Veuillez entrer le nombre correspondant"
                 dispatcher.utter_message(message_sent)
             else:
-                dispatcher.utter_message("Aucune autre option correspondant")
+                dispatcher.utter_message("Aucune option n'est disponible")
+                return [SlotSet("option_count",-1),SlotSet("choix_option",-1),SlotSet("options_ressource",[])]
         else:
             dispatcher.utter_message("Aucune ressource trouvée pour récupérer ses options")
         return []

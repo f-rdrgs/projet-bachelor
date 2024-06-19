@@ -327,14 +327,14 @@ async def add_reservation(data:Reservation_API):
                 session.flush()
                 session.refresh(reservation_ressource)
                 output_reserv_ressource = {"heure": reservation_ressource.heure,"date_reservation": reservation_ressource.date_reservation,"ressource": reservation_ressource.resource,"date_reservation": reservation_ressource.date_reservation}
-            with Session.begin() as session:
-                print(data.list_options[0])
-                for id in data.list_options:
-                    reserv_choix = Reservations_Client_Choix(reservation=output_reserv["id"],resource=data.ressource,id_choix_ressource=id)
-                    session.add(reserv_choix)
-                    session.flush()
-                    session.refresh(reserv_choix)
-                    output_choix_res[str(id)] = {"id":reserv_choix.id,"ressource":reserv_choix.resource,"res_id":reserv_choix.reservation,"id_choix":reserv_choix.id_choix_ressource}
+            if data.list_options.__len__()> 0:
+                with Session.begin() as session:
+                    for id in data.list_options:
+                        reserv_choix = Reservations_Client_Choix(reservation=output_reserv["id"],resource=data.ressource,id_choix_ressource=id)
+                        session.add(reserv_choix)
+                        session.flush()
+                        session.refresh(reserv_choix)
+                        output_choix_res[str(id)] = {"id":reserv_choix.id,"ressource":reserv_choix.resource,"res_id":reserv_choix.reservation,"id_choix":reserv_choix.id_choix_ressource}
             return JSONResponse(content={
                     "message":"Réservation ajoutée",
                     "data":{"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res)}
