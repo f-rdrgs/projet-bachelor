@@ -9,6 +9,7 @@
 # This is a simple example for a custom action which utters "Hello World!"
 
 from enum import Enum
+import enum
 import json
 from typing import Any, Text, Dict, List
 
@@ -29,6 +30,7 @@ class Reservation_save_API():
     date:datetime.date
     ressource:str
     heure:datetime.time
+    list_choix:list[int]
 
 class Day_week(Enum):
     lundi = 0
@@ -113,13 +115,15 @@ def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
         date = str(data.date)
         ressource = str(data.ressource)
         heure = str(data.heure)
+        list_choix = data.list_choix
         print({
             "nom":nom,
             "prenom":prenom,
             "numero_tel":numero_tel,
             "ressource":ressource,
             "heure":str(heure),
-            "date":str(date)
+            "date":str(date),
+            "list_options":list_choix
         })
         res = requests.post(f"http://api:5500/add-reservation",json={
             "nom":nom,
@@ -127,13 +131,23 @@ def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
             "numero_tel":numero_tel,
             "ressource":ressource,
             "heure":str(heure),
-            "date":str(date)
+            "date":str(date),
+            "list_options":list_choix
         })
     except Exception as e:
         print(e)
         return False,e
     else:
         return res.status_code == 200, ""
+
+@staticmethod
+def get_options(ressource:str)->dict[str,list]:
+    res = requests.get(f"http://api:5500/get-options-choix/{ressource}").json()
+    if(len(res)>0):
+        if len(res["options"]) > 0:
+            return res["options"]
+        
+    return []
 
 class RestartConvo(Action):
     def name(self)-> Text:
@@ -154,6 +168,7 @@ class ActionSaveRessource(Action):
         ressource = tracker.get_slot("ressource")
         date = tracker.get_slot("date")
         heure = tracker.get_slot("heure")
+        list_choix = tracker.get_slot("options_ressource")
         nom_prenom = str(tracker.get_slot("nom_prenom"))
         nom_prenom_list = nom_prenom.split(' ')
         nom = ""
@@ -170,7 +185,7 @@ class ActionSaveRessource(Action):
             date_conv = datetime.datetime.fromisoformat(str(date)).date()
             heure_conv = datetime.datetime.fromisoformat(str(heure)).time()
             num_tel = str(num_tel)
-            save_reserv_data = Reservation_save_API(nom=str(nom),prenom=str(prenom),numero_tel=str(num_tel),date=str(date_conv),heure=str(heure_conv),ressource=ressource)
+            save_reserv_data = Reservation_save_API(nom=str(nom),prenom=str(prenom),numero_tel=str(num_tel),date=str(date_conv),heure=str(heure_conv),ressource=ressource,list_choix=list_choix)
             succes,err = save_reservation(save_reserv_data)
             if succes:
                 dispatcher.utter_message("Réservation enregistrée !")
@@ -197,7 +212,59 @@ class ActionSalutation(Action):
        
         return []
 
+class UtterListOptions(Action):
+    def name(self) -> Text:
+        return "list_list_options"
+    
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        list_options = tracker.get_slot("options_ressource")
+        if list_options is not None or str(list_options) != "None":
+            dispatcher.utter_message(str(list_options))
+        return []
 
+class ValidateGetOptionsReservForm(FormValidationAction):
+    def name(self)->Text:
+        return "validate_get_options_reserv_form"
+    
+    def validate_choix_option(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: DomainDict,
+    ) -> Dict[Text, Any]:
+        ressource = tracker.get_slot("ressource")
+        option_count = tracker.get_slot("option_count")
+        choix_option = tracker.get_slot("choix_option")
+        options_list = tracker.get_slot("options_ressource")
+        options = get_options(ressource)
+        print(f"List choix: {str(options_list)}")
+        if tracker.latest_message.get("intent")["name"] == "stop":
+            return {}
+        if option_count is None:
+            return {"choix_option":None}
+        option_count = int(option_count)
+        
+        if options.keys().__len__()>0 and option_count >=0 and option_count < options.keys().__len__() and choix_option is not None:
+            # print(f"{int(choix_option)} in {range(0,options.keys().__len__())} {int(choix_option) in range(0,options.keys().__len__()+1)}")
+            if int(choix_option) in range(0,list(options.items())[option_count][1][1].keys().__len__()+1):
+                # list(list(dico.items())[option_count][1][1].items())[2-1][0]
+                options_list.append(int(list(list(options.items())[option_count][1][1].items())[int(choix_option)-1][0]))
+                if option_count+1 < options.keys().__len__():
+                    print(f"LIST : {options_list}")
+                    return {"choix_option":None,"option_count":float(option_count+1),"options_ressource":options_list}
+                else:
+                    print(f"LIST : {options_list}")
+                    return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
+            else:
+                dispatcher.utter_message("Choix invalide")
+                return {"choix_option":None}
+        else:
+            dispatcher.utter_message("Erreur lors de la sélection de choix")
+            return {"choix_option":None}
+    
 
 # https://learning.rasa.com/rasa-forms-3/validation/
 class ValidateRessourceForm(FormValidationAction):
@@ -525,6 +592,36 @@ class ValidateHeuresForm(FormValidationAction):
             dispatcher.utter_message("Veuillez répondre oui ou non")
             return {"accept_deny":None}
  
+class AskForChoixOptionAction(Action):
+    def name(self)->Text:
+        return "action_ask_choix_option"
+    
+    def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
+    ) -> List[EventType]:
+        ressource = tracker.get_slot("ressource")
+        option_count = tracker.get_slot("option_count")
+        options_list = tracker.get_slot("options_ressource")
+        dispatcher.utter_message(str(options_list))
+        if ressource is not None and option_count is not None:
+            ressource = str(ressource)
+            options = get_options(ressource)
+            option_count = int(option_count)
+            if option_count < options.keys().__len__():
+                message_sent = ""
+                for i,option in enumerate(options.keys()):
+                    if i == option_count:
+                        message_sent =f"Les options disponible pour {option} sont: \n"
+                        for j,value in enumerate(options[option][1].items()):
+                            message_sent+=f"{j}: {value[1]}\n"
+                        message_sent+="Veuillez entrer le nombre correspondant"
+                dispatcher.utter_message(message_sent)
+            else:
+                dispatcher.utter_message("Aucune option n'est disponible")
+                return [SlotSet("option_count",-1),SlotSet("choix_option",-1),SlotSet("options_ressource",[])]
+        else:
+            dispatcher.utter_message("Aucune ressource trouvée pour récupérer ses options")
+        return []
 # https://rasa.com/docs/rasa/forms/#using-a-custom-action-to-ask-for-the-next-slot
 class AskForRessourceAction(Action):
     def name(self) -> Text:

@@ -1,0 +1,476 @@
+{
+	"info": {
+		"_postman_id": "adb6eb52-c696-4c07-a89a-047680c0aac9",
+		"name": "Projet Bachelor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24839166",
+		"_collection_link": "https://red-comet-147439.postman.co/workspace/My-Workspace~cba4613f-0e87-4927-886d-bb7be4a6e1da/collection/24839166-adb6eb52-c696-4c07-a89a-047680c0aac9?action=share&source=collection_link&creator=24839166"
+	},
+	"item": [
+		{
+			"name": "Rasa",
+			"item": [
+				{
+					"name": "Check Version",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/version",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"version"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\": \"I'm good and you\",\r\n    \"sender\": \"user\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5005/webhooks/rest/webhook",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5005",
+							"path": [
+								"webhooks",
+								"rest",
+								"webhook"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/webhook/rasa",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"webhook",
+								"rasa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Execute Action",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Duckling",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://0.0.0.0:8000",
+							"protocol": "http",
+							"host": [
+								"0",
+								"0",
+								"0",
+								"0"
+							],
+							"port": "8000"
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API",
+			"item": [
+				{
+					"name": "Send Message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\":\"3\",\r\n    \"sender\":\"Utilisateur12331\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/communicate-rasa",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"communicate-rasa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test NLU",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"text\":\"le 12/07\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/test-nlu",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"test-nlu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Horaires",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/get-horaires/tennis",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"get-horaires",
+								"tennis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Jours semaine",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/get-jours-semaine/tennis/30",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"get-jours-semaine",
+								"tennis",
+								"30"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Jours semaine heure",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/get-jours-semaine/tennis/30/15:00:00",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"get-jours-semaine",
+								"tennis",
+								"30",
+								"15:00:00"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Horaires Jour semaine",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/get-horaires/2024-06-24/tennis",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"get-horaires",
+								"2024-06-24",
+								"tennis"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ressources",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/get-ressources",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"get-ressources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ajout Réservation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nom\":\"oui\",\r\n    \"prenom\": \"oui\",\r\n    \"numero_tel\":\"0786279442\",\r\n    \"date\":\"2024-06-24\",\r\n    \"ressource\":\"tennis\",\r\n    \"heure\":\"16:30:00\",\r\n    \"list_options\":[1,3]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/add-reservation",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"add-reservation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ajout Pré-Réservation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"ressource\": \"tennis\",\r\n    \"heure\": \"10:00:00\",\r\n    \"date_reserv\": \"2024-07-12\"\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/add-temp-reservation/",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"add-temp-reservation",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Réservations par ressources",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/get-reservations-ressources/badminton",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"get-reservations-ressources",
+								"badminton"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Réservations ressources depuis date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/get-reservations-ressources-from-date/badminton/2024-06-24",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"get-reservations-ressources-from-date",
+								"badminton",
+								"2024-06-24"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/test/badminton",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"test",
+								"badminton"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Date heure",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/verif-horaire-jour/tennis/2024-07-08/14:00:00",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"verif-horaire-jour",
+								"tennis",
+								"2024-07-08",
+								"14:00:00"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Options Choix",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{API_URL}}/get-options-choix/tennis",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"get-options-choix",
+								"tennis"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Duckling",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "locale",
+							"value": "fr_FR",
+							"type": "text"
+						},
+						{
+							"key": "text",
+							"value": "10h",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/parse",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"parse"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5005",
+			"type": "string"
+		},
+		{
+			"key": "API_URL",
+			"value": "http://localhost:5500",
+			"type": "string"
+		}
+	]
+}

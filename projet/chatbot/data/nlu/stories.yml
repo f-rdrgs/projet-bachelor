@@ -30,6 +30,17 @@ stories:
       - action: reset_validation
       - slot_was_set:
           - accept_deny: None
+      - action: get_options_reserv_form
+      - active_loop: get_options_reserv_form
+      - slot_was_set:
+          - choix_option: 1
+      - slot_was_set:
+          - requested_slot: null
+      - active_loop: null
+      - action: list_list_options
+      - action: reset_validation
+      - slot_was_set:
+          - accept_deny: None
       - action: get_date_heure_form
       - active_loop: get_date_heure_form
       - slot_was_set:
