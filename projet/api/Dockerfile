@@ -6,5 +6,5 @@ COPY ./requirements.txt ./server.py database.ini /app/
 
 RUN pip install -r requirements.txt
 
-CMD [ "python3.10","./server.py" ]
+CMD [ "python3.10","-u","./server.py" ]
 
