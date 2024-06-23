@@ -75,10 +75,10 @@ Un exemple :
 query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.debut <= heure).where(Jour_Horaire.fin>=heure).distinct().all()
 ```
 
-Serait équivalent à :
+Est équivalent à :
 
 ```sql
-SELECT DISTINCT jour FROM Jour_Horaire WHERE label like ressource_label AND debut <= heure AND fin >= heure
+SELECT DISTINCT jour FROM Jour_Horaire WHERE label like ressource_label AND debut <= heure AND fin >= heure;
 ```
 
 Bien que la requête soit plus longue avec de l'ORM, elle est plus rapide à écrire et bien plus facilement modulable que de devoir changer manuellement un string contenant la requête SQL
