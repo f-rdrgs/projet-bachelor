@@ -8,3 +8,4 @@
 **Zone.Identifier
 **/models
 **/*.csv
+projet/telegram_bot/.env-api

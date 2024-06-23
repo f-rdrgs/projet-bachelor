@@ -433,7 +433,8 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
             heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
             # print(dates_dispo)
             for date in curr_reservations.keys():
-                curr_reservations[date].append(temp_res[date])
+                if date in temp_res.keys():
+                    curr_reservations[date].append(temp_res[date])
             # Retire toutes les dates ne possédant aucun horaire de disponible
             for date in curr_reservations.keys():
                 diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])

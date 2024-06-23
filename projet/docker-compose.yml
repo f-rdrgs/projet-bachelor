@@ -45,7 +45,11 @@ services:
       file: ./chatbot/rasa-docker-compose.yml
       service: actions-server
       env_file: ./chatbot/.env
-
+  telegram:
+    extends:
+      file: ./telegram_bot/telegram-docker-compose.yml
+      service: telegram
+      env_file: ./telegram_bot/.env
 
 volumes:
   chatbot_volume:

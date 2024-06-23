@@ -1,0 +1,12 @@
+services:
+  telegram:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: "telegram-api"
+    container_name: ${CONT_NAME}
+    env_file: .env
+    volumes:
+      - ./:/app
+      - /app/.venv
+    restart: unless-stopped
