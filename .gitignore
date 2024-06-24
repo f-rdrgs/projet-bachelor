@@ -9,3 +9,5 @@
 **/models
 **/*.csv
 projet/telegram_bot/.env-api
+projet/api/credentials.json
+projet/api/token.json
