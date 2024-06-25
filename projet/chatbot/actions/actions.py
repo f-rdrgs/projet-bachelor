@@ -107,7 +107,7 @@ def get_reserved_ressources_since_date(date:datetime.date,ressource:str):
         return []
 
 @staticmethod
-def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
+def save_reservation(data: Reservation_save_API)->tuple[bool,str,requests.Response]:
     try:
         nom = str(data.nom)
         prenom = str(data.prenom)
@@ -138,7 +138,7 @@ def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
         print(e)
         return False,e
     else:
-        return res.status_code == 200, ""
+        return res.status_code == 200, "",res.json()
 
 @staticmethod
 def get_options(ressource:str)->dict[str,list]:
@@ -186,9 +186,10 @@ class ActionSaveRessource(Action):
             heure_conv = datetime.datetime.fromisoformat(str(heure)).time()
             num_tel = str(num_tel)
             save_reserv_data = Reservation_save_API(nom=str(nom),prenom=str(prenom),numero_tel=str(num_tel),date=str(date_conv),heure=str(heure_conv),ressource=ressource,list_choix=list_choix)
-            succes,err = save_reservation(save_reserv_data)
+            succes,err,res = save_reservation(save_reserv_data)
             if succes:
                 dispatcher.utter_message("Réservation enregistrée !")
+                dispatcher.utter_message(f"Événement google: {res['data']['lien_reservation_google']}")
             else:
                 dispatcher.utter_message(f"Une erreur s'est produite lors de l'enregistrement de la réservation: {err}")
         else:

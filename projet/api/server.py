@@ -14,7 +14,7 @@ import httpx
 import os
 
 import numpy as np
-
+from google_cal import add_event_reservation, gen_share_link_google_cal
 
 
 class Communicate_Rasa(BaseModel):
@@ -308,40 +308,48 @@ async def add_temp_reserv(data:Temp_Reservation_API):
 @app.post("/add-reservation/")
 async def add_reservation(data:Reservation_API):
     
-        new_reservation = Reservation(nom=data.nom,prenom=data.prenom,numero_tel=data.numero_tel,date_reservation=datetime.datetime.now(ZoneInfo('Europe/Paris')),)
+        new_reservation = Reservation(nom=data.nom,prenom=data.prenom,numero_tel=data.numero_tel,date_reservation=datetime.datetime.now(ZoneInfo('Europe/Paris')))
         print(datetime.datetime.now())
         output_reserv = Reservation()
         output_reserv_ressource = Reservations_Client_Resource()
         output_choix_res = {}
-        try:
-            # Ajout de la nouvelle réservation (infos client)
+        # try:
+        # Ajout de la nouvelle réservation (infos client)
+        with Session.begin() as session:
+            session.add(new_reservation)
+            session.flush()
+            session.refresh(new_reservation)
+            output_reserv = {"id": new_reservation.id,"nom": new_reservation.nom,"prenom": new_reservation.prenom,"numero_tel": new_reservation.numero_tel,"date_reservation": new_reservation.date_reservation}
+        # Ajout de la réservation coté ressources
+        with Session.begin() as session:
+            reservation_ressource = Reservations_Client_Resource(reservation=output_reserv["id"],resource=data.ressource,date_reservation=data.date,heure=data.heure)
+            session.add(reservation_ressource)
+            session.flush()
+            session.refresh(reservation_ressource)
+            output_reserv_ressource = {"heure": reservation_ressource.heure,"date_reservation": reservation_ressource.date_reservation,"ressource": reservation_ressource.resource,"date_reservation": reservation_ressource.date_reservation}
+        if data.list_options.__len__()> 0:
             with Session.begin() as session:
-                session.add(new_reservation)
-                session.flush()
-                session.refresh(new_reservation)
-                output_reserv = {"id": new_reservation.id,"nom": new_reservation.nom,"prenom": new_reservation.prenom,"numero_tel": new_reservation.numero_tel,"date_reservation": new_reservation.date_reservation}
-            # Ajout de la réservation coté ressources
-            with Session.begin() as session:
-                reservation_ressource = Reservations_Client_Resource(reservation=output_reserv["id"],resource=data.ressource,date_reservation=data.date,heure=data.heure)
-                session.add(reservation_ressource)
-                session.flush()
-                session.refresh(reservation_ressource)
-                output_reserv_ressource = {"heure": reservation_ressource.heure,"date_reservation": reservation_ressource.date_reservation,"ressource": reservation_ressource.resource,"date_reservation": reservation_ressource.date_reservation}
-            if data.list_options.__len__()> 0:
-                with Session.begin() as session:
-                    for id in data.list_options:
-                        reserv_choix = Reservations_Client_Choix(reservation=output_reserv["id"],resource=data.ressource,id_choix_ressource=id)
-                        session.add(reserv_choix)
-                        session.flush()
-                        session.refresh(reserv_choix)
-                        output_choix_res[str(id)] = {"id":reserv_choix.id,"ressource":reserv_choix.resource,"res_id":reserv_choix.reservation,"id_choix":reserv_choix.id_choix_ressource}
-            return JSONResponse(content={
-                    "message":"Réservation ajoutée",
-                    "data":{"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res)}
-                },status_code=status.HTTP_200_OK)
-        except Exception as e:
-            print(e)
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=str(e))
+                for id in data.list_options:
+                    reserv_choix = Reservations_Client_Choix(reservation=output_reserv["id"],resource=data.ressource,id_choix_ressource=id)
+                    session.add(reserv_choix)
+                    session.flush()
+                    session.refresh(reserv_choix)
+                    output_choix_res[str(id)] = {"id":reserv_choix.id,"ressource":reserv_choix.resource,"res_id":reserv_choix.reservation,"id_choix":reserv_choix.id_choix_ressource}
+        date_reserv = output_reserv_ressource["date_reservation"]
+        heure_reserv = output_reserv_ressource["heure"]
+        # datetime_start = datetime.datetime()
+        result_fin_heure = await get_fin_heure(output_reserv_ressource['ressource'],date_reserv,heure_reserv)
+        heure_fin_reserv = datetime.datetime.strptime(result_fin_heure["heure_fin"],"%H:%M:%S").time()
+        heure_start_print = datetime.datetime.combine(date_reserv,heure_reserv,tzinfo=ZoneInfo('Europe/Paris')).astimezone(ZoneInfo('Europe/Paris')).isoformat()
+        heure_fin_print = datetime.datetime.combine(date_reserv,heure_fin_reserv,tzinfo=ZoneInfo('Europe/Paris')).astimezone(ZoneInfo('Europe/Paris')).isoformat()
+        lien_google_cal = gen_share_link_google_cal(f"Réservation de {output_reserv_ressource['ressource']}",heure_start_print,heure_fin_print,f"Une réservation de {output_reserv_ressource['ressource']}\n{output_reserv['nom']} {output_reserv['nom']}\nNuméro: {output_reserv['numero_tel']}")
+        return JSONResponse(content={
+                "message":"Réservation ajoutée",
+                "data":{"lien_reservation_google":lien_google_cal,"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res)}
+            },status_code=status.HTTP_200_OK)
+        # except Exception as e:
+        #     print(e)
+        #     raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=str(e))
         
 @app.get("/get-options-choix/{ressource}")
 async def get_options_choix(ressource:str):
@@ -444,7 +452,25 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
             
         return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
 
-
+async def get_fin_heure(ressource_label:str,date:datetime.date,heure:datetime.time):
+    query = []
+    try:
+        with Session.begin() as session:
+            query = session.query(Jour_Horaire.temps_reservation).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.jour == Jours_Semaine(date.weekday())).where(Jour_Horaire.debut <= heure).where(Jour_Horaire.fin>=heure).distinct().all()
+            query = [temps[0] for temps in query]
+            if query.__len__() >0:
+                query = query[0]
+            else:
+                query = datetime.time(0,30,0)
+            sum_time = datetime.timedelta(hours=query.hour,minutes=query.minute,seconds=query.second)
+            final_time = (datetime.datetime.combine(datetime.date.today(),heure) + sum_time).time()
+        return {"heure_fin":jsonable_encoder(final_time)}
+    except Exception as e:
+        print(f"Une erreur s'est produite lors de la récupération du temps de réserv.: {e}")
+        temps_reserv = datetime.time(0,30,0)
+        sum_time = datetime.timedelta(hours=temps_reserv.hour,minutes=temps_reserv.minute,seconds=temps_reserv.second)
+        final_time = (datetime.datetime.combine(datetime.date.today(),heure) + sum_time).time()
+        return {"heure_fin":final_time}
 
 @app.get("/get-horaires/{ressource_label}")
 async def get_horaires_for_ressource(ressource_label: str):

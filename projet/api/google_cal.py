@@ -1,16 +1,16 @@
-# https://developers.google.com/calendar/api/quickstart/python
 import datetime
 import os.path
-
+from urllib.parse import urlencode
+from zoneinfo import ZoneInfo
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-# If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
+# https://developers.google.com/calendar/api/quickstart/python
 def login():
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
@@ -29,46 +29,59 @@ def login():
             flow = InstalledAppFlow.from_client_secrets_file(
                 "credentials.json", SCOPES
             )
-            creds = flow.run_local_server(port=0)
+            flow.redirect_uri= "http://localhost:4545"
+            creds = flow.run_local_server(port=4545)
         # Save the credentials for the next run
         with open("token.json", "w") as token:
             token.write(creds.to_json())
     return creds
 
-def main():
+def add_event_reservation(title:str,attendee_phone:str,attendee_name:str,attendee_surname:str,description:str,date_start:datetime.datetime,date_end:datetime.datetime)->str:
     creds = login()
+    date_start_iso = date_start.astimezone().isoformat()
+    date_end_iso = date_end.astimezone().isoformat()
     try:
         service = build("calendar", "v3", credentials=creds)
+        print(f"Start {date_start} End {str(date_end)}")
+        event = {
+            "summary": title,
+            "description":f"{description}\n{attendee_surname} {attendee_name}\nNuméro: {attendee_phone}",
+            "start":{
+                "dateTime":str(date_start_iso),
+                "timeZone":"Europe/Paris"
+            },
+            "end":{
+                "dateTime":str(date_end_iso),
+                "timeZone":"Europe/Paris"
+            }
+        }
 
-        # Call the Calendar API
-        now = datetime.datetime.utcnow().isoformat() + "Z"  # 'Z' indicates UTC time
-        print("Getting the upcoming 10 events")
-        events_result = (
-            service.events()
-            .list(
-                calendarId="primary",
-                timeMin=now,
-                maxResults=10,
-                singleEvents=True,
-                orderBy="startTime",
-            )
-            .execute()
-        )
-        events = events_result.get("items", [])
+        event = service.events().insert(calendarId='primary',body=event).execute()
+        detail = f"{description}\n{attendee_surname} {attendee_name}\nNuméro: {attendee_phone}"
+        link_cal = gen_share_link_google_cal(title,date_start_iso,date_end_iso,detail)
+        print(f"Created event at link: {link_cal}")
+        return link_cal
+    except Exception as e:
+        print(f"An error occured when adding event: {e}")
 
-        if not events:
-            print("No upcoming events found.")
-            return
+def gen_share_link_google_cal(summary:str,date_start:datetime.datetime,date_end:datetime.datetime,details:str)->str:
+    event = {
+        'action': 'TEMPLATE',
+        'text': summary,
+        'dates': f"{str(date_start).replace(':', '').replace('-', '')}/{str(date_end).replace(':', '').replace('-', '')}",
+        'details': details
+    }
+    base_url = "https://calendar.google.com/calendar/r/eventedit"
+    return f"{base_url}?{urlencode(event)}"
 
-        # Prints the start and name of the next 10 events
-        for event in events:
-            start = event["start"].get("dateTime", event["start"].get("date"))
-            print(start, event["summary"])
 
-    except HttpError as error:
-        print(f"An error occurred: {error}")
-
-# Added http://localhost:47857/ as authorized return uri
+# Added http://localhost:4545/ as authorized return uri in https://console.cloud.google.com/apis/credentials
 # https://developers.google.com/calendar/api/guides/create-events#python
+# if __name__ == "__main__":
+#   add_event_reservation("Réservation Terrain de tennis","995830193","Smith","Michael","Une réservation de terrain de tennis",datetime.datetime(2024,6,26,14,30,0,tzinfo=ZoneInfo('Europe/Paris')),datetime.datetime(2024,6,26,15,0,0,tzinfo=ZoneInfo('Europe/Paris')))
+
 if __name__ == "__main__":
-  main()
+    date_og = datetime.datetime.fromisoformat("2024-06-25T14:35:25.143736")
+    new_date = datetime.datetime(date_og.year,date_og.month,date_og.day,14,50,0,tzinfo=ZoneInfo("Europe/Paris"))
+    print(new_date)
+    print(gen_share_link_google_cal("AAAAA","2025-07-05 16:30:00","2025-07-05 17:00:00","HAHHAHAH"))
