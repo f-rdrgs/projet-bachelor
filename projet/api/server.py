@@ -340,9 +340,9 @@ async def add_reservation(data:Reservation_API):
         # datetime_start = datetime.datetime()
         result_fin_heure = await get_fin_heure(output_reserv_ressource['ressource'],date_reserv,heure_reserv)
         heure_fin_reserv = datetime.datetime.strptime(result_fin_heure["heure_fin"],"%H:%M:%S").time()
-        heure_start_print = datetime.datetime.combine(date_reserv,heure_reserv,tzinfo=ZoneInfo('Europe/Paris')).astimezone(ZoneInfo('Europe/Paris')).isoformat()
-        heure_fin_print = datetime.datetime.combine(date_reserv,heure_fin_reserv,tzinfo=ZoneInfo('Europe/Paris')).astimezone(ZoneInfo('Europe/Paris')).isoformat()
-        lien_google_cal = gen_share_link_google_cal(f"Réservation de {output_reserv_ressource['ressource']}",heure_start_print,heure_fin_print,f"Une réservation de {output_reserv_ressource['ressource']}\n{output_reserv['nom']} {output_reserv['nom']}\nNuméro: {output_reserv['numero_tel']}")
+        heure_start_print = datetime.datetime.combine(date_reserv,heure_reserv,tzinfo=ZoneInfo('Europe/Paris'))
+        heure_fin_print = datetime.datetime.combine(date_reserv,heure_fin_reserv,tzinfo=ZoneInfo('Europe/Paris'))
+        lien_google_cal = add_event_reservation(f"Réservation de {output_reserv_ressource['ressource']}",output_reserv['numero_tel'],output_reserv['prenom'],output_reserv['nom'],f"Une réservation de {output_reserv_ressource['ressource']}",heure_start_print,heure_fin_print)
         return JSONResponse(content={
                 "message":"Réservation ajoutée",
                 "data":{"lien_reservation_google":lien_google_cal,"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res)}

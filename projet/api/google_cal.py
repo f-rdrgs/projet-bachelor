@@ -38,8 +38,8 @@ def login():
 
 def add_event_reservation(title:str,attendee_phone:str,attendee_name:str,attendee_surname:str,description:str,date_start:datetime.datetime,date_end:datetime.datetime)->str:
     creds = login()
-    date_start_iso = date_start.astimezone().isoformat()
-    date_end_iso = date_end.astimezone().isoformat()
+    date_start_iso = date_start.astimezone(ZoneInfo('Europe/Paris')).isoformat()
+    date_end_iso = date_end.astimezone(ZoneInfo('Europe/Paris')).isoformat()
     try:
         service = build("calendar", "v3", credentials=creds)
         print(f"Start {date_start} End {str(date_end)}")

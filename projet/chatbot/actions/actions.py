@@ -147,7 +147,7 @@ def get_options(ressource:str)->dict[str,list]:
         if len(res["options"]) > 0:
             return res["options"]
         
-    return []
+    return {}
 
 class RestartConvo(Action):
     def name(self)-> Text:
@@ -614,7 +614,7 @@ class AskForChoixOptionAction(Action):
                     if i == option_count:
                         message_sent =f"Les options disponible pour {option} sont: \n"
                         for j,value in enumerate(options[option][1].items()):
-                            message_sent+=f"{j}: {value[1]}\n"
+                            message_sent+=f"{j+1}: {value[1]}\n"
                         message_sent+="Veuillez entrer le nombre correspondant"
                 dispatcher.utter_message(message_sent)
             else:
