@@ -263,8 +263,7 @@ class ValidateGetOptionsReservForm(FormValidationAction):
                 dispatcher.utter_message("Choix invalide")
                 return {"choix_option":None}
         else:
-            dispatcher.utter_message("Erreur lors de la sélection de choix")
-            return {"choix_option":None}
+            return {"choix_option":0.0}
     
 
 # https://learning.rasa.com/rasa-forms-3/validation/
@@ -357,19 +356,12 @@ class ValidateInfoReserv(FormValidationAction):
                 # Si un numéro est bien trouvé
                 if dim_time_index >= 0:
                         numero_duckling = str(res_json[dim_time_index]["value"]["value"])
-                        ressource = tracker.get_slot("ressource")
-                        date = tracker.get_slot("date")
-                        heure = tracker.get_slot("heure")
-                        nom = tracker.get_slot("nom")
-                        prenom = tracker.get_slot("prenom")
-                        date_conv = datetime.datetime.fromisoformat(date).date()
-                        heure_conv = datetime.datetime.fromisoformat(heure).time()
                         # dispatcher.utter_message(f"{ressource} {str(heure_conv)} {str(date_conv)} {nom} {prenom} {numero_duckling}")
                         # Sauvegarde le numéro venant de duckling dans le slot
                         return {"numero_tel": str(numero_duckling)}
                 else:
                     dispatcher.utter_message(text=f"Pouvez-vous répéter votre numéro de téléphone d'une autre manière ?")
-                
+                    return {"numero_tel":None}
             
 
         

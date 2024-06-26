@@ -61,7 +61,7 @@ slots:
         - type: custom
   choix_option:
     type: float
-    min_value: 0.0
+    min_value: -1.0
     max_value: 50.0
     mappings:
       - type: from_text
