@@ -190,6 +190,7 @@ class ActionSaveRessource(Action):
             if succes:
                 dispatcher.utter_message("Réservation enregistrée !")
                 dispatcher.utter_message(f"Événement google: {res['data']['lien_reservation_google']}")
+                dispatcher.utter_message(f"[FILE]{res['data']['uuid_ical']}")
             else:
                 dispatcher.utter_message(f"Une erreur s'est produite lors de l'enregistrement de la réservation: {err}")
         else:

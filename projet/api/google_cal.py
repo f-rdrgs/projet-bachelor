@@ -1,12 +1,16 @@
+import base64
 import datetime
 import os.path
+import time
 from urllib.parse import urlencode
+from uuid import uuid4
 from zoneinfo import ZoneInfo
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from icalendar import Calendar, Event
 
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
@@ -80,8 +84,60 @@ def gen_share_link_google_cal(summary:str,date_start:datetime.datetime,date_end:
 # if __name__ == "__main__":
 #   add_event_reservation("Réservation Terrain de tennis","995830193","Smith","Michael","Une réservation de terrain de tennis",datetime.datetime(2024,6,26,14,30,0,tzinfo=ZoneInfo('Europe/Paris')),datetime.datetime(2024,6,26,15,0,0,tzinfo=ZoneInfo('Europe/Paris')))
 
+
+# https://learnpython.com/blog/working-with-icalendar-with-python/
+def create_ical_event(title:str,attendee_phone:str,attendee_name:str,attendee_surname:str,description:str,date_start:datetime.datetime,date_end:datetime.datetime)->str:
+    cal = Calendar()
+    cal.add('prodid','WiREV calendar')
+    cal.add('version','2.0')
+    event = Event()
+    event.add('summary',title)
+    event.add('description',f"{description}\n{attendee_surname} {attendee_name}\nNuméro: {attendee_phone}")
+    event.add('dtstart',date_start.astimezone(ZoneInfo('Europe/Paris')))
+    event.add('dtend',date_end.astimezone(ZoneInfo('Europe/Paris')))
+    cal.add_component(event)
+    try:
+        uuid_file = str(uuid4())
+        if not os.path.exists('./tmp'):
+            os.mkdir('./tmp',511)
+        with open(f'./tmp/{uuid_file}.ics',"wb") as f:
+            f.write(cal.to_ical())
+        
+        return uuid_file
+    except Exception as e:
+        print(e)
+        return ""
+def delete_ics_older_than_duration(duration_secs:int):
+    try:
+        if os.path.exists('./tmp'):
+            print(os.listdir('./tmp/'))
+            for f in os.listdir('./tmp/'):
+                f = os.path.join('./tmp',f)
+                if os.stat(f).st_mtime < (time.time() - duration_secs):
+                    os.remove(f)
+                    print(f'Deleted {f}')
+        else:
+            print("Wrong path")
+    except Exception as e:
+        print(f"An error occured while deleting old ics files: {e}")
+
 if __name__ == "__main__":
     date_og = datetime.datetime.fromisoformat("2024-06-25T14:35:25.143736")
     new_date = datetime.datetime(date_og.year,date_og.month,date_og.day,14,50,0,tzinfo=ZoneInfo("Europe/Paris"))
+    date_og2 = datetime.datetime.fromisoformat("2024-06-25T14:35:25.143736")
+    new_date2 = datetime.datetime(date_og.year,date_og.month,date_og.day,15,50,0,tzinfo=ZoneInfo("Europe/Paris"))
     print(new_date)
-    print(gen_share_link_google_cal("AAAAA","2025-07-05 16:30:00","2025-07-05 17:00:00","HAHHAHAH"))
+    print(gen_share_link_google_cal("Réservation","2025-07-05 16:30:00","2025-07-05 17:00:00","HAHHAHAH"))
+    print(f"Time: {datetime.datetime.now()-datetime.timedelta(minutes=1,seconds=30)} {datetime.datetime.now()}")
+    delete_ics_older_than_duration(5)
+    print("[FILE]999dfsfdlsdlfds9fsdfs".removeprefix('[FILE]'))
+    arr = ["kakfdskfsd","kjfwkjliedfwef","[FILE]koifwlifkewdokijfmwe","kmnmvfnjjnjnf"]
+    file = [elem for elem in arr if elem.startswith("[FILE]")]
+    if file:
+        print(file[0].removeprefix("[FILE]"))
+    else:
+        print("No")
+    if "asdsggs":
+        print("y")
+    else:
+        print("n")
