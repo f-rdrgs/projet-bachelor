@@ -2,6 +2,10 @@
 
 (Ce fichier est temporaire et sert à rédiger sans prendre en compte la forme)
 
+## Sommaire
+
+[toc]
+
 ## Architecture Générale
 
 ![architecture diagram](./assets/Architecture.png)
@@ -327,3 +331,79 @@ COPY ./data/*.csv .
 L'extrait du docker compose montre comment est mis en place la base de donnée en tant que conteneur. Tout d'abord une image va être créée à partir du Dockerfile présent dans `/db`, image créée à partir de l'image existante postgres-15.7 et qui copie la base de données définie dans les fichiers .sql se trouvant dans `/db` ainsi que les .csv. Ensuite, les divers variables d'environnement postgres sont définies, les volumes nécessaires au fonctionnement de la base de données montés, les ports définis et ouverts et finalement l'activation du mode relançant le conteneur si une erreur survient afin de maintenir un temps de disponibilité de service élevé. 
 
 En  second lieu, le conteneur de l'API est défini de manière plus simplifiée car toute la partie présente dans DB est défini dans un sous-fichier docker compose. Ainsi, il n'est que nécessaire de spécifier le chemin du docker compose, le nom du service et les volumes à utiliser.
+
+### Telegram
+
+Un composant optionnel mais présent dans ce projet est l'ajout d'une interface à l'aide du package python Telegram
+
+Le fonctionnement du bot Telegram est similaire à une api rest. Les routes sont remplacées par des handler et ne sont appelés généralement que lorsque l'utilisateur interagit avec ce dernier.
+
+```python
+async def handle_message(update:Update, context:ContextTypes.DEFAULT_TYPE):
+    ...
+async def error(update:Update, context:ContextTypes.DEFAULT_TYPE):
+    ...
+app = Application.builder().token(TOKEN).concurrent_updates(True).build()
+
+app.add_handler(CommandHandler('start',start_command))
+   app.add_handler(MessageHandler(filters.TEXT,handle_message))
+app.add_error_handler(error)
+
+app.run_polling(poll_interval=1)
+```
+
+`handle_message` est une fonction appelée lorsqu'un message est envoyé par un utilisateur et est chargée dans ce cas-ci de faire l'entremetteur entre le chatbot Rasa et l'utilisateur Telegram
+
+`error` est une fonction appelée lorsqu'une erreur survient et sert à afficher dans la console divers messages ou d'informer l'utilisateur qu'une erreur s'est produite après le traitement d'un message
+
+Finalement, comme dans une application REST, les divers handlers sont affectés à l'application avec `add_handler()`. Puis, l'application est démarrée avec `run_polling`
+
+```python
+async def handle_message(update:Update, context:ContextTypes.DEFAULT_TYPE):
+    ...
+	response = requests.post("http://api:5500/communicate-		rasa",json={
+        "message": str(text),
+        "sender": str(id_user)
+    })
+    ...
+    await update.message.reply_document(...)
+```
+
+Ci-dessus, un extrait du code de `handle_message` dans lequel on effectue une requête à Rasa et une fois que l'on reçoit un message il est traité et envoyé en réponse à l'utilisateur.
+
+### Google Calendar
+
+Afin de rendre le système de réservation fonctionnel coté propriétaire du chatbot, l'ajout de chaque réservations a été mis en place sur google calendar. De ce fait, lorsque le projet est mis en place initialement, il ne suffit que de se connecter pour recevoir un token pour Google Calendar et ensuite toute nouvelle réservation sera ajoutée automatiquement au calendrier lié.
+
+```python
+creds = login()
+...
+service = build("calendar", "v3", credentials=creds)
+event = {
+            "summary": title,
+            "description":f"{description}\n{attendee_surname} {attendee_name}\nNuméro: {attendee_phone}",
+            "start":{
+                "dateTime":str(date_start_iso),
+                "timeZone":"Europe/Paris"
+            },
+            "end":{
+                "dateTime":str(date_end_iso),
+                "timeZone":"Europe/Paris"
+            }
+        }
+event = service.events().insert(calendarId='primary',body=event).execute()
+```
+
+Cet extrait de code démontre comment un nouvel événement est ajouté au calendrier. Afin de pouvoir accéder au calendrier lié, la fonction `login()` permet de récupérer ou de générer un token contenant les identifiants requis.
+
+Ensuite, le service est créé grâce à ces identifiants et permet d'insérer des objets événement.
+
+### Fichier ICal
+
+Bien que l'ajout de l'implémentation de Google Calendar facilite la gestion des réservations coté propriétaire, ce service n'est pas forcément celui le plus utilisé par des utilisateurs lambda. 
+
+C'est pourquoi l'implémentation de la génération d'un fichier ICal a été ajouté au projet.
+
+Le format ICal est un format de stockage d'information de calendriers disponible sur la plupart des appareils actuels et permettant d'avoir un moyen normalisé de gérer des calendriers.
+
+Grâce à cela, il ne suffit que de générer un fichier `.ics` contenant les informations liées à l'événement et l'envoyer à l'utilisateur. Lorsqu'un fichier ics est ouvert que ce soit sur mobile, ordinateur, tablette, etc; ce dernier va ouvrir le logiciel de calendrier par défaut de l'appareil avec de demander à enregistrer un nouvel événement.

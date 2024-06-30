@@ -121,23 +121,13 @@ def delete_ics_older_than_duration(duration_secs:int):
     except Exception as e:
         print(f"An error occured while deleting old ics files: {e}")
 
-if __name__ == "__main__":
-    date_og = datetime.datetime.fromisoformat("2024-06-25T14:35:25.143736")
-    new_date = datetime.datetime(date_og.year,date_og.month,date_og.day,14,50,0,tzinfo=ZoneInfo("Europe/Paris"))
-    date_og2 = datetime.datetime.fromisoformat("2024-06-25T14:35:25.143736")
-    new_date2 = datetime.datetime(date_og.year,date_og.month,date_og.day,15,50,0,tzinfo=ZoneInfo("Europe/Paris"))
-    print(new_date)
-    print(gen_share_link_google_cal("Réservation","2025-07-05 16:30:00","2025-07-05 17:00:00","HAHHAHAH"))
-    print(f"Time: {datetime.datetime.now()-datetime.timedelta(minutes=1,seconds=30)} {datetime.datetime.now()}")
-    delete_ics_older_than_duration(5)
-    print("[FILE]999dfsfdlsdlfds9fsdfs".removeprefix('[FILE]'))
-    arr = ["kakfdskfsd","kjfwkjliedfwef","[FILE]koifwlifkewdokijfmwe","kmnmvfnjjnjnf"]
-    file = [elem for elem in arr if elem.startswith("[FILE]")]
-    if file:
-        print(file[0].removeprefix("[FILE]"))
-    else:
-        print("No")
-    if "asdsggs":
-        print("y")
-    else:
-        print("n")
+# if __name__ == "__main__":
+#     date_og = datetime.datetime.fromisoformat("2024-06-25T14:35:25.143736")
+#     new_date = datetime.datetime(date_og.year,date_og.month,date_og.day,14,50,0,tzinfo=ZoneInfo("Europe/Paris"))
+#     date_og2 = datetime.datetime.fromisoformat("2024-06-25T14:35:25.143736")
+#     new_date2 = datetime.datetime(date_og.year,date_og.month,date_og.day,15,50,0,tzinfo=ZoneInfo("Europe/Paris"))
+#     print(new_date)
+#     print(gen_share_link_google_cal("Réservation","2025-07-05 16:30:00","2025-07-05 17:00:00","HAHHAHAH"))
+#     print(f"Time: {datetime.datetime.now()-datetime.timedelta(minutes=1,seconds=30)} {datetime.datetime.now()}")
+#     delete_ics_older_than_duration(5)
+#     print("[FILE]999dfsfdlsdlfds9fsdfs".removeprefix('[FILE]'))
