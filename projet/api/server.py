@@ -14,7 +14,7 @@ import httpx
 import os
 
 import numpy as np
-
+from google_cal import add_event_reservation, gen_share_link_google_cal, create_ical_event
 
 
 class Communicate_Rasa(BaseModel):
@@ -165,17 +165,27 @@ Session = sessionmaker(bind=engine)
 
 time_for_deletion = datetime.timedelta(minutes=1,seconds=15)
 interval_exec_remove = 10
+"""
+Requête à la bdd permettant de supprimer les pré-réservations plus vieilles que le temps spécifié
+"""
 async def delete_reservation_query():   
     with Session.begin() as session:
         query = session.query(Temp_Reservation).where(Temp_Reservation.timestamp_reserv < ( datetime.datetime.now(ZoneInfo('Europe/Paris')) - time_for_deletion)).delete()
     return query
 
+"""
+Fonction exécutant la suppression de pré-réservations chaque fois que le temps défini s'est écoulé
+"""
 async def remove_old_reservations(interval: int):
     while True:
         print(f"Removed old temp. reservations at {datetime.datetime.now(ZoneInfo('Europe/Paris'))}")
         await delete_reservation_query()
         await asyncio.sleep(interval)
 
+
+"""
+Fonction faisant usage du lifespan de l'app pour démarrer une tache de suppression continuelle des pré-réservations jusqu'à l'arrêt du serveur
+"""
 @asynccontextmanager
 async def start_remove_reserv_task(app:FastAPI):
     print("Starting execution of removal of temp reservations")
@@ -195,12 +205,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def seconds_to_hour_min_sec(seconds:int)-> tuple[int,int,int]:
-    hour = seconds / 3600
 
-# Ressort les horaires de la semaine pour une ressource sous ce format :
 """
+Ressort les horaires de la semaine pour une ressource sous ce format :
+
 {
+Jour de la semaine (lundi = 0, mardi = 1, ...)
  "0": [ Array d'heures de début[début1, début2], Array d'heures de fin[fin1,fin2], découpage horaire],
  ...
 }
@@ -220,8 +230,10 @@ def get_all_horaires_semaine_for_ressource(ressource:str,jours_semaine:list[Jour
         print(e)
         return {},[]
     
-# Permet de récupérer l'ensemble des heures pour chaque jour de la semaine pour une ressource
+
 """
+Permet de récupérer l'ensemble des heures pour chaque jour de la semaine pour une ressource
+
 {
 "0"(0 Correspond à lundi):[
     "14:30:00", "15:00:00", ...
@@ -236,8 +248,6 @@ def get_heures_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Sema
         for jour in horaires.keys():
             decoupage = datetime.time.fromisoformat(horaires[jour][2])
             horaires_debut_fin = [(datetime.datetime.strptime(debut,"%H:%M:%S").time(),datetime.datetime.strptime(fin,"%H:%M:%S").time(),decoupage) for debut,fin in zip(horaires[jour][0],horaires[jour][1])]
-            # print(horaires[jour][2])
-            # print(f"{jour}:{horaires_debut_fin}")
 
             total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
             final_schedule = []
@@ -274,7 +284,26 @@ def get_reservations_for_dates_for_ressource(ressource:str,dates:list[datetime.d
             return jsonable_encoder(query)
     except Exception as e:
         return []
-    
+
+"""
+Récupère les titres associés à une liste d'ids de choix
+"""
+def get_choix_titres_from_ids(list_choix:list[int])->list[str]:
+    try:
+        with Session.begin() as session:
+            query = session.query(Options_Resource_Choix.choix).where(Options_Resource_Choix.id.in_(list_choix)).all()
+            return jsonable_encoder([opt[0] for opt in query])
+    except Exception as e:
+        print(e)
+        return [] 
+
+"""
+Récupère une liste des pré réservations pour une liste de dates et une ressource donnée
+
+[
+[date, [heure1, heure2, heure3]]
+]
+"""
 def get_reservations_temporaire_for_dates_for_ressource(ressource:str,dates:list[datetime.date])->dict[datetime.date,list[datetime.time]]:
     try:
         with Session.begin() as session:
@@ -286,6 +315,9 @@ def get_reservations_temporaire_for_dates_for_ressource(ressource:str,dates:list
 
 # Temps stocké en UTC (2h en moins qu'en Suisse)
 
+"""
+Route d'ajout de pré-réservation à la base de données
+"""
 @app.post("/add-temp-reservation/")
 async def add_temp_reserv(data:Temp_Reservation_API):
     new_temp_res = Temp_Reservation(label_ressource = data.ressource, heure = data.heure, date_reserv = data.date_reserv, timestamp_reserv = datetime.datetime.now(ZoneInfo('Europe/Paris')))
@@ -308,13 +340,13 @@ async def add_temp_reserv(data:Temp_Reservation_API):
 @app.post("/add-reservation/")
 async def add_reservation(data:Reservation_API):
     
-        new_reservation = Reservation(nom=data.nom,prenom=data.prenom,numero_tel=data.numero_tel,date_reservation=datetime.datetime.now(ZoneInfo('Europe/Paris')),)
+        new_reservation = Reservation(nom=data.nom,prenom=data.prenom,numero_tel=data.numero_tel,date_reservation=datetime.datetime.now(ZoneInfo('Europe/Paris')))
         print(datetime.datetime.now())
         output_reserv = Reservation()
         output_reserv_ressource = Reservations_Client_Resource()
         output_choix_res = {}
         try:
-            # Ajout de la nouvelle réservation (infos client)
+        # Ajout de la nouvelle réservation (infos client)
             with Session.begin() as session:
                 session.add(new_reservation)
                 session.flush()
@@ -327,22 +359,51 @@ async def add_reservation(data:Reservation_API):
                 session.flush()
                 session.refresh(reservation_ressource)
                 output_reserv_ressource = {"heure": reservation_ressource.heure,"date_reservation": reservation_ressource.date_reservation,"ressource": reservation_ressource.resource,"date_reservation": reservation_ressource.date_reservation}
+            choix_text = ""
+            choix_list = []
             if data.list_options.__len__()> 0:
                 with Session.begin() as session:
                     for id in data.list_options:
                         reserv_choix = Reservations_Client_Choix(reservation=output_reserv["id"],resource=data.ressource,id_choix_ressource=id)
+                        choix_list.append(id)
                         session.add(reserv_choix)
                         session.flush()
                         session.refresh(reserv_choix)
                         output_choix_res[str(id)] = {"id":reserv_choix.id,"ressource":reserv_choix.resource,"res_id":reserv_choix.reservation,"id_choix":reserv_choix.id_choix_ressource}
+            if choix_list.__len__()>0:
+                choix_titres = get_choix_titres_from_ids(choix_list)
+                for choix in choix_titres:
+                    choix_text+= f", {choix}"
+            date_reserv = output_reserv_ressource["date_reservation"]
+            heure_reserv = output_reserv_ressource["heure"]
+            # datetime_start = datetime.datetime()
+            result_fin_heure = await get_fin_heure(output_reserv_ressource['ressource'],date_reserv,heure_reserv)
+            heure_fin_reserv = datetime.datetime.strptime(result_fin_heure["heure_fin"],"%H:%M:%S").time()
+            heure_start_print = datetime.datetime.combine(date_reserv,heure_reserv,tzinfo=ZoneInfo('Europe/Paris'))
+            heure_fin_print = datetime.datetime.combine(date_reserv,heure_fin_reserv,tzinfo=ZoneInfo('Europe/Paris'))
+            # Ajout de la réservation au calendrier google associé et retourne un lien pour ajouter l'event à son propre calendrier
+
+            lien_google_cal = add_event_reservation(f"Réservation de {output_reserv_ressource['ressource']}",output_reserv['numero_tel'],output_reserv['prenom'],output_reserv['nom'],f"Une réservation de {output_reserv_ressource['ressource']}{choix_text}",heure_start_print,heure_fin_print)
+            uuid_file = create_ical_event(f"Réservation de {output_reserv_ressource['ressource']}",output_reserv['numero_tel'],output_reserv['prenom'],output_reserv['nom'],f"Une réservation de {output_reserv_ressource['ressource']}{choix_text}",heure_start_print,heure_fin_print)
             return JSONResponse(content={
                     "message":"Réservation ajoutée",
-                    "data":{"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res)}
+                    "data":{"lien_reservation_google":lien_google_cal,"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res),"uuid_ical":uuid_file}
                 },status_code=status.HTTP_200_OK)
         except Exception as e:
             print(e)
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=str(e))
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite à l'ajout d'une réservation: {str(e)}")
         
+"""
+Route pour récupérer les choix et options associés à une ressource
+
+{
+   "options": {
+    "nom option 1": {
+        "description option 1", {id 1 : "choix 1", id 2: "choix 2", ...}
+    }
+   } 
+}
+"""
 @app.get("/get-options-choix/{ressource}")
 async def get_options_choix(ressource:str):
     with Session.begin() as session:
@@ -355,13 +416,26 @@ async def get_options_choix(ressource:str):
         print(query.keys().__len__())
         return JSONResponse(content={"options":jsonable_encoder(query)},status_code=status.HTTP_200_OK)
 
+"""
+Route permettant de récupérer toutes les réservations
+
+[
+[id reservation ,ressource ,date_reservation, heure], ...
+]
+"""
 @app.get("/get-reservations-ressources/")    
 async def get_reservations_ressources():
     with Session.begin() as session:
         query = session.query(Reservations_Client_Resource).distinct().all()
         
         return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+"""
+Route permettant de récupérer toutes les réservations d'une ressource
 
+[
+[id reservation ,ressource ,date_reservation, heure], ...
+]
+"""
 @app.get("/get-reservations-ressources/{ressource}")    
 async def get_reservations_ressources(ressource:str):
     with Session.begin() as session:
@@ -369,6 +443,13 @@ async def get_reservations_ressources(ressource:str):
         
         return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
 
+"""
+Route permettant de récupérer toutes les réservations d'une ressource à une date donnée
+
+[
+[id reservation ,ressource ,date_reservation, heure], ...
+]
+"""
 @app.get("/get-reservations-ressources-from-date/{ressource}/{date}")
 async def get_reservations_ressources_from_date(ressource:str,date:datetime.date):
      with Session.begin() as session:
@@ -399,7 +480,6 @@ async def get_jours_semaine(ressource_label:str,num_jours:int):
                 if date in pre_reserv.keys():
                     curr_reservations[date]+=pre_reserv[date]
             heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
-            print(dates_dispo)
             # Retire toutes les dates ne possédant aucun horaire de disponible
             for date in curr_reservations.keys():
                 diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
@@ -444,7 +524,25 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
             
         return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
 
-
+async def get_fin_heure(ressource_label:str,date:datetime.date,heure:datetime.time):
+    query = []
+    try:
+        with Session.begin() as session:
+            query = session.query(Jour_Horaire.temps_reservation).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.jour == Jours_Semaine(date.weekday())).where(Jour_Horaire.debut <= heure).where(Jour_Horaire.fin>=heure).distinct().all()
+            query = [temps[0] for temps in query]
+            if query.__len__() >0:
+                query = query[0]
+            else:
+                query = datetime.time(0,30,0)
+            sum_time = datetime.timedelta(hours=query.hour,minutes=query.minute,seconds=query.second)
+            final_time = (datetime.datetime.combine(datetime.date.today(),heure) + sum_time).time()
+        return {"heure_fin":jsonable_encoder(final_time)}
+    except Exception as e:
+        print(f"Une erreur s'est produite lors de la récupération du temps de réserv.: {e}")
+        temps_reserv = datetime.time(0,30,0)
+        sum_time = datetime.timedelta(hours=temps_reserv.hour,minutes=temps_reserv.minute,seconds=temps_reserv.second)
+        final_time = (datetime.datetime.combine(datetime.date.today(),heure) + sum_time).time()
+        return {"heure_fin":final_time}
 
 @app.get("/get-horaires/{ressource_label}")
 async def get_horaires_for_ressource(ressource_label: str):
@@ -458,8 +556,6 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
         with Session.begin() as session:
             # decoupage = datetime.time(minute=30)
             jour_date = datetime.datetime.fromisoformat(jour).date()
-            # Récupère les horaires d'une ressource pour un jour de la semaine donné
-            # query = session.query(Jour_Horaire).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.jour == Jours_Semaine(jour_date.weekday())).all()
 
             # Récupère toutes les réservations correspondant à la date donnée
             query_reservations = get_reservations_for_dates_for_ressource(ressource_label,[jour_date])
@@ -507,11 +603,12 @@ async def get_ressources():
 
 @app.post("/test-nlu")
 async def test_nlu_rasa(data:Test_rasa_nlu):
+    
     headers = {"Content-Type": "application/json"}
     print(data.model_dump_json())
     async with httpx.AsyncClient() as client:
         response = await client.post('http://rasa-core:5005/model/parse',data=data.model_dump_json(),headers=headers)    
-        return JSONResponse(content=response.json(),status_code=status.HTTP_200_OK)
+        return JSONResponse(content=jsonable_encoder(response.json()),status_code=status.HTTP_200_OK)
 
 @app.post("/communicate-rasa")
 async def talk_to_rasa(data:Communicate_Rasa):

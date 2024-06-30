@@ -12,6 +12,11 @@ import requests
 async def start_command(update:Update, context:ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Bonjour! Je suis un bot de réservation. Que souhaitez-vous faire ?\neg. \"Je voudrais réserver un terrain de Pétanque, je voudrais réserver, ...\"")
 
+async def get_base64_document(uuid_file:str):
+    if os.path.exists(f'./tmp/{uuid_file}.ics'):
+        with open(f'./tmp/{uuid_file}.ics','rb') as f:
+            return f.read()
+
 async def handle_message(update:Update, context:ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     id_user = update.message.chat.id
@@ -29,11 +34,23 @@ async def handle_message(update:Update, context:ContextTypes.DEFAULT_TYPE):
     response_array = []
     response_json = response.json()
     print(f"Rasa response: {response_json}")
+    file = [elem["text"] for elem in response_json if elem["text"].startswith("[FILE]")]
+    file_ics = ""
+    if file:
+        file_ics = f"{file[0].removeprefix('[FILE]')}.ics"
+    
     if len(response_json) > 0:
-        response_array = [resp["text"] for resp in response_json]
+        response_array = [resp["text"] for resp in response_json if not resp["text"].startswith("[FILE]")]
     
     for resp in response_array:
         await update.message.reply_text(resp)
+    if file_ics:
+        if os.path.exists(f'./tmp/{file_ics}'):
+            await update.message.reply_document(caption="Fichier ICS de l'événement",document=open(f'./tmp/{file_ics}','rb'))
+            os.remove(f'./tmp/{file_ics}')
+        else:
+            await update.message.reply_text('Erreur lors de la génération du fichier ics pour l\'événement')
+
 
 
 async def error(update:Update, context:ContextTypes.DEFAULT_TYPE):

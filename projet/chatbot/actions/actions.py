@@ -107,7 +107,7 @@ def get_reserved_ressources_since_date(date:datetime.date,ressource:str):
         return []
 
 @staticmethod
-def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
+def save_reservation(data: Reservation_save_API)->tuple[bool,str,requests.Response]:
     try:
         nom = str(data.nom)
         prenom = str(data.prenom)
@@ -138,7 +138,7 @@ def save_reservation(data: Reservation_save_API)->tuple[bool,str]:
         print(e)
         return False,e
     else:
-        return res.status_code == 200, ""
+        return res.status_code == 200, "",res.json()
 
 @staticmethod
 def get_options(ressource:str)->dict[str,list]:
@@ -147,7 +147,7 @@ def get_options(ressource:str)->dict[str,list]:
         if len(res["options"]) > 0:
             return res["options"]
         
-    return []
+    return {}
 
 class RestartConvo(Action):
     def name(self)-> Text:
@@ -186,9 +186,11 @@ class ActionSaveRessource(Action):
             heure_conv = datetime.datetime.fromisoformat(str(heure)).time()
             num_tel = str(num_tel)
             save_reserv_data = Reservation_save_API(nom=str(nom),prenom=str(prenom),numero_tel=str(num_tel),date=str(date_conv),heure=str(heure_conv),ressource=ressource,list_choix=list_choix)
-            succes,err = save_reservation(save_reserv_data)
+            succes,err,res = save_reservation(save_reserv_data)
             if succes:
                 dispatcher.utter_message("Réservation enregistrée !")
+                dispatcher.utter_message(f"Événement google: {res['data']['lien_reservation_google']}")
+                dispatcher.utter_message(f"[FILE]{res['data']['uuid_ical']}")
             else:
                 dispatcher.utter_message(f"Une erreur s'est produite lors de l'enregistrement de la réservation: {err}")
         else:
@@ -262,8 +264,7 @@ class ValidateGetOptionsReservForm(FormValidationAction):
                 dispatcher.utter_message("Choix invalide")
                 return {"choix_option":None}
         else:
-            dispatcher.utter_message("Erreur lors de la sélection de choix")
-            return {"choix_option":None}
+            return {"choix_option":0.0}
     
 
 # https://learning.rasa.com/rasa-forms-3/validation/
@@ -356,19 +357,12 @@ class ValidateInfoReserv(FormValidationAction):
                 # Si un numéro est bien trouvé
                 if dim_time_index >= 0:
                         numero_duckling = str(res_json[dim_time_index]["value"]["value"])
-                        ressource = tracker.get_slot("ressource")
-                        date = tracker.get_slot("date")
-                        heure = tracker.get_slot("heure")
-                        nom = tracker.get_slot("nom")
-                        prenom = tracker.get_slot("prenom")
-                        date_conv = datetime.datetime.fromisoformat(date).date()
-                        heure_conv = datetime.datetime.fromisoformat(heure).time()
                         # dispatcher.utter_message(f"{ressource} {str(heure_conv)} {str(date_conv)} {nom} {prenom} {numero_duckling}")
                         # Sauvegarde le numéro venant de duckling dans le slot
                         return {"numero_tel": str(numero_duckling)}
                 else:
                     dispatcher.utter_message(text=f"Pouvez-vous répéter votre numéro de téléphone d'une autre manière ?")
-                
+                    return {"numero_tel":None}
             
 
         
@@ -613,7 +607,7 @@ class AskForChoixOptionAction(Action):
                     if i == option_count:
                         message_sent =f"Les options disponible pour {option} sont: \n"
                         for j,value in enumerate(options[option][1].items()):
-                            message_sent+=f"{j}: {value[1]}\n"
+                            message_sent+=f"{j+1}: {value[1]}\n"
                         message_sent+="Veuillez entrer le nombre correspondant"
                 dispatcher.utter_message(message_sent)
             else:

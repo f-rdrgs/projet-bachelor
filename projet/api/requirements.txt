@@ -5,3 +5,7 @@ asyncio
 sqlalchemy 
 psycopg2-binary
 psycopg2
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+icalendar
