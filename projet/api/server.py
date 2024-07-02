@@ -211,8 +211,9 @@ Ressort les horaires de la semaine pour une ressource sous ce format :
 
 {
 Jour de la semaine (lundi = 0, mardi = 1, ...)
- "0": [ Array d'heures de début[début1, début2], Array d'heures de fin[fin1,fin2], découpage horaire],
+ "0": [ [ Array d'heures de début[début1, début2], Array d'heures de fin[fin1,fin2], découpage horaire], [ Array d'heures de début[début1, début2], Array d'heures de fin[fin1,fin2], découpage horaire]],
  ...
+ Un jour peut posséder de multiples horaires différents avec des découpages différents, d'où la présence d'un array de tuples ici
 }
 """
 def get_all_horaires_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Semaine])-> tuple[dict[int,tuple[list[datetime.time],list[datetime.time],datetime.time]],Any]:
@@ -222,12 +223,16 @@ def get_all_horaires_semaine_for_ressource(ressource:str,jours_semaine:list[Jour
             output : dict[int,tuple[list[datetime.time],list[datetime.time]]] = {}
             output_query = {}
             for day in query:
-                output[Jours_Semaine(day[0]).value] =tuple([day[2],day[3],day[1]])
+                if Jours_Semaine(day[0]).value not in output.keys():
+                    output[Jours_Semaine(day[0]).value] = []
+                output[Jours_Semaine(day[0]).value].append(tuple([day[2],day[3],day[1]]))
             for day in query:
-                output_query[Jours_Semaine(day[0]).value] = {"horaires":[[debut,fin]for debut,fin in zip(day[2],day[3])],"decoupage":day[1]}
+                if Jours_Semaine(day[0]).value not in output_query.keys():
+                    output_query[Jours_Semaine(day[0]).value] = []
+                output_query[Jours_Semaine(day[0]).value].append({"horaires":[[debut,fin]for debut,fin in zip(day[2],day[3])],"decoupage":day[1]})
             return jsonable_encoder(output), jsonable_encoder(output_query)
     except Exception as e:
-        print(e)
+        print(f"An error has occured while getting horaires: {e}")
         return {},[]
     
 
@@ -240,40 +245,45 @@ Permet de récupérer l'ensemble des heures pour chaque jour de la semaine pour 
 ]
 }
 """
-def get_heures_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Semaine] = [Jours_Semaine.lundi,Jours_Semaine.mardi,Jours_Semaine.mercredi,Jours_Semaine.jeudi,Jours_Semaine.vendredi,Jours_Semaine.samedi,Jours_Semaine.dimanche])->tuple[dict[int,list[datetime.time]],Any]:
+def get_heures_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Semaine] = [Jours_Semaine.lundi,Jours_Semaine.mardi,Jours_Semaine.mercredi,Jours_Semaine.jeudi,Jours_Semaine.vendredi,Jours_Semaine.samedi,Jours_Semaine.dimanche]):
     try:
         horaires,query_horaire = get_all_horaires_semaine_for_ressource(ressource,jours_semaine)
-        print(horaires)
+        print(f"horaires: {horaires}\n\n\nhoraire_query: {query_horaire}")
         heures_semaine = {}
         for jour in horaires.keys():
-            decoupage = datetime.time.fromisoformat(horaires[jour][2])
-            horaires_debut_fin = [(datetime.datetime.strptime(debut,"%H:%M:%S").time(),datetime.datetime.strptime(fin,"%H:%M:%S").time(),decoupage) for debut,fin in zip(horaires[jour][0],horaires[jour][1])]
+            for sub_horaire in horaires[jour]:
 
-            total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
-            final_schedule = []
-            for heures_tuple in horaires_debut_fin:
-                debut, fin, decoupage = heures_tuple
+                decoupage = datetime.time.fromisoformat(sub_horaire[2])
+                horaires_debut_fin = [(datetime.datetime.strptime(debut,"%H:%M:%S").time(),datetime.datetime.strptime(fin,"%H:%M:%S").time(),decoupage) for debut,fin in zip(sub_horaire[0],sub_horaire[1])]
 
-                debut_delta = datetime.timedelta(seconds=total_sec_calc(debut.hour,debut.minute,debut.second))
-                fin_delta = datetime.timedelta(seconds=total_sec_calc(fin.hour,fin.minute,fin.second))
+                total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
+                final_schedule = []
+                for heures_tuple in horaires_debut_fin:
+                    debut, fin, decoupage = heures_tuple
 
-
-                decoupage_delta = datetime.timedelta(seconds=total_sec_calc(decoupage.hour,decoupage.minute,decoupage.second))
-
-                slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
+                    debut_delta = datetime.timedelta(seconds=total_sec_calc(debut.hour,debut.minute,debut.second))
+                    fin_delta = datetime.timedelta(seconds=total_sec_calc(fin.hour,fin.minute,fin.second))
 
 
+                    decoupage_delta = datetime.timedelta(seconds=total_sec_calc(decoupage.hour,decoupage.minute,decoupage.second))
 
-                # print(f"Number of slots : {slot_count}")
-                new_schedule = [str((datetime.datetime.combine(datetime.date.today(), debut)+(decoupage_delta*offset)).time()) for offset in range(int(slot_count))]
-                final_schedule += new_schedule
-                heures_semaine[jour] = final_schedule
+                    slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
+
+
+
+                    # print(f"Number of slots : {slot_count}")
+                    new_schedule = [str((datetime.datetime.combine(datetime.date.today(), debut)+(decoupage_delta*offset)).time()) for offset in range(int(slot_count))]
+                    final_schedule += new_schedule
+                    if jour not in heures_semaine.keys():
+                        heures_semaine[jour] = []
+                    heures_semaine[jour] += (final_schedule)
             
         
         return heures_semaine,query_horaire
 
     except Exception as e:
-        return {}
+        print(f"Error on horaire semaine: {e}")
+        return {},{}
 
 # Récupérer les réservations pour une date et ressource donnée
 def get_reservations_for_dates_for_ressource(ressource:str,dates:list[datetime.date])->dict[datetime.date,list[datetime.time]]:

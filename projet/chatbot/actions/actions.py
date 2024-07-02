@@ -678,8 +678,9 @@ class AskForDateAction(Action):
             dict_horaires_jour : dict[str,dict] = result_query_heures["horaires"]
             dispatcher.utter_message("Les horaires de réservation sont les suivants: ")
             for day in dict_horaires_jour.keys():
-                for horaire in result_query_heures["horaires"][day]["horaires"]:
-                    dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {result_query_heures['horaires'][day]['decoupage']}")
+                for horaire_jour in dict_horaires_jour[day]:
+                    for horaire in horaire_jour['horaires']:
+                        dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {horaire_jour['decoupage']}")
             response_mess = "Les dates disponibles à la réservation pour le prochain mois sont :"
             ressource = tracker.get_slot("ressource")
             dates_for_ressource = get_jours_disponibles(ressource,30,None)

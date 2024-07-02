@@ -33,6 +33,8 @@ services:
       file: ./chatbot/rasa-docker-compose.yml
       env_file: ./chatbot/.env
       service: rasa-core
+    volumes:
+      - db_data:/db/data
 
   duckling:
     extends:
@@ -66,5 +68,11 @@ volumes:
     driver: local
     driver_opts:
       device: "./api/tmp"
+      o: bind
+      type: none
+  db_data:
+    driver: local
+    driver_opts:
+      device: "./db/data"
       o: bind
       type: none
