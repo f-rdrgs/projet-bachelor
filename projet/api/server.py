@@ -222,10 +222,12 @@ def get_all_horaires_semaine_for_ressource(ressource:str,jours_semaine:list[Jour
             query = session.query(Jour_Horaire.jour,Jour_Horaire.temps_reservation,func.array_agg(Jour_Horaire.debut).label("heures_debut"),func.array_agg(Jour_Horaire.fin).label("heures_fin")).where(Jour_Horaire.label == ressource).filter(Jour_Horaire.jour.in_(jours_semaine)).group_by(Jour_Horaire.jour,Jour_Horaire.temps_reservation).distinct().all()
             output : dict[int,tuple[list[datetime.time],list[datetime.time]]] = {}
             output_query = {}
+            # Formation heures début-fin par jour
             for day in query:
                 if Jours_Semaine(day[0]).value not in output.keys():
                     output[Jours_Semaine(day[0]).value] = []
                 output[Jours_Semaine(day[0]).value].append(tuple([day[2],day[3],day[1]]))
+            # Formation horaires par jour
             for day in query:
                 if Jours_Semaine(day[0]).value not in output_query.keys():
                     output_query[Jours_Semaine(day[0]).value] = []
@@ -251,13 +253,16 @@ def get_heures_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Sema
         print(f"horaires: {horaires}\n\n\nhoraire_query: {query_horaire}")
         heures_semaine = {}
         for jour in horaires.keys():
+            # Parcours des divers horaires pour un même jour (si d'autres sont présents ou non)
             for sub_horaire in horaires[jour]:
 
                 decoupage = datetime.time.fromisoformat(sub_horaire[2])
+                # Création d'un array d'heures de début-fin avec découpage horaire inclu
                 horaires_debut_fin = [(datetime.datetime.strptime(debut,"%H:%M:%S").time(),datetime.datetime.strptime(fin,"%H:%M:%S").time(),decoupage) for debut,fin in zip(sub_horaire[0],sub_horaire[1])]
 
                 total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
                 final_schedule = []
+                # Ajout de toutes les heures de disponibilité selon les plages horaires et découpage horaire
                 for heures_tuple in horaires_debut_fin:
                     debut, fin, decoupage = heures_tuple
 
@@ -269,9 +274,6 @@ def get_heures_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Sema
 
                     slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
 
-
-
-                    # print(f"Number of slots : {slot_count}")
                     new_schedule = [str((datetime.datetime.combine(datetime.date.today(), debut)+(decoupage_delta*offset)).time()) for offset in range(int(slot_count))]
                     final_schedule += new_schedule
                     if jour not in heures_semaine.keys():
@@ -293,7 +295,7 @@ def get_reservations_for_dates_for_ressource(ressource:str,dates:list[datetime.d
             print(query)
             return jsonable_encoder(query)
     except Exception as e:
-        return []
+        return {}
 
 """
 Récupère les titres associés à une liste d'ids de choix
@@ -305,7 +307,7 @@ def get_choix_titres_from_ids(list_choix:list[int])->list[str]:
             return jsonable_encoder([opt[0] for opt in query])
     except Exception as e:
         print(e)
-        return [] 
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération de titres de choix: {str(e)}")
 
 """
 Récupère une liste des pré réservations pour une liste de dates et une ressource donnée
@@ -321,7 +323,7 @@ def get_reservations_temporaire_for_dates_for_ressource(ressource:str,dates:list
             print(f"Temp Res: {query}")
             return jsonable_encoder(query)
     except Exception as e:
-        return []
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération de réservations temporaires: {str(e)}")
 
 # Temps stocké en UTC (2h en moins qu'en Suisse)
 
@@ -371,7 +373,9 @@ async def add_reservation(data:Reservation_API):
                 output_reserv_ressource = {"heure": reservation_ressource.heure,"date_reservation": reservation_ressource.date_reservation,"ressource": reservation_ressource.resource,"date_reservation": reservation_ressource.date_reservation}
             choix_text = ""
             choix_list = []
+            # Test si des options ont été fournies
             if data.list_options.__len__()> 0:
+                # Ajout des choix de réservation à la réservation courante
                 with Session.begin() as session:
                     for id in data.list_options:
                         reserv_choix = Reservations_Client_Choix(reservation=output_reserv["id"],resource=data.ressource,id_choix_ressource=id)
@@ -380,20 +384,21 @@ async def add_reservation(data:Reservation_API):
                         session.flush()
                         session.refresh(reserv_choix)
                         output_choix_res[str(id)] = {"id":reserv_choix.id,"ressource":reserv_choix.resource,"res_id":reserv_choix.reservation,"id_choix":reserv_choix.id_choix_ressource}
+            # Si des options ont été fournies, rempli le texte d'options en conséquence
             if choix_list.__len__()>0:
                 choix_titres = get_choix_titres_from_ids(choix_list)
                 for choix in choix_titres:
                     choix_text+= f", {choix}"
             date_reserv = output_reserv_ressource["date_reservation"]
             heure_reserv = output_reserv_ressource["heure"]
-            # datetime_start = datetime.datetime()
             result_fin_heure = await get_fin_heure(output_reserv_ressource['ressource'],date_reserv,heure_reserv)
             heure_fin_reserv = datetime.datetime.strptime(result_fin_heure["heure_fin"],"%H:%M:%S").time()
             heure_start_print = datetime.datetime.combine(date_reserv,heure_reserv,tzinfo=ZoneInfo('Europe/Paris'))
             heure_fin_print = datetime.datetime.combine(date_reserv,heure_fin_reserv,tzinfo=ZoneInfo('Europe/Paris'))
-            # Ajout de la réservation au calendrier google associé et retourne un lien pour ajouter l'event à son propre calendrier
 
+            # Ajout de la réservation au calendrier google associé et retourne un lien pour ajouter l'event à son propre calendrier
             lien_google_cal = add_event_reservation(f"Réservation de {output_reserv_ressource['ressource']}",output_reserv['numero_tel'],output_reserv['prenom'],output_reserv['nom'],f"Une réservation de {output_reserv_ressource['ressource']}{choix_text}",heure_start_print,heure_fin_print)
+            # Création d'un fichier ical de l'événement
             uuid_file = create_ical_event(f"Réservation de {output_reserv_ressource['ressource']}",output_reserv['numero_tel'],output_reserv['prenom'],output_reserv['nom'],f"Une réservation de {output_reserv_ressource['ressource']}{choix_text}",heure_start_print,heure_fin_print)
             return JSONResponse(content={
                     "message":"Réservation ajoutée",
@@ -416,15 +421,13 @@ Route pour récupérer les choix et options associés à une ressource
 """
 @app.get("/get-options-choix/{ressource}")
 async def get_options_choix(ressource:str):
-    with Session.begin() as session:
-        query = session.query(Options_Resource.label_option,Options_Resource.description,func.array_agg(Options_Resource_Choix.choix).label("choix"),func.array_agg(Options_Resource_Choix.id).label("id")).join(Options_Resource_Choix,Options_Resource.label_option == Options_Resource_Choix.label_option).where(Options_Resource.label_resource.like(ressource)).group_by(Options_Resource.label_option).group_by(Options_Resource.description).all()
-        query = {elem[0]: [elem[1],{id: choix for id, choix in zip(elem[3],elem[2])}]for elem in query}
-        test = [1,3]
-        # print(list(jsonable_encoder(query).items()))
-        for i,item in enumerate(list(jsonable_encoder(query).items())):
-            print(list(item[1][1].items())[test[i]-1])
-        print(query.keys().__len__())
-        return JSONResponse(content={"options":jsonable_encoder(query)},status_code=status.HTTP_200_OK)
+    try:
+        with Session.begin() as session:
+            query = session.query(Options_Resource.label_option,Options_Resource.description,func.array_agg(Options_Resource_Choix.choix).label("choix"),func.array_agg(Options_Resource_Choix.id).label("id")).join(Options_Resource_Choix,Options_Resource.label_option == Options_Resource_Choix.label_option).where(Options_Resource.label_resource.like(ressource)).group_by(Options_Resource.label_option).group_by(Options_Resource.description).all()
+            query = {elem[0]: [elem[1],{id: choix for id, choix in zip(elem[3],elem[2])}]for elem in query}
+            return JSONResponse(content={"options":jsonable_encoder(query)},status_code=status.HTTP_200_OK)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération de choix: {str(e)}")
 
 """
 Route permettant de récupérer toutes les réservations
@@ -435,10 +438,13 @@ Route permettant de récupérer toutes les réservations
 """
 @app.get("/get-reservations-ressources/")    
 async def get_reservations_ressources():
-    with Session.begin() as session:
-        query = session.query(Reservations_Client_Resource).distinct().all()
-        
-        return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+    try:
+        with Session.begin() as session:
+            query = session.query(Reservations_Client_Resource).distinct().all()
+            
+            return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération de réservations: {str(e)}")
 """
 Route permettant de récupérer toutes les réservations d'une ressource
 
@@ -448,10 +454,13 @@ Route permettant de récupérer toutes les réservations d'une ressource
 """
 @app.get("/get-reservations-ressources/{ressource}")    
 async def get_reservations_ressources(ressource:str):
-    with Session.begin() as session:
-        query = session.query(Reservations_Client_Resource).where(Reservations_Client_Resource.resource == ressource).distinct().all()
-        
-        return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+    try:
+        with Session.begin() as session:
+            query = session.query(Reservations_Client_Resource).where(Reservations_Client_Resource.resource == ressource).distinct().all()
+            
+            return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération de réservations par ressource: {str(e)}")
 
 """
 Route permettant de récupérer toutes les réservations d'une ressource à une date donnée
@@ -462,77 +471,84 @@ Route permettant de récupérer toutes les réservations d'une ressource à une 
 """
 @app.get("/get-reservations-ressources-from-date/{ressource}/{date}")
 async def get_reservations_ressources_from_date(ressource:str,date:datetime.date):
-     with Session.begin() as session:
-        query = session.query(Reservations_Client_Resource).where(Reservations_Client_Resource.resource == ressource).where(Reservations_Client_Resource.date_reservation >= date).distinct().all()
+    try:
+        with Session.begin() as session:
+            query = session.query(Reservations_Client_Resource).where(Reservations_Client_Resource.resource == ressource).where(Reservations_Client_Resource.date_reservation >= date).distinct().all()
         
-        return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+            return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération de réservations par ressource et date: {str(e)}")
 
 
 @app.get("/get-jours-semaine/{ressource_label}/{num_jours}")
 async def get_jours_semaine(ressource_label:str,num_jours:int):
-    with Session.begin() as session:
-        # Récupération des jours de la semaine possédant des horaires
-        query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).distinct().all()
-        query_result = []
-        dates_dispo :list[datetime.date] = []
-        if query.__len__() > 0:
-            curr_date = datetime.datetime.now().date()
-            # Filtrage en format [0, 1, 2, 3](lundi, mardi, mercredi, ...)
-            jours_semaines_values = [Jours_Semaine(jour[0]).value for jour in query]
-            # Création array de dates selon les jours disponibles
-            for date in range(num_jours):
-                if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaines_values:
-                    date_found = curr_date + datetime.timedelta(days=date)
-                    dates_dispo.append(date_found)
-            curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
-            pre_reserv = get_reservations_temporaire_for_dates_for_ressource(ressource_label,dates_dispo)
-            for date in curr_reservations.keys():
-                if date in pre_reserv.keys():
-                    curr_reservations[date]+=pre_reserv[date]
-            heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
-            # Retire toutes les dates ne possédant aucun horaire de disponible
-            for date in curr_reservations.keys():
-                diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
-                if diff.__len__() == 0:
-                    print(f"Removing {date}")
-                    dates_dispo.remove(datetime.date.fromisoformat(date))
-            
-        return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
+    try:
+        with Session.begin() as session:
+            # Récupération des jours de la semaine possédant des horaires
+            query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).distinct().all()
+            query_result = []
+            dates_dispo :list[datetime.date] = []
+            if query.__len__() > 0:
+                curr_date = datetime.datetime.now().date()
+                # Filtrage en format [0, 1, 2, 3](lundi, mardi, mercredi, ...)
+                jours_semaines_values = [Jours_Semaine(jour[0]).value for jour in query]
+                # Création array de dates selon les jours disponibles
+                for date in range(num_jours):
+                    if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaines_values:
+                        date_found = curr_date + datetime.timedelta(days=date)
+                        dates_dispo.append(date_found)
+                curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
+                pre_reserv = get_reservations_temporaire_for_dates_for_ressource(ressource_label,dates_dispo)
+                for date in curr_reservations.keys():
+                    if date in pre_reserv.keys():
+                        curr_reservations[date]+=pre_reserv[date]
+                heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
+                # Retire toutes les dates ne possédant aucun horaire de disponible
+                for date in curr_reservations.keys():
+                    diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
+                    if diff.__len__() == 0:
+                        print(f"Removing {date}")
+                        dates_dispo.remove(datetime.date.fromisoformat(date))
+                
+            return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération de dates de disponibilité par semaine: {str(e)}")
 
 @app.get("/get-jours-semaine/{ressource_label}/{num_jours}/{heure}")
 async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.time):
-    with Session.begin() as session:
-        # Récupération des jours de la semaine possédant des horaires
-        query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.debut <= heure).where(Jour_Horaire.fin>=heure).distinct().all()
-        print(query)
-        query_result = []
-        dates_dispo :list[datetime.date] = []
-        query_horaire = []
-        if query.__len__() > 0:
-            curr_date = datetime.datetime.now().date()
-            # Filtrage en format [0, 1, 2, 3](lundi, mardi, mercredi, ...)
-            jours_semaines_values = [Jours_Semaine(jour[0]).value for jour in query]
-            # Création array de dates selon les jours disponibles
-            for date in range(num_jours):
-                if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaines_values:
-                    date_found = curr_date + datetime.timedelta(days=date)
-                    dates_dispo.append(date_found)
-            curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
-            print(f"CUR RES ! ! ! ! {curr_reservations}")
-            temp_res = get_reservations_temporaire_for_dates_for_ressource(ressource_label,dates_dispo)
-            heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
-            # print(dates_dispo)
-            for date in curr_reservations.keys():
-                if date in temp_res.keys():
-                    curr_reservations[date].append(temp_res[date])
-            # Retire toutes les dates ne possédant aucun horaire de disponible
-            for date in curr_reservations.keys():
-                diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
-                if diff.__len__() == 0:
-                    print(f"Removing {date}")
-                    dates_dispo.remove(datetime.date.fromisoformat(date))
-            
-        return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
+    try:
+        with Session.begin() as session:
+            # Récupération des jours de la semaine possédant des horaires
+            query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.debut <= heure).where(Jour_Horaire.fin>=heure).distinct().all()
+            print(query)
+            query_result = []
+            dates_dispo :list[datetime.date] = []
+            query_horaire = []
+            if query.__len__() > 0:
+                curr_date = datetime.datetime.now().date()
+                # Filtrage en format [0, 1, 2, 3](lundi, mardi, mercredi, ...)
+                jours_semaines_values = [Jours_Semaine(jour[0]).value for jour in query]
+                # Création array de dates selon les jours disponibles
+                for date in range(num_jours):
+                    if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaines_values:
+                        date_found = curr_date + datetime.timedelta(days=date)
+                        dates_dispo.append(date_found)
+                curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
+                temp_res = get_reservations_temporaire_for_dates_for_ressource(ressource_label,dates_dispo)
+                heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
+                for date in curr_reservations.keys():
+                    if date in temp_res.keys():
+                        curr_reservations[date].append(temp_res[date])
+                # Retire toutes les dates ne possédant aucun horaire de disponible
+                for date in curr_reservations.keys():
+                    diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
+                    if diff.__len__() == 0:
+                        print(f"Removing {date}")
+                        dates_dispo.remove(datetime.date.fromisoformat(date))
+                
+            return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération de dates de réservation selon une heure et ressource: {str(e)}")
 
 async def get_fin_heure(ressource_label:str,date:datetime.date,heure:datetime.time):
     query = []
@@ -556,13 +572,16 @@ async def get_fin_heure(ressource_label:str,date:datetime.date,heure:datetime.ti
 
 @app.get("/get-horaires/{ressource_label}")
 async def get_horaires_for_ressource(ressource_label: str):
-        heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
+        try:
+            heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
             
-        return JSONResponse(content={"heures_dispo":jsonable_encoder(heures_for_semaine),"horaires":query_horaire},status_code=status.HTTP_200_OK)
+            return JSONResponse(content={"heures_dispo":jsonable_encoder(heures_for_semaine),"horaires":query_horaire},status_code=status.HTTP_200_OK)
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération des horaires pour une ressource: {str(e)}")
 
 @app.get("/get-horaires/{jour}/{ressource_label}")
 async def get_horaires_for_ressource(jour:str,ressource_label: str):
-
+    try:
         with Session.begin() as session:
             # decoupage = datetime.time(minute=30)
             jour_date = datetime.datetime.fromisoformat(jour).date()
@@ -603,30 +622,39 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
             print("QUERY HORAIRE "+str(query_horaire))
             return JSONResponse(content={"horaire_heures":final_schedule,"horaire":query_horaire},status_code=status.HTTP_200_OK)
 
-
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération des heures selon une date et ressource: {str(e)}")
 
 @app.get("/get-ressources")
 async def get_ressources():
-    with Session.begin() as session:
-        query = session.query(Ressource).all()
-        return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+    try:
+        with Session.begin() as session:
+            query = session.query(Ressource).all()
+            return JSONResponse(content=jsonable_encoder(query),status_code=status.HTTP_200_OK)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération des ressources: {str(e)}")
 
 @app.post("/test-nlu")
 async def test_nlu_rasa(data:Test_rasa_nlu):
-    
-    headers = {"Content-Type": "application/json"}
-    print(data.model_dump_json())
-    async with httpx.AsyncClient() as client:
-        response = await client.post('http://rasa-core:5005/model/parse',data=data.model_dump_json(),headers=headers)    
-        return JSONResponse(content=jsonable_encoder(response.json()),status_code=status.HTTP_200_OK)
+    try:
+        headers = {"Content-Type": "application/json"}
+        print(data.model_dump_json())
+        async with httpx.AsyncClient() as client:
+            response = await client.post('http://rasa-core:5005/model/parse',data=data.model_dump_json(),headers=headers)    
+            return JSONResponse(content=jsonable_encoder(response.json()),status_code=status.HTTP_200_OK)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors du test nlu avec Rasa: {str(e)}")
 
 @app.post("/communicate-rasa")
 async def talk_to_rasa(data:Communicate_Rasa):
-    headers = {"Content-Type": "application/json"}
-    print(data.model_dump_json())
-    async with httpx.AsyncClient() as client:
-        response = await client.post('http://rasa-core:5005/webhooks/rest/webhook',data=data.model_dump_json(),headers=headers)    
-        return JSONResponse(content=response.json(),status_code=status.HTTP_200_OK)
+    try:
+        headers = {"Content-Type": "application/json"}
+        print(data.model_dump_json())
+        async with httpx.AsyncClient() as client:
+            response = await client.post('http://rasa-core:5005/webhooks/rest/webhook',data=data.model_dump_json(),headers=headers)    
+            return JSONResponse(content=response.json(),status_code=status.HTTP_200_OK)
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la communication avec Rasa: {str(e)}")
 
 
 
