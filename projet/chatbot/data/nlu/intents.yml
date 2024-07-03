@@ -9,36 +9,6 @@ nlu:
       - [Bonsoir](salutation)
       - [Bjr](salutation)
 
-  - intent: ressource_gather
-    examples: |
-      - Je veux réserver un terrain de [tennis](ressource)
-      - J'aimerai réserver un terrain de [Handball](ressource)
-      - J'aimerai réserver un terrain de [tennis](ressource)
-      - J'aimerai réserver un terrain de [Pétanque](ressource)
-      - Je souhaite réserver un terrain de [Basket](ressource)
-      - Je voudrai réserver une table de [Ping-Pong](ressource)
-      - Je voudrai réserver un terrain de [basket](ressource)
-      - Je voudrai réserver un terrain de [Handball]
-      - Je voudrai réserver un terrain de [tennis](ressource)
-      - Je veux réserver une table de [Ping-Pong](ressource)
-      - Je veux réserver un terrain de [basket](ressource)
-      - Je souhaiterai réserver un terrain de [Pétanque](ressource)
-      - Je veux faire une réservation pour un terrain de [tennis](ressource)
-      - J'aimerai faire une réservation d'un terrain de [Badminton](ressource)
-      - J'aimerai faire une réservation pour un terrain de [pétanque](ressource)
-
-  - intent: inform_ressource
-    examples: |
-      - Un terrain de [tennis](ressource)
-      - Un terrain de [badminton](ressource)
-      - Une table de [ping-pong](ressource)
-      - un terrain de [handball](ressource)
-      - un terrain de [basket](ressource)
-      - [pétanque](ressource)
-      - [tennis](ressource)
-      - [handball](ressource)
-      - [Tennis](ressource)
-      - [Basket](ressource)
   - intent: inform_heure
     examples: |
       - Pour [14h](heure)
@@ -155,4 +125,26 @@ nlu:
       - 1929931293129053290mewdfjjewio392
       - Nonononononononononininindindfifind
       - annadfjsfs
-      
+  - intent: inform_name_surname
+    examples: |
+      - Étienne Carrell
+      - Aurélien Rochefort
+      - Pierre-Marie Lefrançois
+      - Lou Plessis
+      - Mathis Rousselle
+      - Grégoire Clérisseau
+      - Fabien Ouvrard
+      - Baptiste Carbonneau
+      - Gérôme Rouanet
+      - Cyril Boisselot
+      - Flora Beaumont
+      - Thaïs Genest
+      - Lisa Sadoul
+      - Nicoline Laurens
+      - Ingrid Suchet
+      - Lucille Delon
+      - Irène Valluy
+      - Bethsabée Bassot
+      - Marianne Carpentier
+      - Jeanne Schaeffer
+      - Nguyen Pia

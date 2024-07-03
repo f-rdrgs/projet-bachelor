@@ -264,6 +264,7 @@ class ValidateGetOptionsReservForm(FormValidationAction):
                 dispatcher.utter_message("Choix invalide")
                 return {"choix_option":None}
         else:
+            dispatcher.utter_message("Pas d'options")
             return {"choix_option":0.0}
     
 
@@ -297,7 +298,11 @@ class ValidateRessourceForm(FormValidationAction):
         if slot_value is not None:
             yes_no = bool(slot_value)
             if yes_no:
-                return {"accept_deny":True}
+                options = get_options(str(tracker.get_slot("ressource")))
+                if options.__len__() == 0:
+                    return {"accept_deny":True, "option_count":0}
+                else:
+                    return {"accept_deny":True}
             else:
                 SlotSet("ressource", None)
                 return {"accept_deny":None,"ressource": None}
@@ -612,7 +617,7 @@ class AskForChoixOptionAction(Action):
                 dispatcher.utter_message(message_sent)
             else:
                 dispatcher.utter_message("Aucune option n'est disponible")
-                return [SlotSet("option_count",-1),SlotSet("choix_option",-1),SlotSet("options_ressource",[])]
+                return [SlotSet("option_count",0),SlotSet("choix_option",0),SlotSet("options_ressource",[]),FollowupAction("reset_validation")]
         else:
             dispatcher.utter_message("Aucune ressource trouvée pour récupérer ses options")
         return []
@@ -678,8 +683,9 @@ class AskForDateAction(Action):
             dict_horaires_jour : dict[str,dict] = result_query_heures["horaires"]
             dispatcher.utter_message("Les horaires de réservation sont les suivants: ")
             for day in dict_horaires_jour.keys():
-                for horaire in result_query_heures["horaires"][day]["horaires"]:
-                    dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {result_query_heures['horaires'][day]['decoupage']}")
+                for horaire_jour in dict_horaires_jour[day]:
+                    for horaire in horaire_jour['horaires']:
+                        dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {horaire_jour['decoupage']}")
             response_mess = "Les dates disponibles à la réservation pour le prochain mois sont :"
             ressource = tracker.get_slot("ressource")
             dates_for_ressource = get_jours_disponibles(ressource,30,None)
