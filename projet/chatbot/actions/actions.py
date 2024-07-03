@@ -264,6 +264,7 @@ class ValidateGetOptionsReservForm(FormValidationAction):
                 dispatcher.utter_message("Choix invalide")
                 return {"choix_option":None}
         else:
+            dispatcher.utter_message("Pas d'options")
             return {"choix_option":0.0}
     
 
@@ -297,7 +298,11 @@ class ValidateRessourceForm(FormValidationAction):
         if slot_value is not None:
             yes_no = bool(slot_value)
             if yes_no:
-                return {"accept_deny":True}
+                options = get_options(str(tracker.get_slot("ressource")))
+                if options.__len__() == 0:
+                    return {"accept_deny":True, "option_count":0}
+                else:
+                    return {"accept_deny":True}
             else:
                 SlotSet("ressource", None)
                 return {"accept_deny":None,"ressource": None}
@@ -612,7 +617,7 @@ class AskForChoixOptionAction(Action):
                 dispatcher.utter_message(message_sent)
             else:
                 dispatcher.utter_message("Aucune option n'est disponible")
-                return [SlotSet("option_count",-1),SlotSet("choix_option",-1),SlotSet("options_ressource",[])]
+                return [SlotSet("option_count",0),SlotSet("choix_option",0),SlotSet("options_ressource",[]),FollowupAction("reset_validation")]
         else:
             dispatcher.utter_message("Aucune ressource trouvée pour récupérer ses options")
         return []
