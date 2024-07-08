@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { io, Socket } from "socket.io-client";
+import { Chatbox, Chatbox_container, Chatbox_text_right} from './component/Chatbox';
 
 const socket = io("http://localhost:3000")
 
@@ -17,7 +18,9 @@ function App() {
   _socket_events()
   return (
     <>
-      <div>
+    <Chatbox_container/>
+
+      {/* <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
         </a>
@@ -36,7 +39,7 @@ function App() {
       </div>
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
-      </p>
+      </p> */}
     </>
   )
 }
