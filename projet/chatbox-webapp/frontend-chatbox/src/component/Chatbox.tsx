@@ -90,8 +90,8 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
 const Chatbox_textbox_cont:FC<ChatboxTextboxCont>= ({})=>{
     return (
         <div className="textbox-input">
-            <textarea></textarea>
-            <button type="submit" value="Envoyer"><IoSendSharp className="react-send-icon" size={40}/></button>
+            <textarea placeholder="Entrez votre message ici..."></textarea>
+            <button type="submit" value="Envoyer"><IoSendSharp className="react-send-icon" size={"3vh"} autoReverse/></button>
         </div>
     )
 }

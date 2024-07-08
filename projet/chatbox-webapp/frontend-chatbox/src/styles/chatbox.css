@@ -30,8 +30,8 @@ div.text-right {
     margin-top: 0.8rem;
     margin-bottom: 0.8rem;
     background-color: lightgreen;
-    font-size: 1.8vmin;
-    box-shadow: 6px 8px 10px darkslategray;
+    font-size: 2.3vmin;
+    box-shadow: 0.2rem 0.5em 0.7rem darkslategray;
     border-radius: 1.2rem;
 }
 
@@ -41,9 +41,9 @@ div.text-left {
     padding: 0.7rem;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
-    background-color: cadetblue;
-    font-size: 1.8vmin;
-    box-shadow: 6px 8px 10px darkslategray;
+    background-color: darkturquoise;
+    font-size: 2.3vmin;
+    box-shadow: 0.2rem 0.5em 0.7rem darkslategray;
     border-radius: 1.2rem;
 }
 
@@ -67,8 +67,9 @@ div.textbox-input {
 div.textbox-input textarea {
     width: 80%;
     border: 1px solid;
-    font-size: 1.8vmin;
+    font-size: 2.3vmin;
     text-justify: auto;
+    
 }
 div.textbox-input button {
     width: 20%;
