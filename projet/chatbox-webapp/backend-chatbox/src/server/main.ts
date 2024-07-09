@@ -21,27 +21,32 @@ app.use(cors({origin:["http://localhost:4000","http://172.17.147.194:4000/","*"]
 
 async function query_rasa(message:string,uuid:string) : Promise<string[]> {
 
-  
-  const response = await fetch("http://localhost:5500/communicate-rasa",{
-    body: JSON.stringify({
-      "message":message,
-      "sender":uuid
-    }),
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json'
+  try {
+    const response = await fetch("http://localhost:5500/communicate-rasa",{
+      body: JSON.stringify({
+        "message":message,
+        "sender":uuid
+      }),
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    if(response.ok){
+      const content : { [x: string]: string; }[] = await response.json();
+      if(content.length> 0){
+        return content.map((content,_)=> {
+          return content["text"];
+        })
+      }else return [];
+      
     }
-  })
-  if(response.ok){
-    const content : { [x: string]: string; }[] = await response.json();
-    if(content.length> 0){
-      return content.map((content,_)=> {
-        return content["text"];
-      })
-    }else return [];
-    
+    else return [];
+  } catch (error) {
+    console.log(error)
+    return ["Une erreur s'est produite, veuillez ressayer ultérieurement."]
   }
-  else return [];
+  
 }
 
 io.on("connection", (socket: Socket) => {
