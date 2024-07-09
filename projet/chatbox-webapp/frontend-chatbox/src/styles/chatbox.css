@@ -10,6 +10,7 @@ div.container {
     border: 0.5rem gray solid;
     display: flex;
     flex-direction: column;
+    align-content: flex-end;
 }
 
 div.message-container {
@@ -21,6 +22,7 @@ div.message-container {
     overflow: auto;
     max-width:100%; 
     max-height: 100%;
+    flex-grow: 1;
 }
 
 div.text-right {
@@ -31,7 +33,7 @@ div.text-right {
     margin-bottom: 0.8rem;
     background-color: lightgreen;
     font-size: 2.3vmin;
-    box-shadow: 0.2rem 0.5em 0.7rem darkslategray;
+    box-shadow: 0.2rem 0.3em 0.7rem darkslategray;
     border-radius: 1.2rem;
 }
 
@@ -43,7 +45,7 @@ div.text-left {
     margin-bottom: 0.5rem;
     background-color: darkturquoise;
     font-size: 2.3vmin;
-    box-shadow: 0.2rem 0.5em 0.7rem darkslategray;
+    box-shadow: 0.2rem 0.3em 0.7rem darkslategray;
     border-radius: 1.2rem;
 }
 
@@ -60,8 +62,8 @@ div.textbox-input {
     margin: 0;
     background-color: white;
     display: flex;
-    position: sticky; /* Keep the input area at the bottom */
-    box-sizing: border-box; /* Ensure padding doesn't affect width */
+    flex-direction: row;
+    flex-shrink: 0;
 }
 
 div.textbox-input textarea {
@@ -71,6 +73,15 @@ div.textbox-input textarea {
     text-justify: auto;
     
 }
+
+
+div.textbox-input textarea:hover {
+
+    background-color: gainsboro;
+    
+}
+
+
 div.textbox-input button {
     width: 20%;
     background-color: lightgrey;
@@ -78,6 +89,12 @@ div.textbox-input button {
     height: 100%;
     padding: 0;
 }
+
+div.textbox-input button:hover {
+    background-color: dimgrey;
+    transition: 0.2s;
+}
+
 svg.react-send-icon {
     max-width: 100%;
     height: 100%;
