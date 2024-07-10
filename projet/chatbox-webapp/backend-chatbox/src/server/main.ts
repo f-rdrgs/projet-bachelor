@@ -1,5 +1,6 @@
 import express from "express";
 import { Server, Socket } from "socket.io";
+import cors from "cors";
 
 // https://dev.to/novu/building-a-chat-app-with-socketio-and-react-2edj
 
@@ -11,13 +12,15 @@ const PORT = 3000;
 
 const io =  new Server(server, {
   cors: {
-    origin: ["http://localhost:4000","http://172.17.147.194:4000/","*"]
-  }
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: []
+  },
+  allowEIO3: true 
 });
 
-const cors = require("cors");
 
-app.use(cors({origin:["http://localhost:4000","http://172.17.147.194:4000/","*"]}));
+app.use(cors({origin:["*"]}));
 
 async function query_rasa(message:string,uuid:string) : Promise<string[]> {
 
@@ -61,5 +64,5 @@ io.on("connection", (socket: Socket) => {
 });
 
 server.listen(PORT, () =>
-  console.log(`Server is listening on port ${PORT}...`)
+  console.log(`Server is listening on ${server.address().address}:${PORT}...`)
 );
