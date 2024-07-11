@@ -66,10 +66,13 @@ const Chatbox_message_container: FC<ChatboxMessageCont> = ({chatList}) => {
     },[chatList])
 
     function CreateChat() : JSX.Element[]{
-        return (
-            chatList.map((message,index)=>{
+        const elem_list: JSX.Element[] = chatList.map((message,index)=>{
                 return <Chatbox_text key={index} key_value={index} isBot={message.isBot} message={message.message}/>
             })
+
+        return (
+            
+            elem_list
    
         )
     }
@@ -77,7 +80,7 @@ const Chatbox_message_container: FC<ChatboxMessageCont> = ({chatList}) => {
     return (
         <>
         <div className="message-container">
-            <Radio_container/>
+            {/* <Radio_container/> */}
             <CreateChat/>
             <div ref={bottomChatRef}></div>
         </div>
