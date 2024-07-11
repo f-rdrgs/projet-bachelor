@@ -7,7 +7,8 @@ import { IoSendSharp } from "react-icons/io5";
 import { io, Socket } from "socket.io-client";
 import {v4 as uuidv4} from "uuid";
 import { SocketContext } from "./Socket";
-
+import { Radio_container } from "./Radio_choix";
+import "../assets/iphone-x-saying-hello-dribbble-css-only/dist/style.css"
 
 
 interface ChatboxProps {
@@ -69,12 +70,14 @@ const Chatbox_message_container: FC<ChatboxMessageCont> = ({chatList}) => {
             chatList.map((message,index)=>{
                 return <Chatbox_text key={index} key_value={index} isBot={message.isBot} message={message.message}/>
             })
+   
         )
     }
 
     return (
         <>
         <div className="message-container">
+            <Radio_container/>
             <CreateChat/>
             <div ref={bottomChatRef}></div>
         </div>
@@ -123,13 +126,36 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
         socket.emit("chat", message,uuid)
     }
 
+    // https://freefrontend.com/iphones-in-css/
+    // https://freefrontend.com/assets/zip/iphones-in-css/iphone-x-saying-hello-dribbble-css-only.zip
     return (
         <>
-        <div className="container">
+        <div className="iphonex">
+			<div className="front">
+				<div className="screen">
+					{/* <!-- <div className="screen__view"> --> */}
+						{/* <!-- Here --> */}
+                        <div className="container">
             <Chatbox_header header="Réservation"/>
             <Chatbox_message_container chatList={messages}/>
             <Chatbox_textbox_cont addMessage={addMessage}/>
         </div>
+					{/* <!-- </div> --> */}
+					<div className="screen__front">
+						<div className="screen__front-speaker"></div>
+						<div className="screen__front-camera"></div>
+					</div>
+				</div>
+				<div className="front__line"></div>
+				<div className="front__line front__line-second"></div>
+			</div>
+			<div className="phoneButtons phoneButtons-right"></div>
+			<div className="phoneButtons phoneButtons-left"></div>
+			<div className="phoneButtons phoneButtons-left2"></div>
+			<div className="phoneButtons phoneButtons-left3"></div>
+			<div className="back"></div>
+		</div>
+
         </>
     )
 }

@@ -2,15 +2,17 @@ div.container {
     background-color: honeydew;
     color:black;
     margin: auto;
-    width: 80%;
-    height: 90vh;
-    margin: 5vh auto 5vh;
+    width: 100%;
+    height: 98vh;
+    margin: 0 auto 0;
     max-width:100%; 
-    max-height: 90%;
-    border: 0.5rem gray solid;
+    max-height: 100%;
+    /* border: 0.5rem gray solid; */
     display: flex;
     flex-direction: column;
     align-content: flex-end;
+    /* padding: 0.5em 0.5em 0.5em 0.5em ; */
+    border-radius: 2.6em;
 }
 
 div.message-container {
@@ -25,54 +27,70 @@ div.message-container {
     flex-grow: 1;
 }
 
-div.text-right {
+div.text-right,div.text-left{
     color: black;
-    align-self: flex-end;
     padding: 0.7rem;
     margin-top: 0.8rem;
     margin-bottom: 0.8rem;
-    background-color: lightgreen;
-    font-size: 2.3vmin;
+    font-size: 1.8em;
     box-shadow: 0.2rem 0.3em 0.7rem darkslategray;
     border-radius: 1.2rem;
+    max-width: 70%;
+    word-wrap: break-word;
+	text-wrap: balance;
+
+}
+
+
+@media (max-width: 1024px){
+	div.text-right,div.text-left {
+		max-width: 50vw;
+        font-size: 1.5em;
+	}
+}
+
+div.textbox-input textarea {
+    width: 80%;
+    border: 1px solid;
+    font-size: 2.5em;
+    text-justify: auto;
+    border-bottom-left-radius:  0.8em;
+}
+
+
+
+div.text-right {
+    align-self: flex-end;
+    background-color: lightgreen;
 }
 
 div.text-left {
-    color: black;
-    align-self: flex-start;
-    padding: 0.7rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
     background-color: darkturquoise;
-    font-size: 2.3vmin;
-    box-shadow: 0.2rem 0.3em 0.7rem darkslategray;
-    border-radius: 1.2rem;
+    align-self: flex-start;
 }
+
 
 h1.header {
     font-size: 2.5rem;
     padding: 2rem;
     margin: 0;
     background-color: powderblue;
+    border-top-left-radius: 0.7em;
+    border-top-right-radius: 0.7em;
+    z-index: 9;
+
 }
 
 div.textbox-input {
     height: 8%;
     width: 100%;
     margin: 0;
-    background-color: white;
     display: flex;
     flex-direction: row;
     flex-shrink: 0;
 }
 
-div.textbox-input textarea {
-    width: 80%;
-    border: 1px solid;
-    font-size: 2.3vmin;
-    text-justify: auto;
-    
-}
+
 
 
 div.textbox-input textarea:hover {
@@ -88,6 +106,7 @@ div.textbox-input button {
     border: 1px solid;
     height: 100%;
     padding: 0;
+    border-bottom-right-radius:  2.7em;
 }
 
 div.textbox-input button:hover {
