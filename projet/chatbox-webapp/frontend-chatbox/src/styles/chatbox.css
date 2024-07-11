@@ -35,7 +35,7 @@ div.text-right,div.text-left{
     font-size: 1.8em;
     box-shadow: 0.2rem 0.3em 0.7rem darkslategray;
     border-radius: 1.2rem;
-    max-width: 70%;
+    max-width: 50%;
     word-wrap: break-word;
 	text-wrap: balance;
 

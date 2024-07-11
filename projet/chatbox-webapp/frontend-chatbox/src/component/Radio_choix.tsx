@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect, useRef, useState } from "react";
-import "../assets/radio-button/dist/style.css"
+import "../assets/radio-button/src/style.css"
 interface Container_Radio{
 
 }

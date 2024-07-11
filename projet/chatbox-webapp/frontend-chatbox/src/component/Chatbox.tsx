@@ -8,7 +8,7 @@ import { io, Socket } from "socket.io-client";
 import {v4 as uuidv4} from "uuid";
 import { SocketContext } from "./Socket";
 import { Radio_container } from "./Radio_choix";
-import "../assets/iphone-x-saying-hello-dribbble-css-only/dist/style.css"
+import "../assets/iphone-x-saying-hello-dribbble-css-only/src/style.css"
 
 
 interface ChatboxProps {
