@@ -7,7 +7,7 @@ import { IoSendSharp } from "react-icons/io5";
 import { io, Socket } from "socket.io-client";
 import {v4 as uuidv4} from "uuid";
 import { SocketContext } from "./Socket";
-import { Radio_container } from "./Radio_choix";
+import { Component_Radio, Radio_element } from "./Radio_choix";
 import "../assets/iphone-x-saying-hello-dribbble-css-only/src/style.css"
 
 
@@ -22,14 +22,26 @@ interface ChatboxContainer {
 interface ChatboxTextboxCont{
     addMessage:(message:string,isBot:boolean)=>void,
 }
-interface ChatboxText {
+
+interface ChatboxMessage {
+    key_value:number
+    type:string
+}
+
+interface ChatboxRadio extends ChatboxMessage {
+    radio:Component_Radio,
+    type:'radio'
+}
+
+
+interface ChatboxText extends ChatboxMessage{
     message:string,
     isBot:boolean,
-    key_value:number
+    type:'text'
 }
 
 interface ChatboxMessageCont{
-    chatList:ChatboxText[]
+    chatList:ChatboxMessage[]
 }
 // https://felixgerschau.com/react-typescript-components/
 
@@ -54,6 +66,17 @@ const Chatbox_text:FC<ChatboxText> = ({message,isBot,key_value}) => {
 };
 
 
+const Radio_container : FC<ChatboxRadio> = ({radio,key_value}) => {
+    const radio_elements = radio.titles.map((title,index) => {
+        return <Radio_element elements_id={radio.elements_id_array[index]} title={title} texts={radio.texts_array[index]}/>
+    })
+    return (
+        <>
+            {radio_elements}
+        </>
+    )
+}
+
 const Chatbox_message_container: FC<ChatboxMessageCont> = ({chatList}) => {
 
     const bottomChatRef = useRef<HTMLDivElement>(null);
@@ -66,8 +89,21 @@ const Chatbox_message_container: FC<ChatboxMessageCont> = ({chatList}) => {
     },[chatList])
 
     function CreateChat() : JSX.Element[]{
+
+        const return_element = (message:ChatboxMessage,index:number) => {
+            if(message.type === 'text'){
+                const message_text :ChatboxText = (message as ChatboxText);
+                return <Chatbox_text key={index} key_value={index} isBot={message_text.isBot} message={message_text.message} type="text"/>
+            } else if (message.type === 'radio'){
+                const message_radio :ChatboxRadio = (message as ChatboxRadio);
+                return <Radio_container radio={message_radio.radio} type="radio" key_value={message.key_value} key={index}/>
+            }else{
+                return <div/>
+            }
+        }
+
         const elem_list: JSX.Element[] = chatList.map((message,index)=>{
-                return <Chatbox_text key={index} key_value={index} isBot={message.isBot} message={message.message}/>
+            return return_element(message,index)               
             })
 
         return (
@@ -94,7 +130,7 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
     // Utilisation de contexte afin d'avoir un socket global unique
     const [socket] = useState( useContext(SocketContext))
 
-    const [messages,setMessages] = useState<ChatboxText[]>([])
+    const [messages,setMessages] = useState<ChatboxMessage[]>([])
 
     const [user_id] = useState(uuidv4())
 
@@ -102,7 +138,7 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
     function addMessage(newMessage:string) {
         newMessage = newMessage.trim()
         if(newMessage.length>0){
-            const newChatMessage :ChatboxText = {message:newMessage,isBot:false,key_value:0};
+            const newChatMessage :ChatboxText = {message:newMessage,isBot:false,key_value:0,type:'text'};
             // Utilisation de la forme fonctionnelle de setState parce que sinon les messages envoyés par d'autres appels de setState seront écrasés
             setMessages(prevMessages => [...prevMessages, newChatMessage]);
             sendMessageToBot(newMessage,user_id);
@@ -112,8 +148,8 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
     useEffect(()=>{
 
         socket.on('chat', (bot_messages:string[])=> {
-            const messagesBotTreated : ChatboxText[]= bot_messages.map((message,index)=>{
-                return {message:message,isBot:true,key_value:index};
+            const messagesBotTreated : ChatboxMessage[]= bot_messages.map((message,index)=>{
+                return {message:message,isBot:true,key_value:index,type:'text'};
             })
             // Utilisation de la forme fonctionnelle de setState parce que sinon les messages envoyés par d'autres appels de setState seront écrasés
             setMessages(prevMessages => [...prevMessages, ...messagesBotTreated])
