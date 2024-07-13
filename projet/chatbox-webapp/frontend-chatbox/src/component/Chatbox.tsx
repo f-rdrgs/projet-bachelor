@@ -20,7 +20,7 @@ interface ChatboxContainer {
 
 }
 interface ChatboxTextboxCont{
-    addMessage:(message:string,isBot:boolean)=>void,
+    addMessage:(message:string, index ?:number)=>void,
 }
 
 interface ChatboxMessage {
@@ -134,11 +134,33 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
 
     const [user_id] = useState(uuidv4())
 
+    // \[(.*?)\]
+    // [OPTION][0][Avec ou sans couverts ?][(Avec,1)(Sans,2)(Je sais pas,3)][OPTION][1][Avec ou sans chaussures ?][(Avec,1)(Sans,2)(Je sais pas,3)]
+    function process_message(newMessage:string, index ?: number) : ChatboxMessage{
 
-    function addMessage(newMessage:string) {
+        const parse_array = (text:string) =>  {
+            const match = text.match(/\[([^\]]*)\]/);  
+            return match ? match : null;
+        }
+
+
+        if(newMessage.startsWith("[OPTION]")) {
+            const options = newMessage.split('[OPTION]').filter((message,index) => message.length>0)
+            // Parser le message radio bouton et créer les éléments nécessaires, possiblement changer le retour de fonction en array de ChatboxMessages vu qu'il peut y avoir une multitude de radio boutons
+            // const ids = options[]
+            options.forEach(console.log)
+            const radio_message : ChatboxRadio = {radio:{elements_id_array:[], texts_array:[],titles:[]},key_value:(index != undefined ? index : 0),type:'radio'}
+            return radio_message;
+        } else{
+            const text_message : ChatboxText= {message:newMessage,isBot:true,key_value:(index != undefined ? index : 0),type:'text'}
+            return text_message;
+        }
+    }
+
+    function addMessage(newMessage:string, index ?:number) {
         newMessage = newMessage.trim()
         if(newMessage.length>0){
-            const newChatMessage :ChatboxText = {message:newMessage,isBot:false,key_value:0,type:'text'};
+            const newChatMessage :ChatboxText = {message:newMessage,isBot:false,key_value:(index != undefined ? index : 2),type:'text'}
             // Utilisation de la forme fonctionnelle de setState parce que sinon les messages envoyés par d'autres appels de setState seront écrasés
             setMessages(prevMessages => [...prevMessages, newChatMessage]);
             sendMessageToBot(newMessage,user_id);
@@ -149,7 +171,7 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
 
         socket.on('chat', (bot_messages:string[])=> {
             const messagesBotTreated : ChatboxMessage[]= bot_messages.map((message,index)=>{
-                return {message:message,isBot:true,key_value:index,type:'text'};
+                return  process_message(message,index);
             })
             // Utilisation de la forme fonctionnelle de setState parce que sinon les messages envoyés par d'autres appels de setState seront écrasés
             setMessages(prevMessages => [...prevMessages, ...messagesBotTreated])
@@ -203,7 +225,7 @@ const Chatbox_textbox_cont:FC<ChatboxTextboxCont>= ({addMessage,})=>{
 
     const [message,setMessage] = useState("")
     function addNewMessage() {
-        addMessage(message,false);
+        addMessage(message);
         setMessage("");
     }
 
