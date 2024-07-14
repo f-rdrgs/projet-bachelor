@@ -50,8 +50,8 @@ h1 {
 	font-size: 1.8em;
 	padding-left: 4rem;
 	font-weight: 400;
-	max-width: 50%;
-
+	max-width: 100%;
+	width: 100%;
 	/* min-width: 30vw; */
 	word-wrap: break-word;
 	white-space: nowrap;
@@ -66,6 +66,7 @@ h1 {
 @media (max-width: 1024px){
 	.radio-item label {
 		max-width: 80%;
+		width: 80%;
 	}
 }
 .radio-item label:after,
