@@ -30,3 +30,6 @@ intents:
         - numero_tel
   - stop
   - inform_name_surname
+  - choose_options:
+      use_entities:
+        - nombre

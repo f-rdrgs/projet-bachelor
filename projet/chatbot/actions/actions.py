@@ -237,32 +237,60 @@ class ValidateGetOptionsReservForm(FormValidationAction):
         tracker: Tracker,
         domain: DomainDict,
     ) -> Dict[Text, Any]:
+        options_choix :str = tracker.latest_message.get('text')
+        nombres = [int(nb) for nb in options_choix.split()]
+        dispatcher.utter_message(f"nombres: {str(nombres)}")
         ressource = tracker.get_slot("ressource")
         option_count = tracker.get_slot("option_count")
         choix_option = tracker.get_slot("choix_option")
+        choix_option = nombres[0]
         options_list = tracker.get_slot("options_ressource")
+        options_list = [str(opt) for opt in options_list]
         options = get_options(ressource)
+        dispatcher.utter_message(f"List choix: {str(options_list)}")
         print(f"List choix: {str(options_list)}")
+        print(f"Nombres: {str(nombres)}")
         if tracker.latest_message.get("intent")["name"] == "stop":
             return {}
         if option_count is None:
             return {"choix_option":None}
         option_count = int(option_count)
         
-        if options.keys().__len__()>0 and option_count >=0 and option_count < options.keys().__len__() and choix_option is not None:
-            # print(f"{int(choix_option)} in {range(0,options.keys().__len__())} {int(choix_option) in range(0,options.keys().__len__()+1)}")
-            if int(choix_option) in range(0,list(options.items())[option_count][1][1].keys().__len__()+1):
-                # list(list(dico.items())[option_count][1][1].items())[2-1][0]
-                options_list.append(int(list(list(options.items())[option_count][1][1].items())[int(choix_option)-1][0]))
-                if option_count+1 < options.keys().__len__():
-                    print(f"LIST : {options_list}")
-                    return {"choix_option":None,"option_count":float(option_count+1),"options_ressource":options_list}
-                else:
-                    print(f"LIST : {options_list}")
-                    return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
+        if options.keys().__len__()>0 and option_count >=0 and option_count < options.keys().__len__() and nombres.__len__() > 0 and nombres.__len__() + option_count <= options.keys().__len__():
+            lst_opt = []
+            final_numbers = []
+            remove_if_present = lambda val : val in options_list
+            for opt in options.items():
+                lst_opt +=(list(opt[1][1].keys()) )
+            lst_opt_filtered = list(filter(remove_if_present,lst_opt))
+            print(f"lst filtered: {lst_opt_filtered}")
+            for choix_nb in nombres:
+                if str(choix_nb) not in lst_opt_filtered:
+                    print("IN")
+                    options_list.append(str(choix_nb))
+                    final_numbers.append(str(choix_nb))
+
+            if option_count+final_numbers.__len__() < options.keys().__len__():
+                print(f"LIST : {options_list}")
+                return {"choix_option":None,"option_count":float(option_count+final_numbers.__len__()),"options_ressource":options_list}
             else:
-                dispatcher.utter_message("Choix invalide")
-                return {"choix_option":None}
+                print(f"LIST : {options_list}")
+                return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
+
+
+            # print(f"{int(choix_option)} in {range(0,options.keys().__len__())} {int(choix_option) in range(0,options.keys().__len__()+1)}")
+            # if int(choix_option) in range(0,list(options.items())[option_count][1][1].keys().__len__()+1):
+            #     # list(list(dico.items())[option_count][1][1].items())[2-1][0]
+            #     options_list.append(int(list(list(options.items())[option_count][1][1].items())[int(choix_option)-1][0]))
+            #     if option_count+1 < options.keys().__len__():
+            #         print(f"LIST : {options_list}")
+            #         return {"choix_option":None,"option_count":float(option_count+1),"options_ressource":options_list}
+            #     else:
+            #         print(f"LIST : {options_list}")
+            #         return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
+            # else:
+            #     dispatcher.utter_message("Choix invalide")
+            #     return {"choix_option":None}
         else:
             dispatcher.utter_message("Pas d'options")
             return {"choix_option":0.0}
@@ -307,7 +335,7 @@ class ValidateRessourceForm(FormValidationAction):
                 SlotSet("ressource", None)
                 return {"accept_deny":None,"ressource": None}
         else:
-            dispatcher.utter_message("Veuillez répondre oui ou non")
+            dispatcher.utter_message("Veuillez répondre oui ou non RESSOURCE")
             return {"accept_deny":None}
         
 
@@ -392,7 +420,7 @@ class ValidateInfoReserv(FormValidationAction):
             else:
                 return {"accept_deny":None,"nom_prenom": None,"numero_tel":None}
         else:
-            dispatcher.utter_message("Veuillez répondre oui ou non")
+            dispatcher.utter_message("Veuillez répondre oui ou non INFO")
             return {"accept_deny":None}
 
 
@@ -588,36 +616,49 @@ class ValidateHeuresForm(FormValidationAction):
                 SlotSet("date", None)
                 return {"accept_deny":None,"heure": None,"date":None}
         else:
-            dispatcher.utter_message("Veuillez répondre oui ou non")
+            dispatcher.utter_message("Veuillez répondre oui ou non HEURES")
             return {"accept_deny":None}
  
 class AskForChoixOptionAction(Action):
     def name(self)->Text:
         return "action_ask_choix_option"
     
+    # [OPTION][0][TITLE][Avec ou sans couverts ?][OPTIONS][(Avec,1)(Sans,2)(Je sais pas,3)][OPTION][1][TITLE][Avec ou sans chaussures ?][OPTIONS][(Avec,1)(Sans,2)(Je sais pas,3)]
     def run(
         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict
     ) -> List[EventType]:
         ressource = tracker.get_slot("ressource")
         option_count = tracker.get_slot("option_count")
         options_list = tracker.get_slot("options_ressource")
-        dispatcher.utter_message(str(options_list))
+        options_list = [str(opt) for opt in options_list]
+        dispatcher.utter_message(f"options_list: {str(options_list)}")
         if ressource is not None and option_count is not None:
             ressource = str(ressource)
             options = get_options(ressource)
-            option_count = int(option_count)
-            if option_count < options.keys().__len__():
-                message_sent = ""
-                for i,option in enumerate(options.keys()):
-                    if i == option_count:
-                        message_sent =f"Les options disponible pour {option} sont: \n"
+            # option_count = int(option_count)
+            # if option_count < options.keys().__len__():
+            message_sent = ""
+            options_flat_list = []
+            for opt in options.items():
+                options_flat_list.append(list(opt[1][1].keys()) )
+                
+            new_options = []
+            
+            are_any_elems_common = lambda arr1,arr2: any([nb for nb in arr1 if nb in arr2])
+            are_all_arrays_common = lambda arr1,arr2: all([True if nb in arr2 else False for nb in arr1])
+            for arr in options_flat_list:
+                if not are_any_elems_common(options_list,arr):
+                    new_options+=arr
+            dispatcher.utter_message(f"new opts: {str(new_options)}")
+            for i,option in enumerate(options.keys()):
+                    
+                    if are_all_arrays_common(list(options[option][1].keys()),new_options):
+                        message_sent +=f"[OPTION][{i}][TITLE][{option}][OPTIONS]["
                         for j,value in enumerate(options[option][1].items()):
-                            message_sent+=f"{j+1}: {value[1]}\n"
-                        message_sent+="Veuillez entrer le nombre correspondant"
-                dispatcher.utter_message(message_sent)
-            else:
-                dispatcher.utter_message("Aucune option n'est disponible")
-                return [SlotSet("option_count",0),SlotSet("choix_option",0),SlotSet("options_ressource",[]),FollowupAction("reset_validation")]
+                            message_sent+=f"({value[1]},{value[0]})"
+                        message_sent+="]"    
+            dispatcher.utter_message(message_sent)
+            dispatcher.utter_message("Veuillez entrer le/les nombre(s) correspondant(s) (Ex.: 2 1, 3 1 1)")
         else:
             dispatcher.utter_message("Aucune ressource trouvée pour récupérer ses options")
         return []

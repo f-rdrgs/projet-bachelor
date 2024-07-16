@@ -181,6 +181,8 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
 
     // \[(.*?)\]
     // [OPTION][0][TITLE][Avec ou sans couverts ?][OPTIONS][(Avec,1)(Sans,2)(Je sais pas,3)][OPTION][1][TITLE][Avec ou sans chaussures ?][OPTIONS][(Avec,1)(Sans,2)(Je sais pas,3)]
+
+    // [OPTION][0][TITLE][option1][OPTIONS][(Un choix 1,1)(Un choix 2,2)(Un choix 3,3)][OPTION][1][TITLE][option2][OPTIONS][(Un choix 1,4)(Un choix 2,5)(Un choix 3,6)]
     function process_message(newMessage:string, index ?: number) : ChatboxMessage{
 
         const parse_array = (text:string) =>  {

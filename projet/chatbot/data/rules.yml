@@ -54,7 +54,6 @@ rules:
     - slot_was_set:
       - requested_slot: null
     - action: list_list_options
-    - action: reset_validation
     - action: get_date_heure_form
     - active_loop: get_date_heure_form
   wait_for_user_input: false
