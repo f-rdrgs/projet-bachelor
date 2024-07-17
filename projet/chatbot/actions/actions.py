@@ -631,34 +631,39 @@ class AskForChoixOptionAction(Action):
         option_count = tracker.get_slot("option_count")
         options_list = tracker.get_slot("options_ressource")
         options_list = [str(opt) for opt in options_list]
-        dispatcher.utter_message(f"options_list: {str(options_list)}")
+        dispatcher.utter_message(f"options_list: {str(options_list)} opt count: {option_count}")
         if ressource is not None and option_count is not None:
-            ressource = str(ressource)
             options = get_options(ressource)
-            # option_count = int(option_count)
-            # if option_count < options.keys().__len__():
-            message_sent = ""
-            options_flat_list = []
-            for opt in options.items():
-                options_flat_list.append(list(opt[1][1].keys()) )
-                
-            new_options = []
-            
-            are_any_elems_common = lambda arr1,arr2: any([nb for nb in arr1 if nb in arr2])
-            are_all_arrays_common = lambda arr1,arr2: all([True if nb in arr2 else False for nb in arr1])
-            for arr in options_flat_list:
-                if not are_any_elems_common(options_list,arr):
-                    new_options+=arr
-            dispatcher.utter_message(f"new opts: {str(new_options)}")
-            for i,option in enumerate(options.keys()):
+            if option_count < options.keys().__len__():
+                ressource = str(ressource)
+                # option_count = int(option_count)
+                # if option_count < options.keys().__len__():
+                message_sent = ""
+                options_flat_list = []
+                for opt in options.items():
+                    options_flat_list.append(list(opt[1][1].keys()) )
                     
-                    if are_all_arrays_common(list(options[option][1].keys()),new_options):
-                        message_sent +=f"[OPTION][{i}][TITLE][{option}][OPTIONS]["
-                        for j,value in enumerate(options[option][1].items()):
-                            message_sent+=f"({value[1]},{value[0]})"
-                        message_sent+="]"    
-            dispatcher.utter_message(message_sent)
-            dispatcher.utter_message("Veuillez entrer le/les nombre(s) correspondant(s) (Ex.: 2 1, 3 1 1)")
+                new_options = []
+                
+                are_any_elems_common = lambda arr1,arr2: any([nb for nb in arr1 if nb in arr2])
+                are_all_arrays_common = lambda arr1,arr2: all([True if nb in arr2 else False for nb in arr1])
+                for arr in options_flat_list:
+                    if not are_any_elems_common(options_list,arr):
+                        new_options+=arr
+                dispatcher.utter_message(f"new opts: {str(new_options)}")
+                for i,option in enumerate(options.keys()):
+                        
+                        if are_all_arrays_common(list(options[option][1].keys()),new_options):
+                            message_sent +=f"[OPTION][{i}][TITLE][{option}][OPTIONS]["
+                            for j,value in enumerate(options[option][1].items()):
+                                message_sent+=f"({value[1]},{value[0]})"
+                            message_sent+="]"    
+                dispatcher.utter_message(message_sent)
+                dispatcher.utter_message("Veuillez entrer le/les nombre(s) correspondant(s) (Ex.: 2 1, 3 1 1)")
+            else:
+                dispatcher.utter_message("Aucune option n'est disponible")
+                return [SlotSet("option_count",0),SlotSet("choix_option",0),SlotSet("options_ressource",[]),FollowupAction('reset_validation')]
+
         else:
             dispatcher.utter_message("Aucune ressource trouvée pour récupérer ses options")
         return []
@@ -689,11 +694,11 @@ class AskForHeureAction(Action):
         ressource = tracker.get_slot("ressource")
         date = tracker.get_slot("date")
         date_datetime = datetime.datetime.fromisoformat(date)
-        response_mess = "Les heures disponibles à la réservation sont :"
+        response_mess = "Les heures disponibles à la réservation sont :\n"
         heures_horaires = get_heures(date_datetime,ressource)
         print(heures_horaires)
-        for ress in [datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires["horaire_heures"]]:
-            response_mess += f"\n\t- {ress}"
+        for index, ress in enumerate([datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires["horaire_heures"]]):
+            response_mess += (f"{ress}, " if index < len([datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires["horaire_heures"]])-1 else f"{ress}")
         dispatcher.utter_message(text=response_mess)
         dispatcher.utter_message(text="Pour quelle heure souhaitez-vous réserver ?")
         return []
@@ -713,8 +718,11 @@ class AskForDateAction(Action):
             ressource = tracker.get_slot("ressource")
             dates_for_ressource = get_jours_disponibles(ressource,30,datetime.datetime.fromisoformat(str(heure)).time())
             # dispatcher.utter_message(dates_for_ressource)
-            for date in dates_for_ressource:
-                response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
+            prev_month = 0
+            for index,date in enumerate(dates_for_ressource):
+                message_utter += f"[br]{str(date.month)}/{str(date.year)}[br]" if prev_month != date.month else ""
+                message_utter += f"[br][tab]{'-' if index == 0 or prev_month != date.month else ''} {str(date.day)}{' ' if index<dates_for_ressource.__len__()-1 else ''}"
+                prev_month = date.month
             dispatcher.utter_message(text=response_mess)
             dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
             return []     
@@ -722,27 +730,43 @@ class AskForDateAction(Action):
             ressource = str(tracker.get_slot("ressource"))
             result_query_heures = get_heures_semaine(ressource)
             dict_horaires_jour : dict[str,dict] = result_query_heures["horaires"]
-            dispatcher.utter_message("Les horaires de réservation sont les suivants: ")
+            message_utter = "Les horaires de réservation sont les suivants:"
+            # dispatcher.utter_message("Les horaires de réservation sont les suivants: ")
+            curr_day = -1
             for day in dict_horaires_jour.keys():
                 for horaire_jour in dict_horaires_jour[day]:
+                    message_utter +=f"[br][br]{Day_week(int(day)).name.capitalize()}[br]" if curr_day != Day_week(int(day)) else ""
+                    curr_day = Day_week(int(day))
                     for horaire in horaire_jour['horaires']:
-                        dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {horaire_jour['decoupage']}")
-            response_mess = "Les dates disponibles à la réservation pour le prochain mois sont :"
+                        message_utter += f"[br][tab]- {horaire[0]} à {horaire[1]} (intervalles de {horaire_jour['decoupage']})"
+                        # dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {horaire_jour['decoupage']}")
+            # response_mess = "Les dates disponibles à la réservation pour le prochain mois sont :"
+            message_utter += "[br][br]Les dates disponibles à la réservation pour les 30 prochains jours:"
             ressource = tracker.get_slot("ressource")
             dates_for_ressource = get_jours_disponibles(ressource,30,None)
             # dispatcher.utter_message(dates_for_ressource)
-            for date in dates_for_ressource:
-                response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
-            dispatcher.utter_message(text=response_mess)
+            prev_month = 0
+            for index,date in enumerate(dates_for_ressource):
+                message_utter += f"[br][br]{str(date.month)}/{str(date.year)}[br]" if prev_month != date.month else ""
+                message_utter += f"{'[br][tab]-' if index == 0 or prev_month != date.month else ''} {str(date.day)}{ ', '}{' ' if index<dates_for_ressource.__len__()-1 else ''}"
+                prev_month = date.month
+
+
+            dispatcher.utter_message(message_utter)
+            # dispatcher.utter_message(text=response_mess)
             dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
 
         else:
-            response_mess = "Les dates disponibles à la réservation sont :"
+            response_mess = "[br][br]Les dates disponibles à la réservation pour les 30 prochains jours:"
             ressource = tracker.get_slot("ressource")
             dates_for_ressource = get_jours_disponibles(ressource,30,None)
             # dispatcher.utter_message(dates_for_ressource)
-            for date in dates_for_ressource:
-                response_mess += f"\n\t- {str(date.day)}/{str(date.month)}/{str(date.year)}"
+            prev_month = 0
+            for index,date in enumerate(dates_for_ressource):
+                message_utter += f"[br][br]{str(date.month)}/{str(date.year)}[br]" if prev_month != date.month else ""
+                message_utter += f"{'[br][tab]-' if index == 0 or prev_month != date.month else ''} {str(date.day)}{('' if prev_month != date.month else ', ')}{' ' if index<dates_for_ressource.__len__()-1 else ''}"
+                prev_month = date.month
+
             dispatcher.utter_message(text=response_mess)
             dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
             

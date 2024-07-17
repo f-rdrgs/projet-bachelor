@@ -63,9 +63,9 @@ const Chatbox_header: FC<ChatboxProps> = ({header}) => {
  
 const Chatbox_text:FC<ChatboxText> = ({message,isBot,key_value}) => {
        return isBot ?  (
-            <div key={key_value} className="text-left">{message}</div>
+            <div key={key_value} className="text-left" dangerouslySetInnerHTML={{__html:message}} />
         ): (
-            <div key={key_value} className="text-right">{message}</div>
+            <div key={key_value} className="text-right" dangerouslySetInnerHTML={{__html:message}} />
        );
 };
 
@@ -263,7 +263,10 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
             const radio_message : ChatboxRadio = {elements_id_array:components_id, texts_array:texts_array,titles:titles,key_value:radioIndex,type:'radio',addMessage}
             return radio_message;
         } else{
-            const text_message : ChatboxText= {message:newMessage,isBot:true,key_value:(index != undefined ? index : 0),type:'text'}
+            let processed_message = newMessage
+            processed_message = processed_message.replace(/\[br\]/g,"<br>")
+            processed_message = processed_message.replace(/\[tab\]/g,"&ensp;")
+            const text_message : ChatboxText= {message:processed_message,isBot:true,key_value:(index != undefined ? index : 0),type:'text'}
             return text_message;
         }
     }
