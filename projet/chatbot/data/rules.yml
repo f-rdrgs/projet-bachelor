@@ -7,6 +7,12 @@ rules:
     - intent: salutation
     - action: utter_que_faire
 
+- rule: Activer messages de debug
+  steps:
+    - intent: debug
+    - action: action_activate_debug_mode
+
+
 - rule: recommencer
   steps:
     - intent: stop

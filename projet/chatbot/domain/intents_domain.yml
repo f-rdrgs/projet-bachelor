@@ -33,3 +33,4 @@ intents:
   - choose_options:
       use_entities:
         - nombre
+  - debug

@@ -38,9 +38,26 @@ async function query_rasa(message:string,uuid:string) : Promise<string[]> {
     if(response.ok){
       const content : { [x: string]: string; }[] = await response.json();
       if(content.length> 0){
-        return content.map((content,_)=> {
-          return content["text"];
-        })
+        const processed_messages = await Promise.all(
+          content.map(async (content) => {
+            if (content["text"].startsWith("[FILE]")) {
+              const response = await fetch(
+                `http://localhost:5500/get-ics-file/${content["text"].replace("[FILE]", "")}`,
+                {
+                  method: "GET",
+                }
+              );
+              console.log(content)
+              const resp_json: { [file_base64: string]: string } = await response.json()
+              const base64Str = resp_json["file_base64"].slice(8,-1)
+              // const decodedStr = Buffer.from(base64Str,'base64').toString('utf-8')
+              return "[FILE]"+base64Str;
+            } else {
+              return content["text"];
+            }
+          })
+        );
+        return processed_messages;
       }else return [];
       
     }
@@ -59,6 +76,8 @@ io.on("connection", (socket: Socket) => {
   console.log(`a user with id \"${socket.id}\" connected`);
   socket.on('chat',async (message:string,uuid:string) => {
     const rasa_messages :string[]  = await query_rasa(message,uuid);
+    // const rasa_messages: string[] = await get_file()
+    // console.log(rasa_messages)
     // const rasa_messages : string[] = ["[OPTION][0][TITLE][Avec ou sans couverts ?][OPTIONS][(Avec,1)(Sans,2)(Je sais pas,3)][OPTION][1][TITLE][Avec ou sans chaussures ?][OPTIONS][(Avec,1)(Sans,2)(Je sais pas,3)]"];
     socket.emit("chat", rasa_messages);
     console.log(uuid + ": "+ message)

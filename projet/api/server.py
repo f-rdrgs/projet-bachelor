@@ -1,3 +1,4 @@
+import base64
 import datetime
 import time
 from typing import Any, List
@@ -403,7 +404,7 @@ async def add_reservation(data:Reservation_API):
             uuid_file = create_ical_event(f"Réservation de {output_reserv_ressource['ressource']}",output_reserv['numero_tel'],output_reserv['prenom'],output_reserv['nom'],f"Une réservation de {output_reserv_ressource['ressource']}{choix_text}",heure_start_print,heure_fin_print)
             return JSONResponse(content={
                     "message":"Réservation ajoutée",
-                    "data":{"lien_reservation_google":lien_google_cal,"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res),"uuid_ical":uuid_file}
+                    "data":{"lien_reservation_google":"[LINK]["+lien_google_cal+"]","reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res),"uuid_ical":uuid_file}
                 },status_code=status.HTTP_200_OK)
         except Exception as e:
             print(e)
@@ -658,7 +659,23 @@ async def talk_to_rasa(data:Communicate_Rasa):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la communication avec Rasa: {str(e)}")
 
 
+@app.get("/get-ics-file/{ics_name}")
+async def get_ics_file(ics_name:str):
+    if ics_name:
+        if os.path.exists(f'./tmp/{ics_name}.ics'):
+            try:
+                with open(f'./tmp/{ics_name}.ics','rb') as file:
+                    encoded_ics = base64.b64encode(file.read())
+                    os.remove(f'./tmp/{ics_name}.ics')
+                    return JSONResponse(content=jsonable_encoder({"file_base64":"[FILE]"+str(encoded_ics)},),status_code=status.HTTP_200_OK)
+            except Exception as e:
+                print(e)
+                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Erreur lors de la génération du fichier ics pour l\'événement': {str(e)}")
+        else:
+            print("No file found")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Erreur lors de la génération du fichier ics pour l\'événement': Aucun fichier ne correspond au nom fournit")
 
+    raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Erreur lors de la génération du fichier ics pour l\'événement'")
 
 if __name__ == "__main__":
     # asyncio.create_task()

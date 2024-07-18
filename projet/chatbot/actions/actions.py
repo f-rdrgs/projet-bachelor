@@ -51,6 +51,19 @@ def get_ressource_list()->list[str]:
 
     return []
 
+
+@staticmethod
+def print_debug(data:any, tracker:Tracker):
+    debug = bool(tracker.get_slot("debug"))
+    if(debug):
+        print(data)
+
+@staticmethod
+def utter_debug(data:str,tracker:Tracker, dispatcher:CollectingDispatcher):
+    debug = bool(tracker.get_slot("debug"))
+    if(debug):
+        dispatcher.utter_message(data)
+
 @staticmethod
 def add_temp_reservation(ressource:str, date_reserv:datetime.date,heure_reserv:datetime.time):
     try:
@@ -156,7 +169,7 @@ class RestartConvo(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message("Pas de soucis")
+        utter_debug("Pas de soucis",tracker,dispatcher)
         return [Restarted(),FollowupAction("utter_que_faire")]
 
 class ActionSaveRessource(Action):
@@ -238,59 +251,62 @@ class ValidateGetOptionsReservForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         options_choix :str = tracker.latest_message.get('text')
-        nombres = [int(nb) for nb in options_choix.split()]
-        dispatcher.utter_message(f"nombres: {str(nombres)}")
+       
         ressource = tracker.get_slot("ressource")
         option_count = tracker.get_slot("option_count")
-        choix_option = tracker.get_slot("choix_option")
-        choix_option = nombres[0]
         options_list = tracker.get_slot("options_ressource")
         options_list = [str(opt) for opt in options_list]
         options = get_options(ressource)
-        dispatcher.utter_message(f"List choix: {str(options_list)}")
+        utter_debug(f"List choix: {str(options_list)}",tracker,dispatcher)
         print(f"List choix: {str(options_list)}")
-        print(f"Nombres: {str(nombres)}")
         if tracker.latest_message.get("intent")["name"] == "stop":
             return {}
         if option_count is None:
             return {"choix_option":None}
         option_count = int(option_count)
         
-        if options.keys().__len__()>0 and option_count >=0 and option_count < options.keys().__len__() and nombres.__len__() > 0 and nombres.__len__() + option_count <= options.keys().__len__():
-            lst_opt = []
-            final_numbers = []
-            remove_if_present = lambda val : val in options_list
-            for opt in options.items():
-                lst_opt +=(list(opt[1][1].keys()) )
-            lst_opt_filtered = list(filter(remove_if_present,lst_opt))
-            print(f"lst filtered: {lst_opt_filtered}")
-            for choix_nb in nombres:
-                if str(choix_nb) not in lst_opt_filtered:
-                    print("IN")
-                    options_list.append(str(choix_nb))
-                    final_numbers.append(str(choix_nb))
+        if options.keys().__len__()>0 and option_count >=0 and option_count < options.keys().__len__():
+            nombres = [int(nb) for nb in options_choix.split()]
+            utter_debug(f"nombres: {str(nombres)}",tracker,dispatcher)
+            print(f"Nombres: {str(nombres)}")
+            if nombres.__len__() > 0 and nombres.__len__() + option_count <= options.keys().__len__(): 
+                lst_opt = []
+                final_numbers = []
+                remove_if_present = lambda val : val in options_list
+                for opt in options.items():
+                    lst_opt +=(list(opt[1][1].keys()) )
+                lst_opt_filtered = list(filter(remove_if_present,lst_opt))
+                print(f"lst filtered: {lst_opt_filtered}")
+                for choix_nb in nombres:
+                    if str(choix_nb) not in lst_opt_filtered:
+                        print("IN")
+                        options_list.append(str(choix_nb))
+                        final_numbers.append(str(choix_nb))
 
-            if option_count+final_numbers.__len__() < options.keys().__len__():
-                print(f"LIST : {options_list}")
-                return {"choix_option":None,"option_count":float(option_count+final_numbers.__len__()),"options_ressource":options_list}
+                if option_count+final_numbers.__len__() < options.keys().__len__():
+                    print(f"LIST : {options_list}")
+                    return {"choix_option":None,"option_count":float(option_count+final_numbers.__len__()),"options_ressource":options_list}
+                else:
+                    print(f"LIST : {options_list}")
+                    return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
+
+
+                # print(f"{int(choix_option)} in {range(0,options.keys().__len__())} {int(choix_option) in range(0,options.keys().__len__()+1)}")
+                # if int(choix_option) in range(0,list(options.items())[option_count][1][1].keys().__len__()+1):
+                #     # list(list(dico.items())[option_count][1][1].items())[2-1][0]
+                #     options_list.append(int(list(list(options.items())[option_count][1][1].items())[int(choix_option)-1][0]))
+                #     if option_count+1 < options.keys().__len__():
+                #         print(f"LIST : {options_list}")
+                #         return {"choix_option":None,"option_count":float(option_count+1),"options_ressource":options_list}
+                #     else:
+                #         print(f"LIST : {options_list}")
+                #         return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
+                # else:
+                #     dispatcher.utter_message("Choix invalide")
+                #     return {"choix_option":None}
             else:
-                print(f"LIST : {options_list}")
-                return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
-
-
-            # print(f"{int(choix_option)} in {range(0,options.keys().__len__())} {int(choix_option) in range(0,options.keys().__len__()+1)}")
-            # if int(choix_option) in range(0,list(options.items())[option_count][1][1].keys().__len__()+1):
-            #     # list(list(dico.items())[option_count][1][1].items())[2-1][0]
-            #     options_list.append(int(list(list(options.items())[option_count][1][1].items())[int(choix_option)-1][0]))
-            #     if option_count+1 < options.keys().__len__():
-            #         print(f"LIST : {options_list}")
-            #         return {"choix_option":None,"option_count":float(option_count+1),"options_ressource":options_list}
-            #     else:
-            #         print(f"LIST : {options_list}")
-            #         return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
-            # else:
-            #     dispatcher.utter_message("Choix invalide")
-            #     return {"choix_option":None}
+                dispatcher.utter_message("Veuillez fournir une/des option(s)")
+                return {"choix_options":None}
         else:
             dispatcher.utter_message("Pas d'options")
             return {"choix_option":0.0}
@@ -433,15 +449,91 @@ class ActionPreDefineRessourceSlot(Action):
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
         pre_ressource = tracker.get_slot("ressource_prereserv")
+        pre_date = tracker.get_slot("date_prereserv")
+        pre_heure = tracker.get_slot("heure_prereserv")
+        ressource = None
+        final_return = []
         if pre_ressource is not None:
             pre_ressource_processed = str(pre_ressource).lower()
             if pre_ressource_processed not in get_ressource_list():
                 dispatcher.utter_message(f"La ressource {pre_ressource_processed} n'est pas disponible")
-                return [SlotSet("ressource_prereserv",None)]
+                final_return.append(SlotSet("ressource_prereserv",None))
             else:
-                dispatcher.utter_message(f"Préselection de {pre_ressource_processed}")
-                return [SlotSet("ressource",pre_ressource_processed)]
-        return []
+                ressource = pre_ressource_processed
+                utter_debug(f"Préselection de {pre_ressource_processed}",tracker,dispatcher)
+                final_return.append(SlotSet("ressource",pre_ressource_processed))
+        utter_debug(f"{pre_ressource} {pre_heure} {pre_date}",tracker,dispatcher)
+        date = None
+        heure = None
+        if pre_date is not None:
+            pre_date = str(pre_date)
+            data = {
+            "locale":"fr_FR",
+            "text":pre_date
+            }
+            # Récupère date parsé par Duckling
+            res = requests.post("http://duckling:8000/parse",data=data)
+            res_json = res.json()
+            if res.status_code == 200:
+                grain = "day"
+                dim_time_index = -1
+                for index in range(len(res_json)):
+                    if res_json[index]["dim"] == "time" and dim_time_index == -1:
+                        dim_time_index = index
+                        grain = res_json[index]["value"]["grain"]
+                if grain == "day":
+                    date = str(res_json[index]["value"]["value"])
+
+        if pre_heure is not None:
+            pre_heure = str(pre_heure)
+            data = {
+            "locale":"fr_FR",
+            "text":pre_heure
+            }
+            # Récupère date parsé par Duckling
+            res = requests.post("http://duckling:8000/parse",data=data)
+            res_json = res.json()
+            if res.status_code == 200:
+                grain = "minute"
+                dim_time_index = -1
+                for index in range(len(res_json)):
+                    if res_json[index]["dim"] == "time" and dim_time_index == -1:
+                        dim_time_index = index
+                        grain = res_json[index]["value"]["grain"]
+                if grain == "minute" or grain == "hour":
+                    heure = str(res_json[index]["value"]["value"])
+
+
+
+        if heure is not None and ressource is not None:
+            heure_datetime = datetime.datetime.fromisoformat(heure)
+            result_query_heures = get_heures_semaine(ressource)
+            list_heures_dispo : dict[int,dict[str,list[datetime.time]]] = result_query_heures["heures_dispo"]
+
+            found_heure_in_horaire = False
+            for day in list_heures_dispo.keys():
+                if str(heure_datetime.time()) in list_heures_dispo[day] and not found_heure_in_horaire:
+                    found_heure_in_horaire = True
+            if found_heure_in_horaire:
+                dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
+                final_return.append(SlotSet("heure",pre_heure))
+            else:
+                dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
+                final_return.append(SlotSet("heure_prereserv",None))
+        elif date is not None and ressource is not None:
+            dates_dispo = get_jours_disponibles(ressource,30,None)
+            date_datetime = datetime.datetime.fromisoformat(date).date()
+            if(date_datetime in dates_dispo):
+               final_return.append(SlotSet('date',pre_date))
+            else:
+                dispatcher.utter_message(f"La date du {date_datetime.day}/{date_datetime.month}/{date_datetime.year} n'est pas disponible. Veuillez choisir une autre date")
+                final_return.append(SlotSet("date_prereserv",None))
+        else:
+            final_return.append(SlotSet("date_prereserv",None))
+            final_return.append(SlotSet("heure_prereserv",None))
+        utter_debug(str(final_return),tracker,dispatcher)
+        return final_return
+
 
 class ActionResetValidation(Action):
     def name(self)->Text:
@@ -474,10 +566,11 @@ class ValidateHeuresForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         date = slot_value
         heure = tracker.get_slot("heure")
+        predate = tracker.get_slot("date_prereserv")
         ressource = str(tracker.get_slot("ressource"))
         data = {
             "locale":"fr_FR",
-            "text":date
+            "text":date 
         }
 
         if  slot_value is not None:
@@ -504,8 +597,13 @@ class ValidateHeuresForm(FormValidationAction):
                         date_duckling = res_json[index]["value"]["value"]
                         date_datetime = datetime.datetime.fromisoformat(date_duckling).date()
                         if(date_datetime in dates_dispo):
-                            dispatcher.utter_message(f"Sélection de la date du {date_datetime.day}/{date_datetime.month}/{date_datetime.year}.")
-                            return {"date": date_duckling}
+                            if heure is not None:
+                                add_temp_reservation(ressource,heure,date)
+                                dispatcher.utter_message(f"Sélection de la date du {date_datetime.day}/{date_datetime.month}/{date_datetime.year}.")
+
+                            else:
+                                dispatcher.utter_message(f"Sélection de la date du {date_datetime.day}/{date_datetime.month}/{date_datetime.year}.")
+                            return {"date": date_duckling,"date_prereserv":None}
                         else:
                             dispatcher.utter_message(f"La date du {date_datetime.day}/{date_datetime.month}/{date_datetime.year} n'est pas disponible. Veuillez choisir une autre date")
                     else:
@@ -516,10 +614,10 @@ class ValidateHeuresForm(FormValidationAction):
             
 
         
-            return {"date":None}
+            return {"date":None,"date_prereserv":None}
         else:
             dispatcher.utter_message("Veuillez spécifier une date")
-            return {"date":tracker.get_slot("date")}
+            return {"date":tracker.get_slot("date"),"date_prereserv":None}
 
     def validate_heure(
         self,
@@ -531,12 +629,14 @@ class ValidateHeuresForm(FormValidationAction):
         heure = slot_value
         ressource = str(tracker.get_slot("ressource"))
         date = tracker.get_slot("date")
-        
+        preheure = tracker.get_slot("heure_prereserv")
+        # Matin ajouté car duckling ne parse pas souvent correctement 09h, 07h, etc (heures du matinstop)
         data = {
             "locale":"fr_FR",
-            "text":heure
+            "text":heure+ " matin"
         }
         
+
         if slot_value is not None:
             heure = str(heure)
             # Récupération de l'heure parsée par duckling
@@ -562,7 +662,9 @@ class ValidateHeuresForm(FormValidationAction):
                             # S'assure que l'heure choisie est disponible à la réservation
                             if heure_datetime.time() in heures_dispo :
                                 dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
-                                return {"heure": heure_duckling,"accept_deny":None}
+                                # return {"heure": heure_duckling,"accept_deny":None}
+                                add_temp_reservation(ressource,heure_duckling,date)
+                                return {"heure":heure_duckling,"heure_prereserv":None}
                             else:
                                 dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
                         else:
@@ -578,23 +680,34 @@ class ValidateHeuresForm(FormValidationAction):
                                     found_heure_in_horaire = True
                             if found_heure_in_horaire:
                                 dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
-                                return {"heure": heure_duckling,"accept_deny":None}
+                                return {"heure": heure_duckling,"accept_deny":None,"heure_prereserv":None}
                             else:
                                 dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
+                                message_utter = ""
+                                curr_day = -1
                                 for day in dict_horaires_jour.keys():
-                                    for horaire in result_query_heures["horaires"][day]["horaires"]:
-                                        dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {result_query_heures['horaires'][day]['decoupage']}")
+                                                for horaire_jour in dict_horaires_jour[day]:
+                                                    message_utter +=f"[br][br]{Day_week(int(day)).name.capitalize()}[br]" if curr_day != Day_week(int(day)) else ""
+                                                    curr_day = Day_week(int(day))
+                                                    for horaire in horaire_jour['horaires']:
+                                                        message_utter += f"[br][tab]- {horaire[0]} à {horaire[1]} (intervalles de {horaire_jour['decoupage']})"
+                                # for day in dict_horaires_jour.keys():
+                                #     for horaire in result_query_heures["horaires"][day]["horaires"]:
+                                #         dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {result_query_heures['horaires'][day]['decoupage']}")
+                                        
 
                     else:
                         dispatcher.utter_message(text=f"2. Pouvez-vous répéter l'heure d'une autre manière ?")
                 else:
                     dispatcher.utter_message(text=f"Pouvez-vous répéter l'heure d'une autre manière ?")
         
-            return {"heure":None}
+            return {"heure":None,"heure_prereserv":None}
         else:
             dispatcher.utter_message("Veuillez spécifier une heure")
-            return {"heure":tracker.get_slot("heure")}
+            return {"heure":tracker.get_slot("heure"),"heure_prereserv":None}
     
+
+
     def validate_accept_deny(
         self,
         slot_value: Any,
@@ -631,7 +744,7 @@ class AskForChoixOptionAction(Action):
         option_count = tracker.get_slot("option_count")
         options_list = tracker.get_slot("options_ressource")
         options_list = [str(opt) for opt in options_list]
-        dispatcher.utter_message(f"options_list: {str(options_list)} opt count: {option_count}")
+        utter_debug(f"options_list: {str(options_list)} opt count: {option_count}",tracker,dispatcher)
         if ressource is not None and option_count is not None:
             options = get_options(ressource)
             if option_count < options.keys().__len__():
@@ -650,7 +763,7 @@ class AskForChoixOptionAction(Action):
                 for arr in options_flat_list:
                     if not are_any_elems_common(options_list,arr):
                         new_options+=arr
-                dispatcher.utter_message(f"new opts: {str(new_options)}")
+                utter_debug(f"new opts: {str(new_options)}",tracker,dispatcher)
                 for i,option in enumerate(options.keys()):
                         
                         if are_all_arrays_common(list(options[option][1].keys()),new_options):
@@ -712,16 +825,17 @@ class AskForDateAction(Action):
     ) -> List[EventType]:
         heure = tracker.get_slot("heure")
         date = tracker.get_slot("date")
-        dispatcher.utter_message(f"Heure {heure} date {date}")
+        utter_debug(f"Heure {heure} date {date}",tracker,dispatcher)
         if heure is not None:
-            response_mess = f"Les dates disponibles à la réservation pour {str(heure)} sont :"
+            response_mess = f"Les dates disponibles à la réservation pour {str(datetime.datetime.strptime(datetime.datetime.fromisoformat(heure).time().__str__(),'%H:%M:%S').strftime('%Hh%M'))} sont :"
             ressource = tracker.get_slot("ressource")
             dates_for_ressource = get_jours_disponibles(ressource,30,datetime.datetime.fromisoformat(str(heure)).time())
             # dispatcher.utter_message(dates_for_ressource)
             prev_month = 0
+            message_utter = ""
             for index,date in enumerate(dates_for_ressource):
-                message_utter += f"[br]{str(date.month)}/{str(date.year)}[br]" if prev_month != date.month else ""
-                message_utter += f"[br][tab]{'-' if index == 0 or prev_month != date.month else ''} {str(date.day)}{' ' if index<dates_for_ressource.__len__()-1 else ''}"
+                response_mess += f"[br][br]{str(date.month)}/{str(date.year)}[br][br]" if prev_month != date.month else ""
+                response_mess += f"[tab]{'- ' if index == 0 or prev_month != date.month else ''}{str(date.day)}{', ' if index<dates_for_ressource.__len__()-1 else ''}"
                 prev_month = date.month
             dispatcher.utter_message(text=response_mess)
             dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
@@ -746,9 +860,10 @@ class AskForDateAction(Action):
             dates_for_ressource = get_jours_disponibles(ressource,30,None)
             # dispatcher.utter_message(dates_for_ressource)
             prev_month = 0
+            
             for index,date in enumerate(dates_for_ressource):
-                message_utter += f"[br][br]{str(date.month)}/{str(date.year)}[br]" if prev_month != date.month else ""
-                message_utter += f"{'[br][tab]-' if index == 0 or prev_month != date.month else ''} {str(date.day)}{ ', '}{' ' if index<dates_for_ressource.__len__()-1 else ''}"
+                message_utter += f"[br][br]{str(date.month)}/{str(date.year)}[br][br]" if prev_month != date.month else ""
+                message_utter += f"[tab]{'- ' if index == 0 or prev_month != date.month else ''}{str(date.day)}{', ' if index<dates_for_ressource.__len__()-1 else ''}"
                 prev_month = date.month
 
 
@@ -771,3 +886,11 @@ class AskForDateAction(Action):
             dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
             
             return []
+        
+class ActionActivateDebugMode(Action):
+    def name(self) -> str:
+        return "action_activate_debug_mode"
+
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        dispatcher.utter_message("Mode Debug activé")
+        return [SlotSet("debug", True)]

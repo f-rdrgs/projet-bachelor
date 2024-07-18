@@ -6,6 +6,12 @@ stories:
       - intent: salutation
       - action: utter_que_faire
 
+  - story: stop_convo
+    steps:
+    - intent: stop
+    - action: restart_convo
+
+
   - story: goodbye
     steps:
       - intent: goodbye
@@ -21,8 +27,8 @@ stories:
       - active_loop: get_ressource_form
       - slot_was_set:
         - ressource: Basket
-      - slot_was_set:
-        - accept_deny: true
+    #   - slot_was_set:
+    #     - accept_deny: true
       - slot_was_set:
           - requested_slot: null
       - active_loop: null
@@ -47,8 +53,8 @@ stories:
           - date: "20/05/2024"
       - slot_was_set:
           - heure: "12h23"
-      - slot_was_set:
-          - accept_deny: true
+    #   - slot_was_set:
+    #       - accept_deny: true
       - slot_was_set:
           - requested_slot: null
       - active_loop: null
@@ -60,8 +66,8 @@ stories:
       - active_loop: get_info_reserv_form
       - slot_was_set:
           - nom_prenom: "Tarkovsky Andrei"
-      - slot_was_set:
-          - accept_deny: true
+    #   - slot_was_set:
+    #       - accept_deny: true
       - slot_was_set:
           - requested_slot: null
       - active_loop: null

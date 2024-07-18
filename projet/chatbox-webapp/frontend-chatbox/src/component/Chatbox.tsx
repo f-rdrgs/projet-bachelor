@@ -43,6 +43,12 @@ interface ChatboxText extends ChatboxMessage{
     type:'text'
 }
 
+interface ChatboxDownloadLink extends ChatboxMessage{
+    title:string,
+    type:'dl-link',
+    href:string
+}
+
 interface ChatboxMessageCont{
     chatList:ChatboxMessage[],
     addMessage: (message:string, index?:number) =>void
@@ -68,6 +74,12 @@ const Chatbox_text:FC<ChatboxText> = ({message,isBot,key_value}) => {
             <div key={key_value} className="text-right" dangerouslySetInnerHTML={{__html:message}} />
        );
 };
+
+const Chatbox_dl_link:FC<ChatboxDownloadLink> = ({href,key_value,title}) => {
+    return (
+        <a key={key_value} href={href} download={"Event.ics"}>{title}</a>
+    )
+}
 
 
 const Radio_container : FC<ChatboxRadio> = ({titles,elements_id_array,texts_array,key_value,addMessage}) => {
@@ -136,7 +148,11 @@ const Chatbox_message_container: FC<ChatboxMessageCont> = ({chatList,addMessage}
             if(message.type === 'text'){
                 const message_text :ChatboxText = (message as ChatboxText);
                 return <Chatbox_text key={index} key_value={index} isBot={message_text.isBot} message={message_text.message} type="text"/>
-            } else if (message.type === 'radio'){
+            } else if (message.type === 'dl-link'){
+                const dl_link : ChatboxDownloadLink = (message as ChatboxDownloadLink)
+                return <Chatbox_dl_link href={dl_link.href} key_value={dl_link.key_value} title={dl_link.title} type="dl-link" key={index}/>
+            }     
+            else if (message.type === 'radio'){
                 const message_radio :ChatboxRadio = (message as ChatboxRadio);
                 return <Radio_container addMessage={addMessage} elements_id_array={message_radio.elements_id_array} texts_array={message_radio.texts_array} titles={message_radio.titles}  type="radio" key_value={message.key_value} key={index}/>
             }else{
@@ -190,7 +206,7 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
             return match ? match : null;
         }
 
-
+//`data:text/calendar;base64,${base64File}`;
         if(newMessage.startsWith("[OPTION]")) {
             const options = newMessage.split('[OPTION]').filter((message,index) => message.length>0)
             // Parser le message radio bouton et créer les éléments nécessaires, possiblement changer le retour de fonction en array de ChatboxMessages vu qu'il peut y avoir une multitude de radio boutons
@@ -262,7 +278,13 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
             
             const radio_message : ChatboxRadio = {elements_id_array:components_id, texts_array:texts_array,titles:titles,key_value:radioIndex,type:'radio',addMessage}
             return radio_message;
-        } else{
+        } else if(newMessage.startsWith("[FILE]")){
+            let removed_pref = newMessage.replace("[FILE]","") 
+            // atob(removed_pref)
+            const dl_link : ChatboxDownloadLink = {href:`data:text/calendar;base64,${removed_pref}`,key_value:(index != undefined ? index : 0),type:"dl-link",title:"Lien vers événement de calendrier"}
+            return dl_link
+        } 
+        else{
             let processed_message = newMessage
             processed_message = processed_message.replace(/\[br\]/g,"<br>")
             processed_message = processed_message.replace(/\[tab\]/g,"&ensp;")

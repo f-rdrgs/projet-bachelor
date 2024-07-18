@@ -17,3 +17,4 @@ actions:
   - predefine_ressource
   - annuler_date_heure
   - list_list_options
+  - action_activate_debug_mode
