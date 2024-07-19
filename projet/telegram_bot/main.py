@@ -1,4 +1,6 @@
+import base64
 import os
+import re
 import dotenv
 
 from telegram import Update
@@ -20,7 +22,7 @@ async def get_base64_document(uuid_file:str):
 async def handle_message(update:Update, context:ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     id_user = update.message.chat.id
-    headers = {"Content-Type": "application/json"}
+    # headers = {"Content-Type": "application/json"}
     data = {
         "message":text,
         "sender": str(id_user)
@@ -36,20 +38,50 @@ async def handle_message(update:Update, context:ContextTypes.DEFAULT_TYPE):
     print(f"Rasa response: {response_json}")
     file = [elem["text"] for elem in response_json if elem["text"].startswith("[FILE]")]
     file_ics = ""
-    if file:
-        file_ics = f"{file[0].removeprefix('[FILE]')}.ics"
-    
     if len(response_json) > 0:
-        response_array = [resp["text"] for resp in response_json if not resp["text"].startswith("[FILE]")]
+        response_array = [str(resp["text"]).replace('[br]','\n').replace('[tab]','  ') for resp in response_json if not resp["text"].startswith("[FILE]")]
     
+
+    # [OPTION][0][TITLE][option1][OPTIONS][(Un choix 1,1)(Un choix 2,2)(Un choix 3,3)][OPTION][1][TITLE][option2][OPTIONS][(Un choix 1,4)(Un choix 2,5)(Un choix 3,6)]
     for resp in response_array:
+        if resp.startswith("[OPTION]"):
+            options = resp.split("[OPTION]")[1:]
+            regex_title = "\[TITLE\]\[(.*?)\]"
+            regex_index = "^\[(.*?)\]"
+            regex_options = "\[OPTIONS]\[(.*?)\]"
+            regex_single_opt = "\((.*?)\,"
+            titles = [re.search(regex_title,option).group(1) for option in options]
+            options_choice = [re.search(regex_options,option)[1] for option in options]
+            single_options = [re.findall(regex_single_opt,option) for option in options_choice]
+            resp = ""
+            for index, title in enumerate(titles):
+                resp+=f"{title}:\n"
+                for ind_opt, opt in enumerate(single_options[index]):
+                    resp+=f"\n\t{ind_opt+1}. {opt}"
+                resp+="\n\n"
+            
         await update.message.reply_text(resp)
-    if file_ics:
-        if os.path.exists(f'./tmp/{file_ics}'):
-            await update.message.reply_document(caption="Fichier ICS de l'événement",document=open(f'./tmp/{file_ics}','rb'))
-            os.remove(f'./tmp/{file_ics}')
-        else:
-            await update.message.reply_text('Erreur lors de la génération du fichier ics pour l\'événement')
+    if file:
+        file_ics = f"{file[0].removeprefix('[FILE]')}"
+    
+        
+        response = requests.get(f"http://api:5500/get-ics-file/{file_ics}")
+        response.raise_for_status()
+        response_json = response.json()
+        if response.status_code == 200:
+            try:
+                b64File = str(response_json["file_base64"])[8:-1]
+                print(f"FILE: {b64File}")
+                binary_file = base64.b64decode(b64File)
+                print(binary_file)
+                with open(file=f'./tmp/{file_ics}.ics',mode='wb') as f:
+                    f.write(binary_file)
+                await update.message.reply_document(caption="Fichier ICS de l'événement",document=open(f'./tmp/{file_ics}.ics','rb')) 
+                if os.path.exists(f'./tmp/{file_ics}.ics'):
+                    os.remove(f'./tmp/{file_ics}.ics')   
+            except Exception as e:
+                print(f"Error while generating ICS: {e}")
+                await update.message.reply_text('Erreur lors de la génération du fichier ics pour l\'événement')
 
 
 

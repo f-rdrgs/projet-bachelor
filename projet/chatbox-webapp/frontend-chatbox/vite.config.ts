@@ -8,7 +8,7 @@ export default defineConfig({
     port:4000,
     host: true,
      headers:{
-      'Access-Control-Allow-Origin': ':3000',
+      'Access-Control-Allow-Origin': `:3000`,
       'Access-Control-Allow-Headers': '*',
       'Access-Control-Allow-Credentials': true,
      },

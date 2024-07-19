@@ -52,8 +52,6 @@ services:
       file: ./telegram_bot/telegram-docker-compose.yml
       service: telegram
       env_file: ./telegram_bot/.env
-    volumes:
-      - ics_volume:/app/tmp
 
 volumes:
   chatbot_volume:
@@ -62,12 +60,6 @@ volumes:
     driver: local
     driver_opts:
       device: "./chatbot"
-      o: bind
-      type: none
-  ics_volume:
-    driver: local
-    driver_opts:
-      device: "./api/tmp"
       o: bind
       type: none
   db_data:

@@ -2,7 +2,7 @@ version: "3.1"
 
 responses:
   utter_ressource:
-  - text: "Fin Form, La ressource : {ressource}"
+  - text: "Ressource sélectionnée : {ressource}"
   utter_nom_prenom:
   - text: "Vous vous appelez {nom_prenom}"
   utter_confirm_ressource:

@@ -254,10 +254,10 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
                     {
                         const new_matched_opts = matched_opts.map((elem,_) => { return elem.replace('(',"").replace(')',"")}).map((elem,_) => elem.split(','))
                         // console.log(new_matched_opts)
-                        new_matched_opts.forEach((elems,_) => {
+                        new_matched_opts.forEach((elems,indx) => {
                             // console.log("ELEMS: "+elems)
                             components_id[radio_index] = [...components_id[radio_index],elems[1]]
-                            texts_array[radio_index] = [...texts_array[radio_index],elems[0]]
+                            texts_array[radio_index] = [...texts_array[radio_index],`${indx+1}. `+elems[0]]
                         })
                     }
                 }

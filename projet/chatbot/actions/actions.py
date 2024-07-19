@@ -236,7 +236,9 @@ class UtterListOptions(Action):
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         list_options = tracker.get_slot("options_ressource")
         if list_options is not None or str(list_options) != "None":
-            dispatcher.utter_message(str(list_options))
+            lst_opts : list[str] = list_options
+            if lst_opts.__len__() > 0:
+                dispatcher.utter_message(str(list_options))
         return []
 
 class ValidateGetOptionsReservForm(FormValidationAction):
@@ -251,7 +253,6 @@ class ValidateGetOptionsReservForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         options_choix :str = tracker.latest_message.get('text')
-       
         ressource = tracker.get_slot("ressource")
         option_count = tracker.get_slot("option_count")
         options_list = tracker.get_slot("options_ressource")

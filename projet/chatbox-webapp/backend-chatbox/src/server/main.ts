@@ -1,14 +1,14 @@
 import express from "express";
 import { Server, Socket } from "socket.io";
 import cors from "cors";
-
+require('dotenv').config()
 // https://dev.to/novu/building-a-chat-app-with-socketio-and-react-2edj
 
 // https://socket.io/get-started/chat/
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 const io =  new Server(server, {
   cors: {
@@ -25,7 +25,7 @@ app.use(cors({origin:["*"]}));
 async function query_rasa(message:string,uuid:string) : Promise<string[]> {
 
   try {
-    const response = await fetch("http://localhost:5500/communicate-rasa",{
+    const response = await fetch(`${process.env.API_IP}/communicate-rasa`,{
       body: JSON.stringify({
         "message":message,
         "sender":uuid
@@ -42,7 +42,7 @@ async function query_rasa(message:string,uuid:string) : Promise<string[]> {
           content.map(async (content) => {
             if (content["text"].startsWith("[FILE]")) {
               const response = await fetch(
-                `http://localhost:5500/get-ics-file/${content["text"].replace("[FILE]", "")}`,
+                `${process.env.API_IP}/get-ics-file/${content["text"].replace("[FILE]", "")}`,
                 {
                   method: "GET",
                 }
