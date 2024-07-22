@@ -2,6 +2,8 @@
   margin: 0 auto;
   padding: 0 auto;
   text-align: center;
+  width: 100%;
+  max-width: 100%;
 }
 
 .logo {
@@ -29,6 +31,15 @@
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
+  }
+}
+
+@media (min-width: 1025px) {
+  #root{
+    width: 100%;
+    margin: auto;
+    max-width: 50%;
+    height: 99%;
   }
 }
 

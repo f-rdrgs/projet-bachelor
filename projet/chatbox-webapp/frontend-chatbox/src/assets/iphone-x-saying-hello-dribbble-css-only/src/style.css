@@ -115,6 +115,7 @@ body {
 	border: solid 0.2em #121415;
 	position: relative;
 	z-index: 10;
+	width: 99.4%;
 	max-width: 99.4%;
 }
 .iphonex .front__line{
@@ -260,8 +261,9 @@ body {
 		font-size: 70%;
 	}
 	.iphonex {
-		/* width: 45%; */
-		width: 45vw;
+		width: 100%;
+		max-width: 100%;
+		/* width: 45vw; */
 		height: 100%;
 		margin: auto;
 	}

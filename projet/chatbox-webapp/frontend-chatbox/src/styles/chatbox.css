@@ -56,7 +56,7 @@ div.text-right,div.text-left{
 div.textbox-input textarea {
     width: 80%;
     border: 1px solid;
-    font-size: 2.5em;
+    font-size: 1.5rem;
     text-justify: auto;
     border-bottom-left-radius:  0.8em;
 }

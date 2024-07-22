@@ -516,7 +516,7 @@ class ActionPreDefineRessourceSlot(Action):
                 if str(heure_datetime.time()) in list_heures_dispo[day] and not found_heure_in_horaire:
                     found_heure_in_horaire = True
             if found_heure_in_horaire:
-                dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
+                # dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
                 final_return.append(SlotSet("heure",pre_heure))
             else:
                 dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
