@@ -9,6 +9,7 @@ import {v4 as uuidv4} from "uuid";
 import { SocketContext } from "./Socket";
 import { Component_Radio, Radio_element } from "./Radio_choix";
 import "../assets/iphone-x-saying-hello-dribbble-css-only/src/style.css"
+import { GrDocumentDownload } from "react-icons/gr";
 
 
 interface ChatboxProps {
@@ -53,6 +54,8 @@ interface ChatboxMessageCont{
     chatList:ChatboxMessage[],
     addMessage: (message:string, index?:number) =>void
 }
+
+
 // https://felixgerschau.com/react-typescript-components/
 
 // https://dev.to/wpreble1/typescript-with-react-functional-components-4c69
@@ -77,7 +80,11 @@ const Chatbox_text:FC<ChatboxText> = ({message,isBot,key_value}) => {
 
 const Chatbox_dl_link:FC<ChatboxDownloadLink> = ({href,key_value,title}) => {
     return (
-        <a key={key_value} href={href} download={"Event.ics"}>{title}</a>
+        <div className="text-left download-link">
+            <a key={key_value} href={href} download={"Event.ics"}><GrDocumentDownload size={"6vh"} className="react-document-icon"/></a>
+            <p>{title}</p>
+            
+        </div>
     )
 }
 
@@ -163,11 +170,8 @@ const Chatbox_message_container: FC<ChatboxMessageCont> = ({chatList,addMessage}
         const elem_list: JSX.Element[] = chatList.map((message,index)=>{
             return return_element(message,index)               
             })
-
         return (
-            
             elem_list
-   
         )
     }
 
@@ -201,20 +205,20 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
     // [OPTION][0][TITLE][option1][OPTIONS][(Un choix 1,1)(Un choix 2,2)(Un choix 3,3)][OPTION][1][TITLE][option2][OPTIONS][(Un choix 1,4)(Un choix 2,5)(Un choix 3,6)]
     function process_message(newMessage:string, index ?: number) : ChatboxMessage{
 
-        const parse_array = (text:string) =>  {
-            const match = text.match(/\[([^\]]*)\]/);  
-            return match ? match : null;
-        }
-
 //`data:text/calendar;base64,${base64File}`;
         if(newMessage.startsWith("[OPTION]")) {
             const options = newMessage.split('[OPTION]').filter((message,index) => message.length>0)
             // Parser le message radio bouton et créer les éléments nécessaires, possiblement changer le retour de fonction en array de ChatboxMessages vu qu'il peut y avoir une multitude de radio boutons
             // const ids = options[]
-
+            
             let titles : string[] = [];
             let components_id : string[][] = [];
             let texts_array: string[][] = [];
+            
+            for(let i = 0; i < options.length;i++){
+                texts_array[i] = [];
+                components_id[i] = [];
+            }
             
             const regex_title = /\[TITLE\]\[(.*?)\]/;
             const regex_index = /^\[(.*?)\]/;
@@ -230,14 +234,17 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
                 const match_options = option.match(regex_options);
                 if(match_index !== null)
                     {
-                        radio_index = +match_index[1]
+                        radio_index = index
                         // console.log("INDEX: "+radio_index)
-                        components_id[radio_index] = []
-                        texts_array[radio_index] = []
+                        // components_id[radio_index] = []
+                        // texts_array[radio_index] = []
                         if(match_title !== null)
                         {
                             // console.log(match_title[1]);
                             titles.push(match_title[1]);
+
+                        }else{
+                            titles.push("")
                         }
                             
                     }
@@ -252,24 +259,37 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
                     
                     if (matched_opts !== null)
                     {
+                        console.log("MATCHES OPTIONS!")
                         const new_matched_opts = matched_opts.map((elem,_) => { return elem.replace('(',"").replace(')',"")}).map((elem,_) => elem.split(','))
                         // console.log(new_matched_opts)
                         new_matched_opts.forEach((elems,indx) => {
                             // console.log("ELEMS: "+elems)
-                            components_id[radio_index] = [...components_id[radio_index],elems[1]]
-                            texts_array[radio_index] = [...texts_array[radio_index],`${indx+1}. `+elems[0]]
+                            if(texts_array[radio_index] !== undefined){
+                                texts_array[radio_index] = [...texts_array[radio_index],`${indx+1}. `+elems[0]]
+
+                            }
+                            if(components_id[radio_index] !== undefined){
+                                components_id[radio_index] = [...components_id[radio_index],elems[1]]
+                            }
                         })
+                    }else{
+                        components_id[radioIndex] = []
+                        texts_array[radioIndex] = []
                     }
+                }else{
+                    components_id[radioIndex] = []
+                    texts_array[radioIndex] = []
                 }
 
                 
             })
+            
+            console.log(titles)
+            console.log(components_id)
+            console.log(texts_array)
             // console.log(options.length)
             setRadioIndex((prevIndex)=> prevIndex+options.length);
 
-            // console.log(titles)
-            // console.log(components_id)
-            // console.log(texts_array)
 
             
 
@@ -288,6 +308,11 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
             let processed_message = newMessage
             processed_message = processed_message.replace(/\[br\]/g,"<br>")
             processed_message = processed_message.replace(/\[tab\]/g,"&ensp;")
+            if(processed_message.match("[LINK]")){
+                processed_message = processed_message.replace(/\[LINK]\[/g,"<a href=\"")
+                processed_message = processed_message.replace("]","\">Lien calendrier</a>")
+
+            }
             const text_message : ChatboxText= {message:processed_message,isBot:true,key_value:(index != undefined ? index : 0),type:'text'}
             return text_message;
         }

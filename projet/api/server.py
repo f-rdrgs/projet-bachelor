@@ -593,22 +593,22 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
             # Récupère toutes les pré-réservations
             query_pre_reserv = get_reservations_temporaire_for_dates_for_ressource(ressource_label,[jour_date])
             # Ressort une liste de temps
-            print(query_reservations)
+            # print(query_reservations)
             query_reservations_time = []
             if str(jour_date) in query_reservations.keys():
                 query_reservations_time = [time for time in query_reservations[str(jour_date)]]
-            print(f"Query reserv {query_reservations}")
+            # print(f"Query reserv {query_reservations}")
             if str(jour_date) in query_pre_reserv.keys():
                 query_reservations_time+=query_pre_reserv[str(jour_date)]
-            print(f"Query reserv with pre {query_reservations}")
+            # print(f"Query reserv with pre {query_reservations}")
             # query_result = jsonable_encoder(query)
             # query_reservations_result = jsonable_encoder(query_reservations)
-            print(f"Réservations: {query_reservations_time}\n")
+            # print(f"Réservations: {query_reservations_time}\n")
             # print(query_result)
 
             total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
             heures_query, query_horaire = get_heures_semaine_for_ressource(ressource_label,[Jours_Semaine(jour_date.weekday())])
-            print(f"Heures query: {heures_query}")
+            # print(f"Heures query: {heures_query}")
             horaires = []
             if jour_date.weekday() in heures_query.keys():
                 horaires = [datetime.datetime.strptime(heure, '%H:%M:%S').time() for heure in heures_query[jour_date.weekday()]]
@@ -616,12 +616,12 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
             final_schedule = []
 
             for heure in horaires:
-                print(f"{heure} not in {query_reservations_time}")
+                # print(f"{heure} not in {query_reservations_time}")
                 if str(heure) not in query_reservations_time:
                     
                     final_schedule.append(str(heure))
 
-            print("QUERY HORAIRE "+str(query_horaire))
+            # print("QUERY HORAIRE "+str(query_horaire))
             return JSONResponse(content={"horaire_heures":final_schedule,"horaire":query_horaire},status_code=status.HTTP_200_OK)
 
     except Exception as e:

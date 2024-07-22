@@ -326,9 +326,11 @@ class ValidateRessourceForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         if slot_value is not None:
             ressource = str(slot_value).lower()
+            print(f"REssource: {ressource}")
             if ressource in get_ressource_list():
                 return {"ressource":ressource,"accept_deny":None}
-            dispatcher.utter_message(text=f"{ressource} n'existe pas. Veuillez réserver une ressource qui existe")
+            ressource = tracker.latest_message.get("text")
+            dispatcher.utter_message(text=f"\"{ressource}\" n'existe pas. Veuillez réserver une ressource qui existe")
             return {"ressource":None}
         else:
             dispatcher.utter_message("Veuillez spécifier une ressource")
