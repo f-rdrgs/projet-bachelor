@@ -58,7 +58,7 @@ stories:
       - slot_was_set:
           - requested_slot: null
       - active_loop: null
-      - action: utter_date_heure
+      - action: action_utter_date_heure
       - action: reset_validation
       - slot_was_set:
           - accept_deny: None

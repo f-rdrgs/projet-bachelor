@@ -895,3 +895,20 @@ class ActionActivateDebugMode(Action):
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
         dispatcher.utter_message("Mode Debug activé")
         return [SlotSet("debug", True)]
+    
+class ActionUtterDateHeure(Action):
+    def name(self)->str:
+        return "action_utter_date_heure"
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        heure = tracker.get_slot("heure")
+        date = tracker.get_slot("date")
+
+        if heure is not None and date is not None:
+            heure_datetime = datetime.datetime.fromisoformat(str(heure))
+            heure_time = heure_datetime.strftime('%Hh%M') 
+            date_datetime = str(datetime.datetime.fromisoformat(str(date)).date().strftime("%d/%m/%Y"))
+
+            message = f"Vous avez bien réservé pour {heure_time} le {date_datetime}."
+            dispatcher.utter_message(message)
+        else:
+            dispatcher.utter_message("Vous avez bien réservé, cependant une erreur s'est produite lors de la réception de la date/heure. Veuillez réessayer de réserver.")

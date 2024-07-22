@@ -72,7 +72,7 @@ rules:
     - active_loop: null
     - slot_was_set:
       - requested_slot: null
-    - action: utter_date_heure
+    - action: action_utter_date_heure
     - action: reset_validation
     - action: get_info_reserv_form
     - active_loop: get_info_reserv_form
