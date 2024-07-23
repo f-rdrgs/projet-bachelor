@@ -265,7 +265,7 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
                         new_matched_opts.forEach((elems,indx) => {
                             // console.log("ELEMS: "+elems)
                             if(texts_array[radio_index] !== undefined){
-                                texts_array[radio_index] = [...texts_array[radio_index],`${indx+1}. `+elems[0]]
+                                texts_array[radio_index] = [...texts_array[radio_index],`${elems[1]}. `+elems[0]]
 
                             }
                             if(components_id[radio_index] !== undefined){
@@ -308,7 +308,8 @@ const Chatbox_container: FC<ChatboxContainer> = ({}) => {
             let processed_message = newMessage
             processed_message = processed_message.replace(/\[br\]/g,"<br>")
             processed_message = processed_message.replace(/\[tab\]/g,"&ensp;")
-            if(processed_message.match("[LINK]")){
+            const match_link = /(\[LINK\])/
+            if(processed_message.match(match_link)){
                 processed_message = processed_message.replace(/\[LINK]\[/g,"<a href=\"")
                 processed_message = processed_message.replace("]","\">Lien calendrier</a>")
 

@@ -11,7 +11,7 @@
 from enum import Enum
 import enum
 import json
-from typing import Any, Text, Dict, List
+from typing import Any, Coroutine, Text, Dict, List
 
 from rasa_sdk import Action, Tracker, FormValidationAction, ValidationAction
 from rasa_sdk.executor import CollectingDispatcher
@@ -88,7 +88,7 @@ def get_jours_disponibles(ressource_label: str,nombre_jours:int,heure_prechoisie
         else:
             res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}/{nombre_jours}").json()
         
-        print(f"result res :{res}")
+        # print(f"result res :{res}")
         if(len(res["dates"])>0):
             return [datetime.date.fromisoformat(date) for date in res["dates"]]
         else:
@@ -274,12 +274,15 @@ class ValidateGetOptionsReservForm(FormValidationAction):
                 lst_opt = []
                 final_numbers = []
                 remove_if_present = lambda val : val in options_list
+                are_arrays_common = lambda arr1,arr2: any([nb for nb in arr1 if nb in arr2])
+
                 for opt in options.items():
-                    lst_opt +=(list(opt[1][1].keys()) )
-                lst_opt_filtered = list(filter(remove_if_present,lst_opt))
-                print(f"lst filtered: {lst_opt_filtered}")
+                    if are_arrays_common(options_list,list(opt[1][1].keys()) ):
+                        lst_opt +=(list(opt[1][1].keys()) )
+                print(f"list unfiltered: {lst_opt}")
+                print(f"lst filtered: {lst_opt}")
                 for choix_nb in nombres:
-                    if str(choix_nb) not in lst_opt_filtered:
+                    if str(choix_nb) not in lst_opt:
                         print("IN")
                         options_list.append(str(choix_nb))
                         final_numbers.append(str(choix_nb))
@@ -484,7 +487,7 @@ class ActionPreDefineRessourceSlot(Action):
                     if res_json[index]["dim"] == "time" and dim_time_index == -1:
                         dim_time_index = index
                         grain = res_json[index]["value"]["grain"]
-                if grain == "day":
+                if grain == "day" or grain == "month":
                     date = str(res_json[index]["value"]["value"])
 
         if pre_heure is not None:
@@ -585,12 +588,13 @@ class ValidateHeuresForm(FormValidationAction):
                 dim_time_index = -1
                 grain = "day"
                 # S'assure de trouver une valeur de type temps dans la réponse
+                utter_debug(str(res_json),tracker,dispatcher)
                 for index in range(len(res_json)):
                     if res_json[index]["dim"] == "time" and dim_time_index == -1:
                         dim_time_index = index
                         grain = res_json[index]["value"]["grain"]
                 if dim_time_index >= 0:
-                    if grain == "day":
+                    if grain == "day"or grain == "month":
                         dates_dispo = []
                         if heure is None:
                             # Si la date donnée est trouvable dans les dates disponibles et non réservées, sauvegarde dans le slot
@@ -614,7 +618,7 @@ class ValidateHeuresForm(FormValidationAction):
                 else:
                     dispatcher.utter_message(text=f"Pouvez-vous répéter la date d'une autre manière ?")
                 
-            
+
 
         
             return {"date":None,"date_prereserv":None}
@@ -794,7 +798,7 @@ class AskForRessourceAction(Action):
         response_mess = "Les ressources possible à réserver sont :"
         liste_ressources = get_ressource_list()
         for ress in liste_ressources:
-            response_mess += f"\n\t- {ress}"
+            response_mess += f"[br][tab]- {ress}"
         dispatcher.utter_message(text=response_mess)
         dispatcher.utter_message(text="Que souhaitez-vous réserver ?")
         return []
@@ -898,6 +902,41 @@ class ActionActivateDebugMode(Action):
         dispatcher.utter_message("Mode Debug activé")
         return [SlotSet("debug", True)]
     
+class ActionAskHoraire(Action):
+    def name(self) -> str:
+        return "action_ask_horaire"
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict):
+        ressource = tracker.get_slot("ressource_ask")
+        if ressource is not None:
+            print(ressource)
+            result_query_heures = get_heures_semaine(ressource)
+            dict_horaires_jour : dict[str,dict] = result_query_heures["horaires"]
+            message_utter = f"Les horaires de réservation pour {ressource} sont les suivants:"
+            # dispatcher.utter_message("Les horaires de réservation sont les suivants: ")
+            curr_day = -1
+            for day in dict_horaires_jour.keys():
+                for horaire_jour in dict_horaires_jour[day]:
+                    message_utter +=f"[br][br]{Day_week(int(day)).name.capitalize()}[br]" if curr_day != Day_week(int(day)) else ""
+                    curr_day = Day_week(int(day))
+                    for horaire in horaire_jour['horaires']:
+                        message_utter += f"[br][tab]- {horaire[0]} à {horaire[1]} (intervalles de {horaire_jour['decoupage']})"
+                        # dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {horaire_jour['decoupage']}")
+            # response_mess = "Les dates disponibles à la réservation pour le prochain mois sont :"
+            message_utter += "[br][br]Les dates disponibles à la réservation pour les 30 prochains jours:"
+            dates_for_ressource = get_jours_disponibles(ressource,30,None)
+            # dispatcher.utter_message(dates_for_ressource)
+            prev_month = 0
+            
+            for index,date in enumerate(dates_for_ressource):
+                message_utter += f"[br][br]{str(date.month)}/{str(date.year)}[br][br]" if prev_month != date.month else ""
+                message_utter += f"[tab]{'- ' if index == 0 or prev_month != date.month else ''}{str(date.day)}{', ' if index<dates_for_ressource.__len__()-1 else ''}"
+                prev_month = date.month
+        else:
+            message_utter = "Aucune ressource correspondante n'a été trouvée"
+
+
+        dispatcher.utter_message(message_utter)
+
 class ActionUtterDateHeure(Action):
     def name(self)->str:
         return "action_utter_date_heure"

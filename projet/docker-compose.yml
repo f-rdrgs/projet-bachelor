@@ -52,7 +52,14 @@ services:
       file: ./telegram_bot/telegram-docker-compose.yml
       service: telegram
       env_file: ./telegram_bot/.env
-
+  backend-chatbox:
+    extends:
+      file: ./chatbox-webapp/chatbox-docker-compose.yml
+      service: backend-chatbox
+  frontend-chatbox:
+    extends:
+      file: ./chatbox-webapp/chatbox-docker-compose.yml
+      service: frontend-chatbox
 volumes:
   chatbot_volume:
     external: false

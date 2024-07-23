@@ -1,0 +1,27 @@
+services:
+  frontend-chatbox:
+    build:
+      context: ./frontend-chatbox
+      dockerfile: Dockerfile
+    image: "frontend-chatbox"
+    container_name: "frontend-chatbox"
+    expose:
+      - "4000"
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./frontend-chatbox:/app
+    restart: unless-stopped
+  backend-chatbox:
+    build:
+      context: ./backend-chatbox
+      dockerfile: Dockerfile
+    image: "backend-chatbox"
+    container_name: "backend-chatbox"
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend-chatbox:/app
+    restart: unless-stopped

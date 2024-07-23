@@ -6,6 +6,11 @@ stories:
       - intent: salutation
       - action: utter_que_faire
 
+  - story: ask_horaire
+    steps:
+      - intent: ask_horaire
+      - action: action_ask_horaire
+
   - story: stop_convo
     steps:
     - intent: stop

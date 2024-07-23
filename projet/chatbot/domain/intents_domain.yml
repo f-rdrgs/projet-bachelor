@@ -34,3 +34,6 @@ intents:
       use_entities:
         - nombre
   - debug
+  - ask_horaire:
+      use_entities:
+        - ressource

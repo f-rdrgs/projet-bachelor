@@ -10,6 +10,12 @@ slots:
           conditions:
             - active_loop: get_ressource_form # Récolte la ressource QUE lorsqu'on est dans un form
     influence_conversation: false
+  ressource_ask:
+    type: text
+    mappings:
+        - type: from_entity
+          entity: ressource
+    influence_conversation: false
   date:
     type: text
     mappings:
