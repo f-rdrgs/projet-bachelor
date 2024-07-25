@@ -2,7 +2,7 @@ version: "3.1"
 
 responses:
   utter_ressource:
-  - text: "Fin Form, La ressource : {ressource}"
+  - text: "Ressource sélectionnée : {ressource}"
   utter_nom_prenom:
   - text: "Vous vous appelez {nom_prenom}"
   utter_confirm_ressource:
@@ -24,7 +24,7 @@ responses:
   utter_ask_get_info_reserv_form_numero_tel:
   - text: "Quel est votre numéro de téléphone ?"
   utter_que_faire:
-  - text: "Que souhaitez-vous donc faire ?"
+  - text: "Que souhaitez-vous donc faire ?[br]Réserver (eg. Je voudrais réserver un ...) ?[br]Voir des horaires (eg. Horaire de ...)?"
   utter_fin_reservation:
   - text: "Vous ({nom_prenom}) avez bien réservé {ressource} le {date} à {heure}"
   # https://rasa.com/docs/rasa/forms/

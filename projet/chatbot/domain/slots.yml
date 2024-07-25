@@ -10,6 +10,12 @@ slots:
           conditions:
             - active_loop: get_ressource_form # Récolte la ressource QUE lorsqu'on est dans un form
     influence_conversation: false
+  ressource_ask:
+    type: text
+    mappings:
+        - type: from_entity
+          entity: ressource
+    influence_conversation: false
   date:
     type: text
     mappings:
@@ -39,6 +45,13 @@ slots:
         value: false
         intent: refuse
         not_intent: affirm
+  debug:
+    type: bool
+    initial_value: false
+    mappings:
+      - type: from_intent
+        value: true
+        intent: debug
   nom_prenom:
     type: text
     mappings:
@@ -52,6 +65,18 @@ slots:
     mappings:
       - type: from_entity
         entity: ressource
+    influence_conversation: false
+  date_prereserv:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: date
+    influence_conversation: false
+  heure_prereserv:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: heure
     influence_conversation: false
   options_ressource:
       type: list

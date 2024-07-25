@@ -7,6 +7,12 @@ rules:
     - intent: salutation
     - action: utter_que_faire
 
+- rule: Activer messages de debug
+  steps:
+    - intent: debug
+    - action: action_activate_debug_mode
+
+
 - rule: recommencer
   steps:
     - intent: stop
@@ -54,7 +60,6 @@ rules:
     - slot_was_set:
       - requested_slot: null
     - action: list_list_options
-    - action: reset_validation
     - action: get_date_heure_form
     - active_loop: get_date_heure_form
   wait_for_user_input: false
@@ -67,7 +72,7 @@ rules:
     - active_loop: null
     - slot_was_set:
       - requested_slot: null
-    - action: utter_date_heure
+    - action: action_utter_date_heure
     - action: reset_validation
     - action: get_info_reserv_form
     - active_loop: get_info_reserv_form

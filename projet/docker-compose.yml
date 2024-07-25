@@ -52,9 +52,14 @@ services:
       file: ./telegram_bot/telegram-docker-compose.yml
       service: telegram
       env_file: ./telegram_bot/.env
-    volumes:
-      - ics_volume:/app/tmp
-
+  backend-chatbox:
+    extends:
+      file: ./chatbox-webapp/chatbox-docker-compose.yml
+      service: backend-chatbox
+  frontend-chatbox:
+    extends:
+      file: ./chatbox-webapp/chatbox-docker-compose.yml
+      service: frontend-chatbox
 volumes:
   chatbot_volume:
     external: false
@@ -62,12 +67,6 @@ volumes:
     driver: local
     driver_opts:
       device: "./chatbot"
-      o: bind
-      type: none
-  ics_volume:
-    driver: local
-    driver_opts:
-      device: "./api/tmp"
       o: bind
       type: none
   db_data:

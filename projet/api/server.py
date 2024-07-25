@@ -1,3 +1,4 @@
+import base64
 import datetime
 import time
 from typing import Any, List
@@ -42,6 +43,7 @@ origins = [
     "http://0.0.0.0",
     "http://0.0.0.0:5500",
     "http://localhost:5500",
+    "http://localhost:3000"
     "http://localhost",
     "*",
 ]
@@ -402,7 +404,7 @@ async def add_reservation(data:Reservation_API):
             uuid_file = create_ical_event(f"Réservation de {output_reserv_ressource['ressource']}",output_reserv['numero_tel'],output_reserv['prenom'],output_reserv['nom'],f"Une réservation de {output_reserv_ressource['ressource']}{choix_text}",heure_start_print,heure_fin_print)
             return JSONResponse(content={
                     "message":"Réservation ajoutée",
-                    "data":{"lien_reservation_google":lien_google_cal,"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res),"uuid_ical":uuid_file}
+                    "data":{"lien_reservation_google":"[LINK]["+lien_google_cal+"]","reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res),"uuid_ical":uuid_file}
                 },status_code=status.HTTP_200_OK)
         except Exception as e:
             print(e)
@@ -591,22 +593,22 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
             # Récupère toutes les pré-réservations
             query_pre_reserv = get_reservations_temporaire_for_dates_for_ressource(ressource_label,[jour_date])
             # Ressort une liste de temps
-            print(query_reservations)
+            # print(query_reservations)
             query_reservations_time = []
             if str(jour_date) in query_reservations.keys():
                 query_reservations_time = [time for time in query_reservations[str(jour_date)]]
-            print(f"Query reserv {query_reservations}")
+            # print(f"Query reserv {query_reservations}")
             if str(jour_date) in query_pre_reserv.keys():
                 query_reservations_time+=query_pre_reserv[str(jour_date)]
-            print(f"Query reserv with pre {query_reservations}")
+            # print(f"Query reserv with pre {query_reservations}")
             # query_result = jsonable_encoder(query)
             # query_reservations_result = jsonable_encoder(query_reservations)
-            print(f"Réservations: {query_reservations_time}\n")
+            # print(f"Réservations: {query_reservations_time}\n")
             # print(query_result)
 
             total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
             heures_query, query_horaire = get_heures_semaine_for_ressource(ressource_label,[Jours_Semaine(jour_date.weekday())])
-            print(f"Heures query: {heures_query}")
+            # print(f"Heures query: {heures_query}")
             horaires = []
             if jour_date.weekday() in heures_query.keys():
                 horaires = [datetime.datetime.strptime(heure, '%H:%M:%S').time() for heure in heures_query[jour_date.weekday()]]
@@ -614,12 +616,12 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
             final_schedule = []
 
             for heure in horaires:
-                print(f"{heure} not in {query_reservations_time}")
+                # print(f"{heure} not in {query_reservations_time}")
                 if str(heure) not in query_reservations_time:
                     
                     final_schedule.append(str(heure))
 
-            print("QUERY HORAIRE "+str(query_horaire))
+            # print("QUERY HORAIRE "+str(query_horaire))
             return JSONResponse(content={"horaire_heures":final_schedule,"horaire":query_horaire},status_code=status.HTTP_200_OK)
 
     except Exception as e:
@@ -657,7 +659,23 @@ async def talk_to_rasa(data:Communicate_Rasa):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la communication avec Rasa: {str(e)}")
 
 
+@app.get("/get-ics-file/{ics_name}")
+async def get_ics_file(ics_name:str):
+    if ics_name:
+        if os.path.exists(f'./tmp/{ics_name}.ics'):
+            try:
+                with open(f'./tmp/{ics_name}.ics','rb') as file:
+                    encoded_ics = base64.b64encode(file.read())
+                    os.remove(f'./tmp/{ics_name}.ics')
+                    return JSONResponse(content=jsonable_encoder({"file_base64":"[FILE]"+str(encoded_ics)},),status_code=status.HTTP_200_OK)
+            except Exception as e:
+                print(e)
+                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Erreur lors de la génération du fichier ics pour l\'événement': {str(e)}")
+        else:
+            print("No file found")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Erreur lors de la génération du fichier ics pour l\'événement': Aucun fichier ne correspond au nom fournit")
 
+    raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Erreur lors de la génération du fichier ics pour l\'événement'")
 
 if __name__ == "__main__":
     # asyncio.create_task()

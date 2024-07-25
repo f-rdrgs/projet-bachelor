@@ -148,3 +148,15 @@ nlu:
       - Marianne Carpentier
       - Jeanne Schaeffer
       - Nguyen Pia
+  - intent: choose_options
+    examples: |
+      - 1 1 3 5
+      - 2 1 3
+      - 1 3
+      - 2
+      - 3 3 1 2 1
+      
+  - intent: debug
+    examples: |
+      - DEBUG
+      - debug
