@@ -4,7 +4,6 @@ forms:
   get_ressource_form:
     required_slots:
       - ressource
-      # - accept_deny
     ignored_intents:
       - inform_date
       - inform_heure
