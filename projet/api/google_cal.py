@@ -79,11 +79,6 @@ def gen_share_link_google_cal(summary:str,date_start:datetime.datetime,date_end:
     return f"{base_url}?{urlencode(event)}"
 
 
-# Added http://localhost:4545/ as authorized return uri in https://console.cloud.google.com/apis/credentials
-# https://developers.google.com/calendar/api/guides/create-events#python
-# if __name__ == "__main__":
-#   add_event_reservation("Réservation Terrain de tennis","995830193","Smith","Michael","Une réservation de terrain de tennis",datetime.datetime(2024,6,26,14,30,0,tzinfo=ZoneInfo('Europe/Paris')),datetime.datetime(2024,6,26,15,0,0,tzinfo=ZoneInfo('Europe/Paris')))
-
 
 # https://learnpython.com/blog/working-with-icalendar-with-python/
 def create_ical_event(title:str,attendee_phone:str,attendee_name:str,attendee_surname:str,description:str,date_start:datetime.datetime,date_end:datetime.datetime)->str:
@@ -121,13 +116,13 @@ def delete_ics_older_than_duration(duration_secs:int):
     except Exception as e:
         print(f"An error occured while deleting old ics files: {e}")
 
-# if __name__ == "__main__":
-#     date_og = datetime.datetime.fromisoformat("2024-06-25T14:35:25.143736")
-#     new_date = datetime.datetime(date_og.year,date_og.month,date_og.day,14,50,0,tzinfo=ZoneInfo("Europe/Paris"))
-#     date_og2 = datetime.datetime.fromisoformat("2024-06-25T14:35:25.143736")
-#     new_date2 = datetime.datetime(date_og.year,date_og.month,date_og.day,15,50,0,tzinfo=ZoneInfo("Europe/Paris"))
-#     print(new_date)
-#     print(gen_share_link_google_cal("Réservation","2025-07-05 16:30:00","2025-07-05 17:00:00","HAHHAHAH"))
-#     print(f"Time: {datetime.datetime.now()-datetime.timedelta(minutes=1,seconds=30)} {datetime.datetime.now()}")
-#     delete_ics_older_than_duration(5)
-#     print("[FILE]999dfsfdlsdlfds9fsdfs".removeprefix('[FILE]'))
+# Added http://localhost:4545/ as authorized return uri in https://console.cloud.google.com/apis/credentials
+# https://developers.google.com/calendar/api/guides/create-events#python
+
+
+if __name__ == "__main__":
+    creds = login()
+    if creds is not None:
+        print("Vous êtes bien connectés.")
+    else:
+        print("Vous n'étiez pas connectés et devriez normalement l'être à présent.")
