@@ -12,7 +12,7 @@ import requests
 # https://www.youtube.com/watch?v=vZtm1wuA2yc
 
 async def start_command(update:Update, context:ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Bonjour! Je suis un bot de réservation. Que souhaitez-vous faire ?\neg. \"Je voudrais réserver un terrain de Pétanque, je voudrais réserver, ...\"")
+    await update.message.reply_text("Bonjour! Je suis un bot de réservation. Que souhaitez-vous faire ?\neg. \"Je voudrais réserver un terrain de Pétanque, je voudrais réserver, quel est l'horaire de tennis, ...\"")
 
 async def get_base64_document(uuid_file:str):
     if os.path.exists(f'./tmp/{uuid_file}.ics'):

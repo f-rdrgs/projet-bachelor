@@ -76,9 +76,6 @@ io.on("connection", (socket: Socket) => {
   console.log(`a user with id \"${socket.id}\" connected`);
   socket.on('chat',async (message:string,uuid:string) => {
     const rasa_messages :string[]  = await query_rasa(message,uuid);
-    // const rasa_messages: string[] = await get_file()
-    // console.log(rasa_messages)
-    // const rasa_messages : string[] = ["[OPTION][0][TITLE][Avec ou sans couverts ?][OPTIONS][(Avec,1)(Sans,2)(Je sais pas,3)][OPTION][1][TITLE][Avec ou sans chaussures ?][OPTIONS][(Avec,1)(Sans,2)(Je sais pas,3)]"];
     socket.emit("chat", rasa_messages);
     console.log(uuid + ": "+ message)
   })
