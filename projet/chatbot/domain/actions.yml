@@ -20,3 +20,4 @@ actions:
   - action_activate_debug_mode
   - action_utter_date_heure
   - action_ask_horaire
+  - action_utter_fin_reservation

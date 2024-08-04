@@ -494,7 +494,7 @@ class ActionPreDefineRessourceSlot(Action):
             pre_heure = str(pre_heure)
             data = {
             "locale":"fr_FR",
-            "text":pre_heure
+            "text":pre_heure+ " matin"
             }
             # Récupère date parsé par Duckling
             res = requests.post("http://duckling:8000/parse",data=data)
@@ -614,7 +614,7 @@ class ValidateHeuresForm(FormValidationAction):
                         else:
                             dispatcher.utter_message(f"La date du {date_datetime.day}/{date_datetime.month}/{date_datetime.year} n'est pas disponible. Veuillez choisir une autre date")
                     else:
-                        dispatcher.utter_message(text=f"2. Pouvez-vous répéter la date d'une autre manière ?")
+                        dispatcher.utter_message(text=f"Pouvez-vous répéter la date d'une autre manière ?")
                 else:
                     dispatcher.utter_message(text=f"Pouvez-vous répéter la date d'une autre manière ?")
                 
@@ -953,3 +953,20 @@ class ActionUtterDateHeure(Action):
             dispatcher.utter_message(message)
         else:
             dispatcher.utter_message("Vous avez bien réservé, cependant une erreur s'est produite lors de la réception de la date/heure. Veuillez réessayer de réserver.")
+
+class ActionUtterFinReservation(Action):
+    def name(self)->str:
+        return "action_utter_fin_reservation"
+    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: dict):
+        heure = tracker.get_slot("heure")
+        date = tracker.get_slot("date")
+        nom_prenom = tracker.get_slot("nom_prenom")
+        ressource = tracker.get_slot("ressource")
+        if heure is not None and date is not None and ressource is not None and nom_prenom is not None:
+            heure_datetime = datetime.datetime.fromisoformat(str(heure))
+            heure_time = heure_datetime.strftime('%Hh%M') 
+            date_datetime = str(datetime.datetime.fromisoformat(str(date)).date().strftime("%d/%m/%Y"))
+            message = f"Vous ({nom_prenom}) avez bien réservé {ressource} le {date_datetime} à {heure_time}"
+            dispatcher.utter_message(message)
+        else:
+            dispatcher.utter_message("Vous avez bien réservé, cependant une erreur s'est produite. Veuillez réessayer de réserver.")

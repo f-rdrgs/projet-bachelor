@@ -87,7 +87,7 @@ rules:
     - slot_was_set:
       - requested_slot: null
     - action: utter_nom_prenom
-    - action: utter_fin_reservation
+    - action: action_utter_fin_reservation
     - action: reset_validation
     - action: save_ressource
     - action: utter_aurevoir
