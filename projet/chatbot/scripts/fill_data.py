@@ -54,14 +54,35 @@ def add_intent_custom(file:str,files_data:list[tuple[str,bool,str,str]],intent_n
     f_filling.close()
     f_intent.close()
 
+
+def add_lookup(file:str,file_data:str,lookup_name:str,first_intent:bool,key_csv_col:str):
+    f_data = pd.read_csv(os.path.join(PATH_DATASET,file_data))
+    f_lookup = open(os.path.join(PATH_NLU_DATA,file),"+a")
+    begin_intent = f"version: \"3.1\"\n\nnlu:" if first_intent else ''
+    f_lookup.write(f"{begin_intent}\n- lookup: {lookup_name}\n  examples: |\n")
+    for data in f_data[key_csv_col]:
+        data = str(data) 
+        temp_fill = f"    - {data}\n"
+        f_lookup.writelines(temp_fill)
+
+    f_lookup.close()
+
+def remove_if_exists(path:str):
+    if os.path.exists(path):
+        os.remove(path)
+     
+
 if __name__ == "__main__":
     print(PATH_DATASET)
     print(PATH_FILL)
     intent_ress_file = "intents_ressource.yml"
     intent_test_file = "intents_ressource_custom.yml"
-    if os.path.exists(os.path.join(PATH_NLU_DATA,intent_ress_file)):
-        os.remove(os.path.join(PATH_NLU_DATA,intent_ress_file))
+    lookup_file = "lookup.yml"
+    remove_if_exists(os.path.join(PATH_NLU_DATA,intent_ress_file))
+    remove_if_exists(os.path.join(PATH_NLU_DATA,lookup_file))
+    
     # add_intent(intent_ress_file,"ressource.csv","ressource_gather","ressource_gather_fill.txt","ressource",True,"label")
     add_intent_custom(intent_ress_file,[["random_date.txt",False,"date",""],["random_heure.txt",False,"heure",""],["ressource.csv",True,"ressource","label"]],"ressource_gather","ressource_gather_fill_custom.txt",True,2)
     add_intent(intent_ress_file,"ressource.csv","inform_ressource","inform_ressource.txt","ressource",False,"label")
     add_intent(intent_ress_file,"ressource.csv","ask_horaire","ask_ressource.txt","ressource",False,"label")
+    add_lookup(lookup_file,"ressource.csv","ressource",True,"label")
