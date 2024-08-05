@@ -388,9 +388,17 @@ async def add_reservation(data:Reservation_API):
                         output_choix_res[str(id)] = {"id":reserv_choix.id,"ressource":reserv_choix.resource,"res_id":reserv_choix.reservation,"id_choix":reserv_choix.id_choix_ressource}
             # Si des options ont été fournies, rempli le texte d'options en conséquence
             if choix_list.__len__()>0:
-                choix_titres = get_choix_titres_from_ids(choix_list)
-                for choix in choix_titres:
-                    choix_text+= f", {choix}"
+                try:
+                    choix_text = "\nChoix effectués: \n"
+                    dic = await get_options_func(output_reserv_ressource['ressource'])
+                    for ch in choix_list:
+                        for key in dic.keys():
+                            temp_message = key
+                            for val in dic[key][1].keys():
+                                if int(val) == int(ch):
+                                    choix_text+=f"\t- {temp_message}: {dic[key][1][val]}\n"
+                except Exception as e:
+                    print(e)
             date_reserv = output_reserv_ressource["date_reservation"]
             heure_reserv = output_reserv_ressource["heure"]
             result_fin_heure = await get_fin_heure(output_reserv_ressource['ressource'],date_reserv,heure_reserv)
@@ -424,12 +432,17 @@ Route pour récupérer les choix et options associés à une ressource
 @app.get("/get-options-choix/{ressource}")
 async def get_options_choix(ressource:str):
     try:
-        with Session.begin() as session:
-            query = session.query(Options_Resource.label_option,Options_Resource.description,func.array_agg(Options_Resource_Choix.choix).label("choix"),func.array_agg(Options_Resource_Choix.id).label("id")).join(Options_Resource_Choix,Options_Resource.label_option == Options_Resource_Choix.label_option).where(Options_Resource.label_resource.like(ressource)).group_by(Options_Resource.label_option).group_by(Options_Resource.description).all()
-            query = {elem[0]: [elem[1],{id: choix for id, choix in zip(elem[3],elem[2])}]for elem in query}
+            query = await get_options_func(ressource)
             return JSONResponse(content={"options":jsonable_encoder(query)},status_code=status.HTTP_200_OK)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération de choix: {str(e)}")
+
+
+async def get_options_func(ressource:str):
+    with Session.begin() as session:
+            query = session.query(Options_Resource.label_option,Options_Resource.description,func.array_agg(Options_Resource_Choix.choix).label("choix"),func.array_agg(Options_Resource_Choix.id).label("id")).join(Options_Resource_Choix,Options_Resource.label_option == Options_Resource_Choix.label_option).where(Options_Resource.label_resource.like(ressource)).group_by(Options_Resource.label_option).group_by(Options_Resource.description).all()
+            query = {elem[0]: [elem[1],{id: choix for id, choix in zip(elem[3],elem[2])}]for elem in query}
+            return query
 
 """
 Route permettant de récupérer toutes les réservations

@@ -83,6 +83,6 @@ if __name__ == "__main__":
     
     # add_intent(intent_ress_file,"ressource.csv","ressource_gather","ressource_gather_fill.txt","ressource",True,"label")
     add_intent_custom(intent_ress_file,[["random_date.txt",False,"date",""],["random_heure.txt",False,"heure",""],["ressource.csv",True,"ressource","label"]],"ressource_gather","ressource_gather_fill_custom.txt",True,2)
-    add_intent(intent_ress_file,"ressource.csv","inform_ressource","inform_ressource.txt","ressource",False,"label")
+    # add_intent(intent_ress_file,"ressource.csv","inform_ressource","inform_ressource.txt","ressource",False,"label")
     add_intent(intent_ress_file,"ressource.csv","ask_horaire","ask_ressource.txt","ressource",False,"label")
     add_lookup(lookup_file,"ressource.csv","ressource",True,"label")

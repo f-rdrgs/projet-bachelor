@@ -6,7 +6,7 @@ slots:
     mappings:
         - type: from_entity
           entity: ressource
-          intent: inform_ressource
+          intent: ressource_gather
           conditions:
             - active_loop: get_ressource_form # Récolte la ressource QUE lorsqu'on est dans un form
     influence_conversation: false

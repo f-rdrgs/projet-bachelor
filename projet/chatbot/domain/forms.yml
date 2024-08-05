@@ -7,7 +7,7 @@ forms:
     ignored_intents:
       - inform_date
       - inform_heure
-      - ressource_gather
+      - ask_horaire
       
   get_date_heure_form:
     required_slots:

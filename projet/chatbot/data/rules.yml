@@ -11,7 +11,10 @@ rules:
   steps:
     - intent: debug
     - action: action_activate_debug_mode
-
+- rule: Récupération horaire
+  steps:
+    - intent: ask_horaire
+    - action: action_ask_horaire
 
 - rule: recommencer
   steps:
