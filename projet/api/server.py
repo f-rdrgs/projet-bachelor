@@ -556,7 +556,7 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
                         curr_reservations[date].append(temp_res[date])
                 # Retire toutes les dates ne possédant aucun horaire de disponible
                 for date in curr_reservations.keys():
-                    diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
+                    diff : list[datetime.date]= np.setdiff1d(curr_reservations[date],heures_for_semaine[datetime.date.fromisoformat(date).weekday()])
                     if diff.__len__() == 0:
                         print(f"Removing {date}")
                         dates_dispo.remove(datetime.date.fromisoformat(date))

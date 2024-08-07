@@ -47,20 +47,26 @@ async def handle_message(update:Update, context:ContextTypes.DEFAULT_TYPE):
         if resp.startswith("[OPTION]"):
             options = resp.split("[OPTION]")[1:]
             regex_title = "\[TITLE\]\[(.*?)\]"
-            regex_index = "^\[(.*?)\]"
             regex_options = "\[OPTIONS]\[(.*?)\]"
             regex_single_opt = "\((.*?)\,"
+            regex_single_opt_index = "\,(.*?)\)"
+
             titles = [re.search(regex_title,option).group(1) for option in options]
             options_choice = [re.search(regex_options,option)[1] for option in options]
             single_options = [re.findall(regex_single_opt,option) for option in options_choice]
+            single_options_index = [re.findall(regex_single_opt_index,option)  for option in options_choice]
+
             resp = ""
             for index, title in enumerate(titles):
                 resp+=f"{title}:\n"
                 for ind_opt, opt in enumerate(single_options[index]):
-                    resp+=f"\n\t{ind_opt+1}. {opt}"
+                    resp+=f"\n\t{single_options_index[index][ind_opt]}. {opt}"
                 resp+="\n\n"
-            
-        await update.message.reply_text(resp)
+            resp +="Veuillez choisir une option par question"
+        regex_link = r'\[LINK\]\[(https://[^\]]+)\]'
+        if re.findall(regex_link,resp):        
+            resp = resp.replace("[","").replace("]","").replace("LINK","")
+        await update.message.reply_text(resp,parse_mode="")
     if file:
         file_ics = f"{file[0].removeprefix('[FILE]')}"
     
