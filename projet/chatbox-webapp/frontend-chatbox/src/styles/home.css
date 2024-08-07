@@ -21,3 +21,9 @@ img {
     max-width: 100%;
     width: auto; /* ie8 */
 }
+
+img:hover{
+    background-color: dimgrey;
+    transition: 0.2s;
+    opacity: 0.5;
+}
