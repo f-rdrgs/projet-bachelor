@@ -27,18 +27,22 @@ def login():
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                "credentials.json", SCOPES
-            )
-            flow.redirect_uri= "http://localhost:4545"
-            creds = flow.run_local_server(port=4545)
-        # Save the credentials for the next run
-        with open("token.json", "w") as token:
-            token.write(creds.to_json())
-    return creds
+        try:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    "credentials.json", SCOPES
+                )
+                flow.redirect_uri= "http://localhost:4545"
+                creds = flow.run_local_server(port=4545)
+            # Save the credentials for the next run
+            with open("token.json", "w") as token:
+                token.write(creds.to_json())
+            return creds
+        except FileNotFoundError as e:
+            print("Veuillez ajouter le fichier Credentials.json disponible avec votre projet Google")
+            return None
 
 def add_event_reservation(title:str,attendee_phone:str,attendee_name:str,attendee_surname:str,description:str,date_start:datetime.datetime,date_end:datetime.datetime)->str:
     creds = login()
@@ -123,6 +127,6 @@ def delete_ics_older_than_duration(duration_secs:int):
 if __name__ == "__main__":
     creds = login()
     if creds is not None:
-        print("Vous êtes bien connectés.")
+        print("Vous êtes bien connecté ou l'êtes à présent.")
     else:
-        print("Vous n'étiez pas connectés et devriez normalement l'être à présent.")
+        print("Une erreur est survenue lors de la génération de Token.")

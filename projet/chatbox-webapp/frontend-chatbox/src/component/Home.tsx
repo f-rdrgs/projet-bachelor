@@ -8,7 +8,7 @@ const HomeContainer: FC<HomePage> = ({}) => {
   return (
     <>
       <div className="HomeContainer">
-        <h1>Page home</h1>
+        <h1>Page d'accueil</h1>
         <Link to="/bot">
           <h2>Vers Bot Web</h2>
         </Link>
