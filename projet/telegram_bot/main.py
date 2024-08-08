@@ -12,7 +12,7 @@ import requests
 # https://www.youtube.com/watch?v=vZtm1wuA2yc
 
 async def start_command(update:Update, context:ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Bonjour! Je suis un bot de réservation. Que souhaitez-vous faire ?\neg. \"Je voudrais réserver un terrain de Pétanque, je voudrais réserver, quel est l'horaire de tennis, ...\"")
+    await update.message.reply_text("Bonjour! Je suis un bot de réservation. Que souhaitez-vous faire ?\neg. \"Je voudrais réserver un terrain de ..., je voudrais réserver, quel est l'horaire de tennis, ...\"")
 
 async def get_base64_document(uuid_file:str):
     if os.path.exists(f'./tmp/{uuid_file}.ics'):
@@ -28,11 +28,17 @@ async def handle_message(update:Update, context:ContextTypes.DEFAULT_TYPE):
         "sender": str(id_user)
     }
     print(data)
-    response = requests.post("http://api:5500/communicate-rasa",json={
-        "message": str(text),
-        "sender": str(id_user)
-    })
-    response.raise_for_status()
+    try:
+        response = requests.post("http://api:5500/communicate-rasa",json={
+            "message": str(text),
+            "sender": str(id_user)
+        })
+        response.raise_for_status()
+    except Exception as e:
+        print(f"Error while communicating with bot: {e}")
+        await update.message.reply_text("Une erreur s'est produite, veuillez réessayer plus tard")
+        return
+    
     response_array = []
     response_json = response.json()
     print(f"Rasa response: {response_json}")
@@ -70,9 +76,13 @@ async def handle_message(update:Update, context:ContextTypes.DEFAULT_TYPE):
     if file:
         file_ics = f"{file[0].removeprefix('[FILE]')}"
     
-        
-        response = requests.get(f"http://api:5500/get-ics-file/{file_ics}")
-        response.raise_for_status()
+        try:
+            response = requests.get(f"http://api:5500/get-ics-file/{file_ics}")
+            response.raise_for_status()
+        except Exception as e:
+            print(f"Error while getting ICS file: {e}")
+            await update.message.reply_text("Une erreur s'est produite lors de la récupération du fichier ICS")
+            return
         response_json = response.json()
         if response.status_code == 200:
             try:
@@ -98,7 +108,7 @@ async def error(update:Update, context:ContextTypes.DEFAULT_TYPE):
 if __name__ == "__main__":
     dotenv.load_dotenv(dotenv_path="./.env-api")
     TOKEN = os.getenv('TELEGRAM_API_KEY')
-    dotenv.load_dotenv(dotenv_path="./.env-api")
+    dotenv.load_dotenv(dotenv_path="./.env")
     print(os.getenv('BOT_USERNAME'))
     app = Application.builder().token(TOKEN).concurrent_updates(True).build()
 
