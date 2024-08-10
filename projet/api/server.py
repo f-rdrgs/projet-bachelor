@@ -276,7 +276,7 @@ def get_heures_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Sema
 
                     slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
 
-                    new_schedule = [str((datetime.datetime.combine(datetime.date.today(), debut)+(decoupage_delta*offset)).time()) for offset in range(int(slot_count)) if (datetime.datetime.combine(datetime.date.today(), debut)+(decoupage_delta*offset)).time() < fin]
+                    new_schedule = [str((datetime.datetime.combine(datetime.date.today(), debut)+(decoupage_delta*offset)).time()) for offset in range(int(slot_count))]
                     final_schedule += new_schedule
                     if jour not in heures_semaine.keys():
                         heures_semaine[jour] = []
@@ -407,12 +407,18 @@ async def add_reservation(data:Reservation_API):
             heure_fin_print = datetime.datetime.combine(date_reserv,heure_fin_reserv,tzinfo=ZoneInfo('Europe/Paris'))
 
             # Ajout de la réservation au calendrier google associé et retourne un lien pour ajouter l'event à son propre calendrier
-            lien_google_cal = add_event_reservation(f"Réservation de {output_reserv_ressource['ressource']}",output_reserv['numero_tel'],output_reserv['prenom'],output_reserv['nom'],f"Une réservation de {output_reserv_ressource['ressource']}{choix_text}",heure_start_print,heure_fin_print)
+            lien_google_cal = ""
+            try:
+                lien_google_cal = add_event_reservation(f"Réservation de {output_reserv_ressource['ressource']}",output_reserv['numero_tel'],output_reserv['prenom'],output_reserv['nom'],f"Une réservation de {output_reserv_ressource['ressource']}{choix_text}",heure_start_print,heure_fin_print)
+                lien_google_cal = "[LINK]["+lien_google_cal+"]"
+            except Exception as e:
+                print(e)
+                lien_google_cal = "Aucun lien google calendar n'est disponible pour le moment."
             # Création d'un fichier ical de l'événement
             uuid_file = create_ical_event(f"Réservation de {output_reserv_ressource['ressource']}",output_reserv['numero_tel'],output_reserv['prenom'],output_reserv['nom'],f"Une réservation de {output_reserv_ressource['ressource']}{choix_text}",heure_start_print,heure_fin_print)
             return JSONResponse(content={
                     "message":"Réservation ajoutée",
-                    "data":{"lien_reservation_google":"[LINK]["+lien_google_cal+"]","reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res),"uuid_ical":uuid_file}
+                    "data":{"lien_reservation_google":lien_google_cal,"reservation":jsonable_encoder(output_reserv),"reservation_ressource":jsonable_encoder(output_reserv_ressource),"reservation_choix":jsonable_encoder(output_choix_res),"uuid_ical":uuid_file}
                 },status_code=status.HTTP_200_OK)
         except Exception as e:
             print(e)
@@ -534,7 +540,7 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
     try:
         with Session.begin() as session:
             # Récupération des jours de la semaine possédant des horaires
-            query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.debut <= heure).where(Jour_Horaire.fin>=heure).distinct().all()
+            query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.debut <= heure).where(Jour_Horaire.fin>heure).distinct().all()
             print(query)
             query_result = []
             dates_dispo :list[datetime.date] = []
@@ -543,12 +549,14 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
                 curr_date = datetime.datetime.now().date()
                 # Filtrage en format [0, 1, 2, 3](lundi, mardi, mercredi, ...)
                 jours_semaines_values = [Jours_Semaine(jour[0]).value for jour in query]
+                print(f"JOUR SEMAINES VALUES {jours_semaines_values}")
                 # Création array de dates selon les jours disponibles
                 for date in range(num_jours):
                     if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaines_values:
                         date_found = curr_date + datetime.timedelta(days=date)
                         dates_dispo.append(date_found)
                 curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
+                print(f"CURR RES : {curr_reservations}")
                 temp_res = get_reservations_temporaire_for_dates_for_ressource(ressource_label,dates_dispo)
                 heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
                 for date in curr_reservations.keys():
@@ -556,7 +564,7 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
                         curr_reservations[date].append(temp_res[date])
                 # Retire toutes les dates ne possédant aucun horaire de disponible
                 for date in curr_reservations.keys():
-                    diff : list[datetime.date]= np.setdiff1d(curr_reservations[date],heures_for_semaine[datetime.date.fromisoformat(date).weekday()])
+                    diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
                     if diff.__len__() == 0:
                         print(f"Removing {date}")
                         dates_dispo.remove(datetime.date.fromisoformat(date))

@@ -16,9 +16,6 @@ SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 # https://developers.google.com/calendar/api/quickstart/python
 def login():
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
-    """
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -49,6 +46,8 @@ def login():
 
 def add_event_reservation(title:str,attendee_phone:str,attendee_name:str,attendee_surname:str,description:str,date_start:datetime.datetime,date_end:datetime.datetime)->str:
     creds = login()
+    if creds is None:
+        raise Exception("No token was found")
     date_start_iso = date_start.astimezone(ZoneInfo('Europe/Paris')).isoformat()
     date_end_iso = date_end.astimezone(ZoneInfo('Europe/Paris')).isoformat()
     try:
