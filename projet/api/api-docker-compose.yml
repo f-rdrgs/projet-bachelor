@@ -12,5 +12,5 @@ services:
     env_file: .env
     volumes:
       - ./:/app
-      - /app/.venv
+      - ./.venv:/venv/.venv
     restart: unless-stopped

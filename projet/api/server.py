@@ -276,7 +276,7 @@ def get_heures_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Sema
 
                     slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
 
-                    new_schedule = [str((datetime.datetime.combine(datetime.date.today(), debut)+(decoupage_delta*offset)).time()) for offset in range(int(slot_count))]
+                    new_schedule = [str((datetime.datetime.combine(datetime.date.today(), debut)+(decoupage_delta*offset)).time()) for offset in range(int(slot_count)) if (datetime.datetime.combine(datetime.date.today(), debut)+(decoupage_delta*offset)).time() < fin]
                     final_schedule += new_schedule
                     if jour not in heures_semaine.keys():
                         heures_semaine[jour] = []
@@ -610,16 +610,12 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
             query_reservations_time = []
             if str(jour_date) in query_reservations.keys():
                 query_reservations_time = [time for time in query_reservations[str(jour_date)]]
-            # print(f"Query reserv {query_reservations}")
             if str(jour_date) in query_pre_reserv.keys():
                 query_reservations_time+=query_pre_reserv[str(jour_date)]
             # print(f"Query reserv with pre {query_reservations}")
             # query_result = jsonable_encoder(query)
             # query_reservations_result = jsonable_encoder(query_reservations)
-            # print(f"Réservations: {query_reservations_time}\n")
-            # print(query_result)
-
-            total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
+            print(f"Réservations: {query_reservations_time}\n")
             heures_query, query_horaire = get_heures_semaine_for_ressource(ressource_label,[Jours_Semaine(jour_date.weekday())])
             # print(f"Heures query: {heures_query}")
             horaires = []
@@ -630,6 +626,7 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
 
             for heure in horaires:
                 # print(f"{heure} not in {query_reservations_time}")
+                print(heure)
                 if str(heure) not in query_reservations_time:
                     
                     final_schedule.append(str(heure))
@@ -692,4 +689,4 @@ async def get_ics_file(ics_name:str):
 
 if __name__ == "__main__":
     # asyncio.create_task()
-    uvicorn.run("server:app", host="0.0.0.0" , port=5500, log_level="info",reload = True,workers=4,reload_dirs=["/app"],reload_excludes=["/app/.venv"])
+    uvicorn.run("server:app", host="0.0.0.0" , port=5500, log_level="info",reload = False,workers=4,reload_dirs=["/app"],reload_excludes=["/app/.venv"])

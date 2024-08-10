@@ -26,7 +26,7 @@ def login():
     if os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json", SCOPES)
     # If there are no (valid) credentials available, let the user log in.
-    if not creds or not creds.valid:
+    if creds is None or not creds.valid:
         try:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
@@ -40,9 +40,12 @@ def login():
             with open("token.json", "w") as token:
                 token.write(creds.to_json())
             return creds
-        except FileNotFoundError as e:
-            print("Veuillez ajouter le fichier Credentials.json disponible avec votre projet Google")
+        except Exception as e:
+            print(e)
+            print("Veuillez ajouter le fichier Credentials.json disponible avec votre projet Google ou une autre erreur est survenue")
             return None
+    else:
+        return creds
 
 def add_event_reservation(title:str,attendee_phone:str,attendee_name:str,attendee_surname:str,description:str,date_start:datetime.datetime,date_end:datetime.datetime)->str:
     creds = login()

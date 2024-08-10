@@ -13,6 +13,7 @@
 action_endpoint:
  url: "http://actions-server:5055/webhook"
  session_expiration_time: 300
+ timeout: 15
 # Tracker store which is used to store the conversations.
 # By default the conversations are stored in memory.
 # https://rasa.com/docs/rasa/tracker-stores
