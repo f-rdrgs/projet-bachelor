@@ -4,3 +4,4 @@ pyspellchecker
 nltk
 peewee
 pandas
+numpy

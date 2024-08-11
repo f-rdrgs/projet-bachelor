@@ -18,7 +18,7 @@ from rasa_sdk.events import SlotSet, Restarted
 import datetime
 import requests
 from dataclasses import dataclass
-
+import numpy as np
 
 @dataclass
 class Reservation_save_API():
@@ -261,27 +261,39 @@ class ValidateGetOptionsReservForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         options_choix :str = tracker.latest_message.get('text')
+        options_choix = options_choix.split()
         ressource = tracker.get_slot("ressource")
         option_count = tracker.get_slot("option_count")
         options_list = tracker.get_slot("options_ressource")
         options_list = [str(opt) for opt in options_list]
         options = get_options(ressource)
+        valid_choices = []
+        # Try Except ValueError
+        for opt in options.items():
+            for choice in options_choix:
+                diff = np.setdiff1d(choice,list(opt[1][1].keys()))
+                if diff.__len__() == 0:
+                    valid_choices+= str(choice)
+        options_choix = valid_choices
         utter_debug(f"List choix: {str(options_list)}",tracker,dispatcher)
         print(f"List choix: {str(options_list)}")
         if tracker.latest_message.get("intent")["name"] == "stop":
-            return {}
+            return {"stop_slot":True}
         if option_count is None:
             return {"choix_option":None}
         option_count = int(option_count)
         
-        if options.keys().__len__()>0 and option_count >=0 and option_count < options.keys().__len__():
-            nombres = [int(nb) for nb in options_choix.split()]
+        if options.keys().__len__()>0 and option_count >=0 and option_count < options.keys().__len__() :
+            try:
+                nombres = [int(nb) for nb in options_choix]
+            except ValueError as e:
+                dispatcher.utter_message("Veuillez entrer des nombres valides")
+                return {"choix_option":None}
             utter_debug(f"nombres: {str(nombres)}",tracker,dispatcher)
             print(f"Nombres: {str(nombres)}")
             if nombres.__len__() > 0 and nombres.__len__() + option_count <= options.keys().__len__(): 
                 lst_opt = []
                 final_numbers = []
-                remove_if_present = lambda val : val in options_list
                 are_arrays_common = lambda arr1,arr2: any([nb for nb in arr1 if nb in arr2])
 
                 for opt in options.items():
@@ -291,34 +303,26 @@ class ValidateGetOptionsReservForm(FormValidationAction):
                 print(f"lst filtered: {lst_opt}")
                 for choix_nb in nombres:
                     if str(choix_nb) not in lst_opt:
-                        print("IN")
+                        for opt in options.items():
+                            if are_arrays_common(str(choix_nb),list(opt[1][1].keys()) ):
+                                lst_opt+=(list(opt[1][1].keys()) )
                         options_list.append(str(choix_nb))
                         final_numbers.append(str(choix_nb))
 
                 if option_count+final_numbers.__len__() < options.keys().__len__():
                     print(f"LIST : {options_list}")
+                    message = "Options: "
+                    for option in options_list:
+                        message +=f"{option}"
+                    message+=" sélectionnée(s)"
+                    dispatcher.utter_message(message)
                     return {"choix_option":None,"option_count":float(option_count+final_numbers.__len__()),"options_ressource":options_list}
                 else:
                     print(f"LIST : {options_list}")
                     return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
-
-
-                # print(f"{int(choix_option)} in {range(0,options.keys().__len__())} {int(choix_option) in range(0,options.keys().__len__()+1)}")
-                # if int(choix_option) in range(0,list(options.items())[option_count][1][1].keys().__len__()+1):
-                #     # list(list(dico.items())[option_count][1][1].items())[2-1][0]
-                #     options_list.append(int(list(list(options.items())[option_count][1][1].items())[int(choix_option)-1][0]))
-                #     if option_count+1 < options.keys().__len__():
-                #         print(f"LIST : {options_list}")
-                #         return {"choix_option":None,"option_count":float(option_count+1),"options_ressource":options_list}
-                #     else:
-                #         print(f"LIST : {options_list}")
-                #         return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
-                # else:
-                #     dispatcher.utter_message("Choix invalide")
-                #     return {"choix_option":None}
             else:
                 dispatcher.utter_message("Veuillez fournir une/des option(s)")
-                return {"choix_options":None}
+                return {"choix_option":None}
         else:
             dispatcher.utter_message("Pas d'options")
             return {"choix_option":0.0}
@@ -381,19 +385,13 @@ class ValidateInfoReserv(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         nom_prenom_list = str(slot_value).split(' ')
+        if str(slot_value).lower().strip() == "stop":
+            return {"stop_slot":True,"numero_tel":"0","nom_prenom":"0"}
         if nom_prenom_list.__len__() >1:
             return {"nom_prenom":slot_value,"accept_deny":None}
         else:
             dispatcher.utter_message("Veuillez entrer un nom et prénom")
             return {"nom_prenom":None,"accept_deny":None}
-
-    def validate_prenom( self,
-        slot_value: Any,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: DomainDict,
-    ) -> Dict[Text, Any]:
-        return {"prenom":slot_value,"accept_deny":None}
 
     def validate_numero_tel(
         self,
@@ -407,6 +405,9 @@ class ValidateInfoReserv(FormValidationAction):
             "locale":"fr_FR",
             "text":numero
         }
+        stop_slot = tracker.get_slot("stop_slot")
+        if bool(stop_slot):
+            return {"stop_slot":True}
         if  slot_value is not None:
             res = requests.post("http://duckling:8000/parse",data=data)
             # Récupération de la requête duckling pour vérifier le numéro de téléphone
@@ -550,15 +551,19 @@ class ActionPreDefineRessourceSlot(Action):
         return final_return
 
 
-class ActionResetValidation(Action):
+class ActionStoppedConvo(Action):
     def name(self)->Text:
-        return "reset_validation"
+        return "stopped_convo"
     
 
     def run(self, dispatcher: CollectingDispatcher,
         tracker: Tracker,
         domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        return [SlotSet("accept_deny",None)]
+        stop_slot = bool(tracker.get_slot("stop_slot"))
+        if stop_slot:
+            return [FollowupAction("restart_convo")]
+        else:
+            return []
 
 
 class AnnulerDateHeureReset(Action):
@@ -827,6 +832,9 @@ class AskForHeureAction(Action):
         date = tracker.get_slot("date")
         date_datetime = datetime.datetime.fromisoformat(date)
         response_mess = "Les heures disponibles à la réservation sont :\n"
+        stop_slot = bool(tracker.get_slot("stop_slot"))
+        if stop_slot:
+            return [FollowupAction("restart_convo")]
         heures_horaires = get_heures(date_datetime,ressource)
         print(heures_horaires)
         for index, ress in enumerate([datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires["horaire_heures"]]):
@@ -844,6 +852,9 @@ class AskForDateAction(Action):
     ) -> List[EventType]:
         heure = tracker.get_slot("heure")
         date = tracker.get_slot("date")
+        stop_slot = bool(tracker.get_slot("stop_slot"))
+        if stop_slot:
+            return [FollowupAction("restart_convo")]
         utter_debug(f"Heure {heure} date {date}",tracker,dispatcher)
         if heure is not None:
             response_mess = f"Les dates disponibles à la réservation pour {str(datetime.datetime.strptime(datetime.datetime.fromisoformat(heure).time().__str__(),'%H:%M:%S').strftime('%Hh%M'))} sont :"

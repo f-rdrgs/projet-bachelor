@@ -52,6 +52,13 @@ slots:
       - type: from_intent
         value: true
         intent: debug
+  stop_slot:
+    type: bool
+    initial_value: false
+    mappings:
+      - type: from_intent
+        value: true
+        intent: stop
   nom_prenom:
     type: text
     mappings:

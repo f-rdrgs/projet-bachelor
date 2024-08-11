@@ -36,7 +36,7 @@ stories:
           - requested_slot: null
       - active_loop: null
       - action: utter_ressource
-      - action: reset_validation
+      # - action: reset_validation
       - slot_was_set:
           - accept_deny: None
       - action: get_options_reserv_form
@@ -46,6 +46,7 @@ stories:
       - slot_was_set:
           - requested_slot: null
       - active_loop: null
+      - action: stopped_convo
       - action: list_list_options
     #   - action: reset_validation
       - slot_was_set:
@@ -60,7 +61,7 @@ stories:
           - requested_slot: null
       - active_loop: null
       - action: action_utter_date_heure
-      - action: reset_validation
+      # - action: reset_validation
       - slot_was_set:
           - accept_deny: None
       - action: get_info_reserv_form
@@ -70,9 +71,10 @@ stories:
       - slot_was_set:
           - requested_slot: null
       - active_loop: null
+      - action: stopped_convo
       - action: utter_nom_prenom
       - action: action_utter_fin_reservation
-      - action: reset_validation
+      # - action: reset_validation
       - slot_was_set:
           - accept_deny: None
       - action: save_ressource

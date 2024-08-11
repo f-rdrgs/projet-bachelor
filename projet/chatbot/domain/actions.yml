@@ -12,7 +12,7 @@ actions:
   - action_ask_ressource
   - action_salutation
   - restart_convo
-  - reset_validation
+  - stopped_convo
   - save_ressource
   - predefine_ressource
   - annuler_date_heure
