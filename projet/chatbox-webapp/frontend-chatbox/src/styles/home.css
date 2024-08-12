@@ -7,6 +7,7 @@ div.HomeContainer {
     justify-content: space-evenly;
     text-align: center;
     height: 100vh;
+    padding-bottom: 4rem;
 }
 div.HomeContainer > h1 {
     font-size: 4rem;
