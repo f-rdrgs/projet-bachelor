@@ -913,7 +913,7 @@ class AskForDateAction(Action):
                 prev_month = date.month
 
             dispatcher.utter_message(text=response_mess)
-            dispatcher.utter_message(text="Quand souhaitez-vous réserver ?")
+            dispatcher.utter_message(text="À quelle date souhaitez-vous réserver ?")
             
             return []
         

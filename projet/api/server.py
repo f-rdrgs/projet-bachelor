@@ -661,9 +661,10 @@ async def test_nlu_rasa(data:Test_rasa_nlu):
         print(data.model_dump_json())
         async with httpx.AsyncClient() as client:
             response = await client.post('http://rasa-core:5005/model/parse',data=data.model_dump_json(),headers=headers)    
+            response.raise_for_status()
             return JSONResponse(content=jsonable_encoder(response.json()),status_code=status.HTTP_200_OK)
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors du test nlu avec Rasa: {str(e)}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors du test nlu avec Rasa: {e}")
 
 @app.post("/communicate-rasa")
 async def talk_to_rasa(data:Communicate_Rasa):
