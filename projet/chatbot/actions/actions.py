@@ -43,7 +43,6 @@ class Day_week(Enum):
 @staticmethod
 def get_ressource_list()->list[str]:
     res = requests.get("http://api:5500/get-ressources").json()
-    # print(res)
     if(len(res)>0):
         return [ressource['label'] for ressource in res]
 
@@ -79,14 +78,12 @@ def add_temp_reservation(ressource:str, date_reserv:datetime.date,heure_reserv:d
 
 @staticmethod
 def get_jours_disponibles(ressource_label: str,nombre_jours:int,heure_prechoisie:datetime.time|None)->list[datetime.date]:
-    # get-jours-semaine/{ressource_label}
         res = []
         if heure_prechoisie is not None:
             res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}/{nombre_jours}/{heure_prechoisie}").json() 
         else:
             res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}/{nombre_jours}").json()
         
-        # print(f"result res :{res}")
         if(len(res["dates"])>0):
             return [datetime.date.fromisoformat(date) for date in res["dates"]]
         else:
@@ -127,15 +124,6 @@ def save_reservation(data: Reservation_save_API)->tuple[bool,str,requests.Respon
         ressource = str(data.ressource)
         heure = str(data.heure)
         list_choix = data.list_choix
-        print({
-            "nom":nom,
-            "prenom":prenom,
-            "numero_tel":numero_tel,
-            "ressource":ressource,
-            "heure":str(heure),
-            "date":str(date),
-            "list_options":list_choix
-        })
         res = requests.post(f"http://api:5500/add-reservation",json={
             "nom":nom,
             "prenom":prenom,
@@ -276,7 +264,6 @@ class ValidateGetOptionsReservForm(FormValidationAction):
                     valid_choices+= str(choice)
         options_choix = valid_choices
         utter_debug(f"List choix: {str(options_list)}",tracker,dispatcher)
-        print(f"List choix: {str(options_list)}")
         if tracker.latest_message.get("intent")["name"] == "stop":
             return {"stop_slot":True}
         if option_count is None:
@@ -290,7 +277,6 @@ class ValidateGetOptionsReservForm(FormValidationAction):
                 dispatcher.utter_message("Veuillez entrer des nombres valides")
                 return {"choix_option":None}
             utter_debug(f"nombres: {str(nombres)}",tracker,dispatcher)
-            print(f"Nombres: {str(nombres)}")
             if nombres.__len__() > 0 and nombres.__len__() + option_count <= options.keys().__len__(): 
                 lst_opt = []
                 final_numbers = []
@@ -299,8 +285,6 @@ class ValidateGetOptionsReservForm(FormValidationAction):
                 for opt in options.items():
                     if are_arrays_common(options_list,list(opt[1][1].keys()) ):
                         lst_opt +=(list(opt[1][1].keys()) )
-                print(f"list unfiltered: {lst_opt}")
-                print(f"lst filtered: {lst_opt}")
                 for choix_nb in nombres:
                     if str(choix_nb) not in lst_opt:
                         for opt in options.items():
@@ -310,7 +294,6 @@ class ValidateGetOptionsReservForm(FormValidationAction):
                         final_numbers.append(str(choix_nb))
 
                 if option_count+final_numbers.__len__() < options.keys().__len__():
-                    print(f"LIST : {options_list}")
                     message = "Options: "
                     for option in options_list:
                         message +=f"{option}"
@@ -318,7 +301,6 @@ class ValidateGetOptionsReservForm(FormValidationAction):
                     dispatcher.utter_message(message)
                     return {"choix_option":None,"option_count":float(option_count+final_numbers.__len__()),"options_ressource":options_list}
                 else:
-                    print(f"LIST : {options_list}")
                     return {"choix_option":1.0,"option_count":0.0,"options_ressource":options_list}
             else:
                 dispatcher.utter_message("Veuillez fournir une/des option(s)")
@@ -341,7 +323,6 @@ class ValidateRessourceForm(FormValidationAction):
     ) -> Dict[Text, Any]:
         if slot_value is not None:
             ressource = str(slot_value).lower()
-            print(f"REssource: {ressource}")
             ressources = get_ressource_list()
             if ressource in ressources:
                 return {"ressource":ressource,"accept_deny":None}
@@ -836,7 +817,6 @@ class AskForHeureAction(Action):
         if stop_slot:
             return [FollowupAction("restart_convo")]
         heures_horaires = get_heures(date_datetime,ressource)
-        print(heures_horaires)
         for index, ress in enumerate([datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires["horaire_heures"]]):
             response_mess += (f"{ress}, " if index < len([datetime.datetime.strptime(horaire,'%H:%M:%S').strftime('%Hh%M') for horaire in heures_horaires["horaire_heures"]])-1 else f"{ress}")
         dispatcher.utter_message(text=response_mess)
@@ -931,7 +911,6 @@ class ActionAskHoraire(Action):
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict):
         ressource = tracker.get_slot("ressource_ask")
         if ressource is not None:
-            print(ressource)
             result_query_heures = get_heures_semaine(ressource)
             dict_horaires_jour : dict[str,dict] = result_query_heures["horaires"]
             message_utter = f"Les horaires de réservation pour {ressource} sont les suivants:"

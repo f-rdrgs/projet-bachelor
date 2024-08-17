@@ -180,7 +180,6 @@ Fonction exécutant la suppression de pré-réservations chaque fois que le temp
 """
 async def remove_old_reservations(interval: int):
     while True:
-        print(f"Removed old temp. reservations at {datetime.datetime.now(ZoneInfo('Europe/Paris'))}")
         await delete_reservation_query()
         await asyncio.sleep(interval)
 
@@ -252,7 +251,6 @@ Permet de récupérer l'ensemble des heures pour chaque jour de la semaine pour 
 def get_heures_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Semaine] = [Jours_Semaine.lundi,Jours_Semaine.mardi,Jours_Semaine.mercredi,Jours_Semaine.jeudi,Jours_Semaine.vendredi,Jours_Semaine.samedi,Jours_Semaine.dimanche]):
     try:
         horaires,query_horaire = get_all_horaires_semaine_for_ressource(ressource,jours_semaine)
-        print(f"horaires: {horaires}\n\n\nhoraire_query: {query_horaire}")
         heures_semaine = {}
         for jour in horaires.keys():
             # Parcours des divers horaires pour un même jour (si d'autres sont présents ou non)
@@ -294,9 +292,9 @@ def get_reservations_for_dates_for_ressource(ressource:str,dates:list[datetime.d
     try:
         with Session.begin() as session:
             query = session.query(Reservations_Client_Resource.date_reservation,func.array_agg(Reservations_Client_Resource.heure).label("heures")).filter(Reservations_Client_Resource.date_reservation.in_(dates)).where(Reservations_Client_Resource.resource == ressource).group_by(Reservations_Client_Resource.date_reservation)
-            print(query)
             return jsonable_encoder(query)
     except Exception as e:
+        print(f"Error on get reservations for dates for ressource: {e}")
         return {}
 
 """
@@ -322,7 +320,6 @@ def get_reservations_temporaire_for_dates_for_ressource(ressource:str,dates:list
     try:
         with Session.begin() as session:
             query = session.query(Temp_Reservation.date_reserv, func.array_agg(Temp_Reservation.heure).label("heures")).filter(Temp_Reservation.date_reserv.in_(dates)).where(Temp_Reservation.label_ressource.like(ressource)).group_by(Temp_Reservation.date_reserv)
-            print(f"Temp Res: {query}")
             return jsonable_encoder(query)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération de réservations temporaires: {str(e)}")
@@ -528,7 +525,6 @@ async def get_jours_semaine(ressource_label:str,num_jours:int):
                 for date in curr_reservations.keys():
                     diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
                     if diff.__len__() == 0:
-                        print(f"Removing {date}")
                         dates_dispo.remove(datetime.date.fromisoformat(date))
                 
             return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
@@ -541,22 +537,18 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
         with Session.begin() as session:
             # Récupération des jours de la semaine possédant des horaires
             query = session.query(Jour_Horaire.jour).where(Jour_Horaire.label.like(ressource_label)).where(Jour_Horaire.debut <= heure).where(Jour_Horaire.fin>heure).distinct().all()
-            print(query)
-            query_result = []
             dates_dispo :list[datetime.date] = []
             query_horaire = []
             if query.__len__() > 0:
                 curr_date = datetime.datetime.now().date()
                 # Filtrage en format [0, 1, 2, 3](lundi, mardi, mercredi, ...)
                 jours_semaines_values = [Jours_Semaine(jour[0]).value for jour in query]
-                print(f"JOUR SEMAINES VALUES {jours_semaines_values}")
                 # Création array de dates selon les jours disponibles
                 for date in range(num_jours):
                     if (curr_date + datetime.timedelta(days=date)).weekday() in jours_semaines_values:
                         date_found = curr_date + datetime.timedelta(days=date)
                         dates_dispo.append(date_found)
                 curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
-                print(f"CURR RES : {curr_reservations}")
                 temp_res = get_reservations_temporaire_for_dates_for_ressource(ressource_label,dates_dispo)
                 heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
                 for date in curr_reservations.keys():
@@ -566,7 +558,6 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
                 for date in curr_reservations.keys():
                     diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
                     if diff.__len__() == 0:
-                        print(f"Removing {date}")
                         dates_dispo.remove(datetime.date.fromisoformat(date))
                 
             return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
@@ -614,18 +605,12 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
             # Récupère toutes les pré-réservations
             query_pre_reserv = get_reservations_temporaire_for_dates_for_ressource(ressource_label,[jour_date])
             # Ressort une liste de temps
-            # print(query_reservations)
             query_reservations_time = []
             if str(jour_date) in query_reservations.keys():
                 query_reservations_time = [time for time in query_reservations[str(jour_date)]]
             if str(jour_date) in query_pre_reserv.keys():
                 query_reservations_time+=query_pre_reserv[str(jour_date)]
-            # print(f"Query reserv with pre {query_reservations}")
-            # query_result = jsonable_encoder(query)
-            # query_reservations_result = jsonable_encoder(query_reservations)
-            print(f"Réservations: {query_reservations_time}\n")
             heures_query, query_horaire = get_heures_semaine_for_ressource(ressource_label,[Jours_Semaine(jour_date.weekday())])
-            # print(f"Heures query: {heures_query}")
             horaires = []
             if jour_date.weekday() in heures_query.keys():
                 horaires = [datetime.datetime.strptime(heure, '%H:%M:%S').time() for heure in heures_query[jour_date.weekday()]]
@@ -633,13 +618,9 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
             final_schedule = []
 
             for heure in horaires:
-                # print(f"{heure} not in {query_reservations_time}")
-                print(heure)
-                if str(heure) not in query_reservations_time:
-                    
+                if str(heure) not in query_reservations_time:    
                     final_schedule.append(str(heure))
 
-            # print("QUERY HORAIRE "+str(query_horaire))
             return JSONResponse(content={"horaire_heures":final_schedule,"horaire":query_horaire},status_code=status.HTTP_200_OK)
 
     except Exception as e:
@@ -658,7 +639,6 @@ async def get_ressources():
 async def test_nlu_rasa(data:Test_rasa_nlu):
     try:
         headers = {"Content-Type": "application/json"}
-        print(data.model_dump_json())
         async with httpx.AsyncClient() as client:
             response = await client.post('http://rasa-core:5005/model/parse',data=data.model_dump_json(),headers=headers)    
             response.raise_for_status()
@@ -697,5 +677,4 @@ async def get_ics_file(ics_name:str):
     raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Erreur lors de la génération du fichier ics pour l\'événement'")
 
 if __name__ == "__main__":
-    # asyncio.create_task()
     uvicorn.run("server:app", host="0.0.0.0" , port=5500, log_level="info",reload = False,workers=4,reload_dirs=["/app"],reload_excludes=["/app/.venv"])
