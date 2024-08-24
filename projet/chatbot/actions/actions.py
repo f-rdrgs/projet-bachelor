@@ -491,14 +491,17 @@ class ActionPreDefineRessourceSlot(Action):
             res = requests.post("http://duckling:8000/parse",data=data)
             res_json = res.json()
             if res.status_code == 200:
-                grain = "minute"
-                dim_time_index = -1
-                for index in range(len(res_json)):
-                    if res_json[index]["dim"] == "time" and dim_time_index == -1:
-                        dim_time_index = index
-                        grain = res_json[index]["value"]["grain"]
-                if grain == "minute" or grain == "hour":
-                    heure = str(res_json[index]["value"]["value"])
+                try:
+                    grain = "minute"
+                    dim_time_index = -1
+                    for index in range(len(res_json)):
+                        if res_json[index]["dim"] == "time" and dim_time_index == -1:
+                            dim_time_index = index
+                            grain = res_json[index]["value"]["grain"]
+                    if grain == "minute" or grain == "hour":
+                        heure = str(res_json[index]["value"]["value"])
+                except Exception as e:
+                    print(f"An error has occured: {e}")
 
 
 
@@ -512,7 +515,7 @@ class ActionPreDefineRessourceSlot(Action):
                 if str(heure_datetime.time()) in list_heures_dispo[day] and not found_heure_in_horaire:
                     found_heure_in_horaire = True
             if found_heure_in_horaire:
-                # dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
+                dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
                 final_return.append(SlotSet("heure",pre_heure))
             else:
                 dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
@@ -521,6 +524,7 @@ class ActionPreDefineRessourceSlot(Action):
             dates_dispo = get_jours_disponibles(ressource,30,None)
             date_datetime = datetime.datetime.fromisoformat(date).date()
             if(date_datetime in dates_dispo):
+               dispatcher.utter_message(f"Sélection de la date du {date_datetime.day}/{date_datetime.month}/{date_datetime.year}")
                final_return.append(SlotSet('date',pre_date))
             else:
                 dispatcher.utter_message(f"La date du {date_datetime.day}/{date_datetime.month}/{date_datetime.year} n'est pas disponible. Veuillez choisir une autre date")
