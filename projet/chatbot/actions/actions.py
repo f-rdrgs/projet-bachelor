@@ -558,7 +558,7 @@ class AnnulerDateHeureReset(Action):
         dispatcher.utter_message("Retour au choix des dates ou heures")
         return [SlotSet("heure",None),SlotSet("date",None), FollowupAction("action_ask_date"),FollowupAction("get_date_heure_form")]
     
-class ValidateHeuresForm(FormValidationAction):
+class ValidateDatesHeuresForm(FormValidationAction):
     def name(self)->Text:
         return "validate_get_date_heure_form"
     # Duckling ne gère pas les dates sous forme de 15.05 ! ! !
@@ -784,7 +784,7 @@ class AskForChoixOptionAction(Action):
                 dispatcher.utter_message("Veuillez entrer le/les nombre(s) correspondant(s) (Ex.: 2 1, 3 4 1)")
             else:
                 dispatcher.utter_message("Aucune option n'est disponible")
-                return [SlotSet("option_count",0),SlotSet("choix_option",0),SlotSet("options_ressource",[]),FollowupAction('reset_validation')]
+                return [SlotSet("option_count",0),SlotSet("choix_option",-1),SlotSet("options_ressource",[]),FollowupAction("stopped_convo")]
 
         else:
             dispatcher.utter_message("Aucune ressource trouvée pour récupérer ses options")

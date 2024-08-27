@@ -261,7 +261,6 @@ def get_heures_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Sema
                 horaires_debut_fin = [(datetime.datetime.strptime(debut,"%H:%M:%S").time(),datetime.datetime.strptime(fin,"%H:%M:%S").time(),decoupage) for debut,fin in zip(sub_horaire[0],sub_horaire[1])]
 
                 total_sec_calc = lambda hour,minute,second: (hour*3600 + minute*60 + second)
-                final_schedule = []
                 # Ajout de toutes les heures de disponibilité selon les plages horaires et découpage horaire
                 for heures_tuple in horaires_debut_fin:
                     debut, fin, decoupage = heures_tuple
@@ -275,10 +274,11 @@ def get_heures_semaine_for_ressource(ressource:str,jours_semaine:list[Jours_Sema
                     slot_count = (fin_delta.total_seconds()-debut_delta.total_seconds()) / decoupage_delta.total_seconds()
 
                     new_schedule = [str((datetime.datetime.combine(datetime.date.today(), debut)+(decoupage_delta*offset)).time()) for offset in range(int(slot_count))]
-                    final_schedule += new_schedule
+                    
                     if jour not in heures_semaine.keys():
                         heures_semaine[jour] = []
-                    heures_semaine[jour] += (final_schedule)
+                    heures_semaine[jour] += new_schedule
+                    heures_semaine[jour].sort()
             
         
         return heures_semaine,query_horaire
@@ -611,6 +611,7 @@ async def get_horaires_for_ressource(jour:str,ressource_label: str):
             if str(jour_date) in query_pre_reserv.keys():
                 query_reservations_time+=query_pre_reserv[str(jour_date)]
             heures_query, query_horaire = get_heures_semaine_for_ressource(ressource_label,[Jours_Semaine(jour_date.weekday())])
+            print(f"heures query : {heures_query} query horaire : {query_horaire}")
             horaires = []
             if jour_date.weekday() in heures_query.keys():
                 horaires = [datetime.datetime.strptime(heure, '%H:%M:%S').time() for heure in heures_query[jour_date.weekday()]]

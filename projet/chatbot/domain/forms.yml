@@ -13,7 +13,6 @@ forms:
     required_slots:
       - date
       - heure
-      # - accept_deny
     ignored_intents:
       - ressource_gather
   
