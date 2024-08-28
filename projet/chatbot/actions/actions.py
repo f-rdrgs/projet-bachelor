@@ -78,14 +78,17 @@ def add_temp_reservation(ressource:str, date_reserv:datetime.date,heure_reserv:d
 
 @staticmethod
 def get_jours_disponibles(ressource_label: str,nombre_jours:int,heure_prechoisie:datetime.time|None)->list[datetime.date]:
-        res = []
+        res = {}
         if heure_prechoisie is not None:
             res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}/{nombre_jours}/{heure_prechoisie}").json() 
         else:
             res = requests.get(f"http://api:5500/get-jours-semaine/{ressource_label}/{nombre_jours}").json()
-        
-        if(len(res["dates"])>0):
-            return [datetime.date.fromisoformat(date) for date in res["dates"]]
+        if "dates" in res:
+            if(len(res["dates"])>0):
+                return [datetime.date.fromisoformat(date) for date in res["dates"]]
+            else:
+                print("No dates found")
+                return []
         else:
             print("No dates found")
             return []
@@ -914,7 +917,7 @@ class ActionAskHoraire(Action):
         return "action_ask_horaire"
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: DomainDict):
         ressource = tracker.get_slot("ressource_ask")
-        if ressource is not None:
+        if str(ressource).lower() in get_ressource_list():
             result_query_heures = get_heures_semaine(ressource)
             dict_horaires_jour : dict[str,dict] = result_query_heures["horaires"]
             message_utter = f"Les horaires de réservation pour {ressource} sont les suivants:"
