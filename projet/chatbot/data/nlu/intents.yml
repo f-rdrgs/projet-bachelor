@@ -45,6 +45,9 @@ nlu:
       - Le [18 avril 2025](date)
       - à la date du [04/06/24](date)
       - le [20/09/2025](date)
+      - le [15 mars](date)
+      - le [2 novembre](date)
+      - le [8 juin](date)
       - [14/05/2024](date)
       - [12 décembre](date)
       - à la date du [25 Février](date)
@@ -57,6 +60,8 @@ nlu:
       - Pour le [25/11](date)
       - Pour le [20/12/2024](date)
       - le [2 mars](date)
+      - le [30/03](date)
+      - pour le [31 mars](date)
 
   - intent: affirm
     examples: |

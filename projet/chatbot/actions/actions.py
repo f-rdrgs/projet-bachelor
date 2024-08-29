@@ -66,10 +66,10 @@ def add_temp_reservation(ressource:str, date_reserv:datetime.date,heure_reserv:d
     try:
         data = {
             "ressource":ressource,
-            "heure":heure_reserv,
-            "date_reserv":date_reserv
+            "heure":str(heure_reserv),
+            "date_reserv":str(date_reserv)
         }
-        res = requests.post("http://api:5500/add-temp-reservation/",data=data)
+        res = requests.post("http://api:5500/add-temp-reservation/",json=data)
         return (res.status_code == 200)
     except Exception as e:
         print(e)
@@ -608,7 +608,7 @@ class ValidateDatesHeuresForm(FormValidationAction):
                             date_datetime = datetime.datetime.fromisoformat(date_duckling).date()
                             if(date_datetime in dates_dispo):
                                 if heure is not None:
-                                    add_temp_reservation(ressource,heure,date)
+                                    add_temp_reservation(ressource,str(date_datetime),str(datetime.datetime.fromisoformat(heure).time()))
                                     dispatcher.utter_message(f"Sélection de la date du {date_datetime.day}/{date_datetime.month}/{date_datetime.year}.")
 
                                 else:
@@ -623,6 +623,7 @@ class ValidateDatesHeuresForm(FormValidationAction):
                     
 
                 except Exception as e:
+                    print(e)
                     dispatcher.utter_message(text="Une erreur s'est produite lors du choix de la date. Veuillez réessayer.")
             return {"date":None,"date_prereserv":None}
         else:
@@ -656,13 +657,11 @@ class ValidateDatesHeuresForm(FormValidationAction):
                     res_json = res.json()
                     dim_time_index = -1
                     grain= "minute"
-                    # dispatcher.utter_message(f"Duckling: {res_json}")
                     for index in range(len(res_json)):
                         if res_json[index]["dim"] == "time" and dim_time_index == -1:
                             dim_time_index = index
                             grain = res_json[index]["value"]["grain"]
                     if dim_time_index >= 0:
-                        # dispatcher.utter_message(f"Grain {grain}")
                         if grain == "minute" or grain == "hour":
                             if date is not None:
                                 date = str(date)
@@ -673,8 +672,7 @@ class ValidateDatesHeuresForm(FormValidationAction):
                                 # S'assure que l'heure choisie est disponible à la réservation
                                 if heure_datetime.time() in heures_dispo :
                                     dispatcher.utter_message(f"Sélection de l'heure pour {heure_datetime.strftime('%Hh%M')}")
-                                    # return {"heure": heure_duckling,"accept_deny":None}
-                                    add_temp_reservation(ressource,heure_duckling,date)
+                                    add_temp_reservation(ressource,date,str(heure_datetime.time()))
                                     return {"heure":heure_duckling,"heure_prereserv":None}
                                 else:
                                     dispatcher.utter_message(f"{heure_datetime.strftime('%Hh%M')} n'est pas une heure valide. Veuillez en choisir une autre")
@@ -702,9 +700,6 @@ class ValidateDatesHeuresForm(FormValidationAction):
                                                         curr_day = Day_week(int(day))
                                                         for horaire in horaire_jour['horaires']:
                                                             message_utter += f"[br][tab]- {horaire[0]} à {horaire[1]} (intervalles de {horaire_jour['decoupage']})"
-                                    # for day in dict_horaires_jour.keys():
-                                    #     for horaire in result_query_heures["horaires"][day]["horaires"]:
-                                    #         dispatcher.utter_message(f"Le {Day_week(int(day)).name.capitalize()} de {horaire[0]} à {horaire[1]} par intervalles de {result_query_heures['horaires'][day]['decoupage']}")
                                             
 
                         else:

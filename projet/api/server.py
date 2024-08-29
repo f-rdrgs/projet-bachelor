@@ -320,6 +320,7 @@ def get_reservations_temporaire_for_dates_for_ressource(ressource:str,dates:list
     try:
         with Session.begin() as session:
             query = session.query(Temp_Reservation.date_reserv, func.array_agg(Temp_Reservation.heure).label("heures")).filter(Temp_Reservation.date_reserv.in_(dates)).where(Temp_Reservation.label_ressource.like(ressource)).group_by(Temp_Reservation.date_reserv)
+            query = {elem[0]:elem[1] for elem in query}
             return jsonable_encoder(query)
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,detail=f"Une erreur s'est produite lors de la récupération de réservations temporaires: {str(e)}")
@@ -517,13 +518,18 @@ async def get_jours_semaine(ressource_label:str,num_jours:int):
                         dates_dispo.append(date_found)
                 curr_reservations = get_reservations_for_dates_for_ressource(ressource_label,dates_dispo)
                 pre_reserv = get_reservations_temporaire_for_dates_for_ressource(ressource_label,dates_dispo)
-                for date in curr_reservations.keys():
-                    if date in pre_reserv.keys():
-                        curr_reservations[date]+=pre_reserv[date]
+                for date in dates_dispo:
+                    date_iso = date.isoformat()
+                    if date_iso in pre_reserv.keys():
+                        if date_iso not in curr_reservations.keys():
+                                curr_reservations[date_iso] = []
+                        curr_reservations[date_iso]+=pre_reserv[date_iso]
                 heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
+                print(f"Curr reservs : {curr_reservations}\n prereserv {pre_reserv} keys {pre_reserv.keys()}")
                 # Retire toutes les dates ne possédant aucun horaire de disponible
                 for date in curr_reservations.keys():
                     diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
+                    print(f"réservs : {curr_reservations[date]} {heures_for_semaine[datetime.date.fromisoformat(date).weekday()]} {diff}")
                     if diff.__len__() == 0:
                         dates_dispo.remove(datetime.date.fromisoformat(date))
                 
@@ -553,12 +559,25 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
                 heures_for_semaine, query_horaire = get_heures_semaine_for_ressource(ressource_label)
                 for date in curr_reservations.keys():
                     if date in temp_res.keys():
-                        curr_reservations[date].append(temp_res[date])
+                        curr_reservations[date]+= temp_res[date]
+                print(f"Curr res {curr_reservations}\ntemp res: {temp_res}")
+                for date in dates_dispo:
+                    date_iso = date.isoformat()
+                    if date_iso in temp_res.keys():
+                        if date_iso not in curr_reservations.keys():
+                            curr_reservations[date_iso] = []
+                        curr_reservations[date_iso]+=temp_res[date_iso]
+
                 # Retire toutes les dates ne possédant aucun horaire de disponible
                 for date in curr_reservations.keys():
                     diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
+                    print(f"{curr_reservations[date]} {heures_for_semaine[datetime.date.fromisoformat(date).weekday()]} {diff}")
                     if diff.__len__() == 0:
                         dates_dispo.remove(datetime.date.fromisoformat(date))
+                    # Retirer les dates à laquelle l'heure est déjà réservée ou préréservée
+                    if heure.isoformat() in curr_reservations[date]:
+                        if datetime.date.fromisoformat(date) in dates_dispo:
+                            dates_dispo.remove(datetime.date.fromisoformat(date))
                 
             return JSONResponse(content={"dates":jsonable_encoder([str(date) for date in dates_dispo]),"horaires":query_horaire},status_code=status.HTTP_200_OK)
     except Exception as e:
