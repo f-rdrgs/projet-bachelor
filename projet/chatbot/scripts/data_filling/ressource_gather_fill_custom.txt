@@ -42,3 +42,10 @@ de l'[ressource] le [date]
 [ressource]
 [ressource] pour [date]
 [ressource] à [heure]
+Je veux réserver
+j'aimerais faire une réservation
+jveux réserver
+j'aimerai réserver
+je veux effectuer une réservation
+une réservation
+réserver
