@@ -325,7 +325,7 @@ class ValidateRessourceForm(FormValidationAction):
         domain: DomainDict,
     ) -> Dict[Text, Any]:
         if slot_value is not None:
-            ressource = str(slot_value).lower()
+            ressource = str(slot_value).lower().replace("' ", "'")
             ressources = get_ressource_list()
             if ressource in ressources:
                 return {"ressource":ressource,"accept_deny":None}
@@ -454,7 +454,7 @@ class ActionPreDefineRessourceSlot(Action):
         ressource = None
         final_return = []
         if pre_ressource is not None:
-            pre_ressource_processed = str(pre_ressource).lower()
+            pre_ressource_processed = str(pre_ressource).lower().strip().replace("' ", "'")
             if pre_ressource_processed not in get_ressource_list():
                 dispatcher.utter_message(f"La ressource {pre_ressource_processed} n'est pas disponible")
                 final_return.append(SlotSet("ressource_prereserv",None))
