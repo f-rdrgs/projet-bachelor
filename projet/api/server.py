@@ -560,18 +560,24 @@ async def get_jours_semaine(ressource_label:str,num_jours:int,heure:datetime.tim
                 for date in curr_reservations.keys():
                     if date in temp_res.keys():
                         curr_reservations[date]+= temp_res[date]
-                print(f"Curr res {curr_reservations}\ntemp res: {temp_res}")
+                heure_isoformat = heure.isoformat()
+                dates_to_remove = []
                 for date in dates_dispo:
                     date_iso = date.isoformat()
                     if date_iso in temp_res.keys():
                         if date_iso not in curr_reservations.keys():
                             curr_reservations[date_iso] = []
                         curr_reservations[date_iso]+=temp_res[date_iso]
+                    if heure_isoformat not in heures_for_semaine[date.weekday()]:
+                        dates_to_remove.append(date)
+                # Retrait des dates qui ne comportent pas l'heure correspondante bien qu'elle soit dans la plage d'horaire
+                # Ex. 13h-18h, espacement d'1h30 peut contenir 14h30 mais pas 8h-17h, espacement 1h30, bien que la plage comprends 14h30
+                for date_rem in dates_to_remove:
+                    dates_dispo.remove(date_rem)
 
                 # Retire toutes les dates ne possédant aucun horaire de disponible
                 for date in curr_reservations.keys():
                     diff : list[datetime.date]= np.setdiff1d(heures_for_semaine[datetime.date.fromisoformat(date).weekday()],curr_reservations[date])
-                    print(f"{curr_reservations[date]} {heures_for_semaine[datetime.date.fromisoformat(date).weekday()]} {diff}")
                     if diff.__len__() == 0:
                         dates_dispo.remove(datetime.date.fromisoformat(date))
                     # Retirer les dates à laquelle l'heure est déjà réservée ou préréservée
